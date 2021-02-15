@@ -14,6 +14,7 @@ col_map = {
     'COMPST_ISU_CNT': '구성족목수',
     'ISU_SRT_CD': '종목코드',
     'ISU_ABBRV': '종목명',
+    'IDX_EN_NM': '영문지수',
     'OPN_DD_INDX': '시작일기준',
     'END_DD_INDX': '종료일기준',
     'TRD_DD': '일자',
@@ -63,20 +64,102 @@ col_map = {
     'MKT_PRC_IDX_CMPPREVDD': '시장가격대비',
     'AVG_DURATION': '듀레이션',
     'AVG_CONVEXITY_PRC': '컨벡시티',
-    'BND_IDX_AVG_YD': 'YTM'
+    'BND_IDX_AVG_YD': 'YTM',
+    'MKT_NM': '시장구분',
+    'SECT_TP_NM': '소속부',
+    'CMPPREVDD_PRC': '대비',
+    'TDD_OPNPRC': '시가',
+    'TDD_HGPRC': '고가',
+    'TDD_LWPRC': '저가',
+    'LIST_SHRS': '상장주식수',
+    'BAS_PRC': '시작일기준가',
+    'MMEND_CLSPRC': '종가',
+    'HGST_CLSPRC': '최고종가',
+    'LWST_CLSPRC': '최저종가',
+    'MM_ACC_TRDVOL': '총거래량',
+    'AVG_ACC_TRDVOL': '일평균거래량',
+    'MM_ACC_TRDVAL': '총거래대금',
+    'AVG_ACC_TRDVAL': '일평균거래대금',
+    'ISU_CD': '표준종목코드',
+    'ISU_NM': '한글종목명',
+    'ISU_ENG_NM': '영문종목명',
+    'LIST_DD': '상장일',
+    'MKT_TP_NM': '시장구분',
+    'SECUGRP_NM': '증권구분',
+    'KIND_STKCERT_TP_NM': '주식종류',
+    'PARVAL': '액면가',
+    'HALT_YN': '매매거래정지',
+    'ARRANTRD_YN': '정리매매종목',
+    'ADMISU_YN': '관리종목',
+    'INVSTCAUTN_REMND_ISU_YN': '투자주의환기',
+    'NFAITHDISCLS_YN': '불성실공시',
+    'VLWLIQU_VALU_YN': '단일가매매대상초저유동성종목',
+    'UNIT_TRD_YN': '상장주식수부족우선주',
+    'SRTTRM_OVERHEAT_ISU_TP_YN': '단기과열종목',
+    'INVSTCAUTN_YN': '투자주의종목',
+    'NVST_WARN_YN': '투자경고종목',
+    'NVST_RISK_YN': '투자위험종목',
+    'INVST_TP_NM': '투자자구분',
+    'ASK_TRDVOL': '매도거래량',
+    'BID_TRDVOL': '매수거래량',
+    'NETBID_TRDVOL': '순매수거래량',
+    'ASK_TRDVAL': '매도거래대금',
+    'BID_TRDVAL': '매수거래대금',
+    'NETBID_TRDVAL': '순매수거래대금',
+    'TRDVAL1': '기관합계/금융투자(d)',
+    'TRDVAL2': '기타법인/보험(d)',
+    'TRDVAL3': '개인/투신(d)',
+    'TRDVAL4': '외국인/사모(d)',
+    'TRDVAL5': '은행',
+    'TRDVAL6': '기타금융',
+    'TRDVAL7': '연기금 등',
+    'TRDVAL8': '기타법인',
+    'TRDVAL9': '개인',
+    'TRDVAL10': '외국인',
+    'TRDVAL11': '기타외국인',
+    'TRDVAL_TOT': '전체',
+    'CMPPRVDD_PRC': '대비',
+    'BLK_TRDVOL': '대량매매수량',
+    'BLK_TRD_RTO': '대량매매비율',
+    'ITM_TP_NM': '구분',
+    'EXST_STRT_DD': '존립기간시작일',
+    'EXST_END_DD': '존립기간종료일',
+    'EXER_PRC': '행사가격',
+    'TARSTK_ISU_SRT_CD': '목적주권-종목코드',
+    'TARSTK_ISU_NM': '목적주권-종목명',
+    'TARSTK_ISU_PRSNT_PRC': '목적주권-종가',
+    'ISU_PRC': '신주발행가',
+    'DELIST_DD': '상장폐지일',
+    'DPS': '주당배당금',
+    'DVD_YLD': '배당수익률',
+    'BPS': 'BPS',
+    'PER': 'PER',
+    'EPS': 'EPS',
+    'PBR': 'PBR',
+    'FORN_HD_MKTCAP': '외국인보유총액',
+    'MKTCAP_RTO': '시가총액비율',
+    'FORN_HD_SHRS': '외국인보유주식수',
+    'LIST_SHRS_RTO': '주식수비율',
+    'FORN_HD_QTY': '외국인보유수량',
+    'FORN_SHR_RT': '외국인지분율',
+    'FORN_ORD_LMT_QTY': '외국인한도수량',
+    'FORN_LMT_EXHST_RT': '외국인한도소진율'
 }
 
 
 def convert(data):
     converted = []
     not_in_map = set() # delete later
-    for d in data['output']:
+    key = list(data.keys())[0]
+    print(key)
+    for d in data[key]:
         new = {}
         for k, v in d.items():
             try:
                 new[col_map[k]] = v
             except:
-                if k in ['IND_TP_CD', 'IDX_IND_CD']:
+                # ISU_ABBRV_STR in [12021]
+                if k in ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID', 'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR']:
                     continue
                 new[k] = v
                 not_in_map.add(k) # delete try except no need to use

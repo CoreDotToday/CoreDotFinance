@@ -143,7 +143,19 @@ col_map = {
     'FORN_HD_QTY': '외국인보유수량',
     'FORN_SHR_RT': '외국인지분율',
     'FORN_ORD_LMT_QTY': '외국인한도수량',
-    'FORN_LMT_EXHST_RT': '외국인한도소진율'
+    'FORN_LMT_EXHST_RT': '외국인한도소진율',
+    'LISTCOM_CNT': '회사수',
+    'LIST_ISU_CNT': '종목수',
+    'MKTCAP_RT': '시가총액비중',
+    'ACC_TRDVOL_RT': '거래량비중',
+    'ACC_TRDVAL_RT': '거래대금비',
+    'SB_PRC': '대용가격',
+    'MK_DATE': '산출기준일',
+    'PREVDD_CLSPRC': '산출기준일 종가',
+    "ASSTCOM_NM": '회사명',
+    "ASSTCOM_FND_NM": '종목명',
+    "STRT_DD": '시작일',
+    "END_DD": '종료일'
 }
 
 
@@ -151,7 +163,6 @@ def convert(data):
     converted = []
     not_in_map = set() # delete later
     key = list(data.keys())[0]
-    print(key)
     for d in data[key]:
         new = {}
         for k, v in d.items():

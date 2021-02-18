@@ -14,9 +14,9 @@ class Info:
         today = datetime.now()
         a_month_ago = today - timedelta(days=60)
         self.code = code
-        self.start = a_month_ago.strftime('%Y%m%d') if start is None else start
-        self.end = today.strftime('%Y%m%d') if end is None else end
-        self.day = today.strftime('%Y%m%d') if day is None else day
+        self.start = a_month_ago.strftime('%Y%m%d') if start is None else str(start)
+        self.end = today.strftime('%Y%m%d') if end is None else str(end)
+        self.day = today.strftime('%Y%m%d') if day is None else str(day)
 
         self.headers = {
             'User-Agent':

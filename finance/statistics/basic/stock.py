@@ -451,17 +451,56 @@ class Detail(Stock):
             '12020': 'Not now',
             '12021': self.per_pbr_dividend_of_stock,
             '12022': self.holding_amount_of_foreigner,
-            '12023': self.holding_amount_of_foreigner_by_item
+            '12023': self.holding_amount_of_foreigner_by_item,
+            '12024': self.distribution_per_business,
+            '12025': self.stock_and_business_table,
+            '12026': self.substitution_price_of_stock,
+            '12027': self.substitution_price_of_beneficiary_certificate,
+            '12028': self.substitution_price_of_mutual_fund
+
         }
         search_type_to_number = {
             '전종목': 1,
             '개별추이': 2
         }
+        business_to_number = {
+            '농업, 임업 및 어업': '005',
+            '광업': '006',
+            '음식료품': '007',
+            '섬유의복': '008',
+            '종이목재': '009',
+            '화학': '010',
+            '의약품': '011',
+            '비금속광물': '012',
+            '철강금속': '013',
+            '기계': '014',
+            '전기전자': '015',
+            '의료정밀': '016',
+            '운수장비': '017',
+            '기타제조업': '018',
+            '유통업': '019',
+            '전기가스업': '020',
+            '건설업': '021',
+            '운수창고업': '022',
+            '통신업': '023',
+            '은행': '025',
+            '증권': '027',
+            '보험': '028',
+            '기타금융': '029',
+            '서비스업': '030',
+            '코스피': '001'
+        }
         super().__init__(code, start, end, day, division, stk_name, code_to_function)
         search_type = kwargs.get('search_type', '전종목')
         isuLmtRto = kwargs.get('no_foreign_only', None)
-        self.isuLmRto = 1 if isuLmtRto is True else None
+        business = kwargs.get('business', None)
+        self.company = kwargs.get('company', None)
+        self.certificate = kwargs.get('certificate', None)
+
         self.search_type = search_type_to_number[search_type]
+        self.isuLmRto = 1 if isuLmtRto is True else None
+        if code in ['12024']:
+            self.idxIndCd = business_to_number[business]
 
     def per_pbr_dividend_of_stock(self):
         """"PER/PBR/배당수익률(개별종목) [12021]"""
@@ -499,7 +538,8 @@ class Detail(Stock):
     def holding_amount_of_foreigner_by_item(self):
         """외국인보유량(개별종목) [12023]"""
         n = self.search_type
-        if n is 2: print(self.item_name)
+        if n is 2:
+            print(self.item_name)
         print(self.isuLmRto)
 
         data = {
@@ -512,8 +552,119 @@ class Detail(Stock):
             'isuCd': self.isuCd,
             'isuCd2': self.isuCd,
             'codeNmisuCd_finder_stkisu0_0': self.item_name,
-            'param1isuCd_finder_stkisu0_0': self.division_category[self.division],
+            'param1isuCd_finder_stkisu0_0': 'STK', #self.division_category[self.division],
             'strtDd': self.start,
             'endDd': self.end
         }
+        return self.requests_data(data)
+
+    def distribution_per_business(self):
+        """
+        업종별 분포 [12024]
+        searchType = 1 (전종목) <- search_type, day, division
+        searchType = 2 (개별추이) <- search_type, dividion, business, start, end
+        division <- KOSPI, KOSDAQ
+        """
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0380{self.search_type}',
+            'searchType': self.search_type,
+            'mktId': self.division_category[self.division],
+            'trdDd': self.day,
+            'idxIndCd': self.idxIndCd,
+            'strtDd': self.start,
+            'endDd': self.end,
+            'share': 2,
+            'money': 3
+        }
+        return self.requests_data(data)
+
+    def stock_and_business_table(self):
+        """
+        업종분류 현황 [12025]
+        :: division, day
+        mktId <- KOSPI, KOSDAQ
+        """
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT03901',
+            'mktId': self.division_category[self.division],
+            'trdDd': self.day,
+            'money': 1
+        }
+        return self.requests_data(data)
+
+    def substitution_price_of_stock(self):
+        """
+        주식 대용가 [12026]
+        searchType = 1 (전종목) <- search_type, day, division
+        searchType = 2 (개별추이) <- search_type, dividion, business, start, end
+        """
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0400{self.search_type}',
+            'searchType': self.search_type,
+            'mktId': self.division_category[self.division],
+            'trdDd': self.day,
+            'tboxisuCd_finder_stkisu0_1': f'{self.isuCd2}/{self.item_name}',
+            'isuCd': self.isuCd,
+            'isuCd2': self.isuCd2,
+            'codeNmisuCd_finder_stkisu0_1': self.item_name,
+            'param1isuCd_finder_stkisu0_1': 'STK',
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
+
+    def substitution_price_of_beneficiary_certificate(self):
+        """
+        수익증권 대용가 [12027]
+        searchType = 1 (전종목) <- search_type, day, division
+        searchType = 2 (개별추이) <- search_type, start, end, company, certificate
+        """
+        if self.search_type == 1:
+            strtYy = self.day[:4]
+            strtMm = self.day[4:6]
+        else:
+            strtYy = self.start[:4]
+            strtMm = self.start[4:6]
+        endYy = self.end[:4]
+        endMm = self.end[4:6]
+
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0410{self.search_type}',
+            'strtYy': strtYy,
+            'strtMm': strtMm,
+            'searchType': self.search_type,
+            'comNm': self.company,
+            'isuNm': self.certificate,
+            'endYy': endYy,
+            'endMm': endMm
+        }
+
+        return self.requests_data(data)
+
+    def substitution_price_of_mutual_fund(self):
+        """
+        뮤추얼펀드 대용가 [12028]
+        searchType = 1 (전종목) <- search_type, day, division
+        searchType = 2 (개별추이) <- search_type, start, end, company, certificate
+        """
+        if self.search_type == 1:
+            strtYy = self.day[:4]
+            strtMm = self.day[4:6]
+        else:
+            strtYy = self.start[:4]
+            strtMm = self.start[4:6]
+        endYy = self.end[:4]
+        endMm = self.end[4:6]
+
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0420{self.search_type}',
+            'strtYy': strtYy,
+            'strtMm': strtMm,
+            'searchType': self.search_type,
+            'comNm': self.company,
+            'isuNm': self.certificate,
+            'endYy': endYy,
+            'endMm': endMm
+        }
+
         return self.requests_data(data)

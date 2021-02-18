@@ -40,8 +40,8 @@ class Stock(Info):
             raise AttributeError(f'{stk_name} is Wrong name as an stock name')
 
         item_name = soup.attrs['data-nm']
-        isuCd = soup.attrs['data-cd'] #data-cd='KR7333430007'
-        isuCd2 = soup.attrs['data-tp'] #data-tp='307070'
+        isuCd = soup.attrs['data-cd']  # data-cd='KR7333430007'
+        isuCd2 = soup.attrs['data-tp']  # data-tp='307070'
 
         return item_name, isuCd, isuCd2
 
@@ -490,10 +490,14 @@ class Detail(Stock):
             '서비스업': '030',
             '코스피': '001'
         }
+        stk_code = kwargs.get('stk_code', None)
+        if stk_code:
+            stk_name = self.convert_code_to_name(stk_code)
         super().__init__(code, start, end, day, division, stk_name, code_to_function)
         search_type = kwargs.get('search_type', '전종목')
         isuLmtRto = kwargs.get('no_foreign_only', None)
         business = kwargs.get('business', None)
+
         self.company = kwargs.get('company', None)
         self.certificate = kwargs.get('certificate', None)
 
@@ -501,6 +505,20 @@ class Detail(Stock):
         self.isuLmRto = 1 if isuLmtRto is True else None
         if code in ['12024']:
             self.idxIndCd = business_to_number[business]
+
+    def convert_code_to_name(self, stk_code):
+        # ER/PBR/배당수익률(개별종목) [12021] 을 위한 전종목 기본정보 [12005] 데이터
+        request_data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
+            'mktId': 'ALL',
+            'share': 1,
+            }
+        data = self.requests_data(request_data)
+        for i in data['OutBlock_1']:
+            if i['ISU_SRT_CD'] == str(stk_code):
+                return i['ISU_ABBRV']
+
+
 
     def per_pbr_dividend_of_stock(self):
         """"PER/PBR/배당수익률(개별종목) [12021]"""

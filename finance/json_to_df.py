@@ -155,7 +155,30 @@ col_map = {
     "ASSTCOM_NM": '회사명',
     "ASSTCOM_FND_NM": '종목명',
     "STRT_DD": '시작일',
-    "END_DD": '종료일'
+    "END_DD": '종료일',
+    'INVSTASST_NETASST_TOTAMT': '순자산총액',
+    'NAV': '순자산가치',
+    'OBJ_STKPRC_IDX': '종가',
+    'FLUC_RT1': '등락률',
+    'CMP_PRC': '대비',
+    'CLSPRC': '종료일 종가',
+    'LST_NAV': '순자산가치',
+    'IDX_FLUC_RT': '등락률',
+    'ETF_OBJ_IDX_NM': '기초지수명',
+    'IDX_CALC_INST_NM1': '지수산출기관',
+    'IDX_CALC_INST_NM2': '추적배수',
+    'ETF_REPLICA_METHD_TP_CD': '복제방법',
+    'IDX_MKT_CLSS_NM': '기초시장분류',
+    'IDX_ASST_CLSS_NM':	'기초자산분',
+    'COM_ABBRV': '운용사',
+    'CU_QTY': 'CU수량',
+    'ETF_TOT_FEE': '홍보수',
+    'TAX_TP_CD': '과세유형',
+    'NUM_ITM_VAL21': '기간 합계',
+    'NUM_ITM_VAL22': '기간법인',
+    'NUM_ITM_VAL23': '개인',
+    'NUM_ITM_VAL24': '외국인 합계',
+    'NUM_ITM_VAL25': '전체'
 }
 
 
@@ -171,10 +194,12 @@ def convert(data):
             except:
                 # ISU_ABBRV_STR in [12021]
                 if k in ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID', 'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR']:
+                    print(f'Ignored {k}')
                     continue
                 new[k] = v
-                not_in_map.add(k) # delete try except no need to use
+                not_in_map.add(k)  # delete try except no need to use
         converted.append(new)
-    print(not_in_map)
+    if len(not_in_map) > 0:
+        print(not_in_map)
     return pd.json_normalize(converted)
 

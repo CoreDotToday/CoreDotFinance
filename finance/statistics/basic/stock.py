@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
 
 class Stock(Info):
-    def __init__(self, code, start, end, day, division, stk_name, code_to_function):
+    def __init__(self, code, start, end, day, division, stk_name, stk_code, code_to_function):
         """
         주가
         :param code:
@@ -15,7 +15,7 @@ class Stock(Info):
         :param division:
         :param stk_name:
         """
-        super(Stock, self).__init__(code, start, end, day)
+        super(Stock, self).__init__(start, end, day)
 
         self.division_category = {
             '전체': 'ALL',
@@ -24,26 +24,41 @@ class Stock(Info):
             'KONEX': 'KNX'
         }
 
-        self.item_name, self.isuCd, self.isuCd2 = self._find_stock_data(stk_name)
+        if stk_code is not None:
+            stk_name = self.convert_code_to_name(stk_code)
+
+        self._find_stock_data(stk_name)
         self.division = '전체' if division is None else division.upper()
         self.function = code_to_function[code]
 
 
+
+
     def _find_stock_data(self, stk_name):
-        if stk_name is None:
+        if stk_name is None:  # 나중에 고쳐야함. stk_name 이 필요한 함수들은 stk_name이 없을 때 stk_name이 없음을 알릴 필요가 있음.
             stk_name = '삼성전자'
         stock_autocomplete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_stkisu&value={value}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_stkisu_autocomplete'
         response = requests.get(stock_autocomplete_url.format(value=stk_name))
         soup = bs(response.content, 'html.parser').li
 
         if soup is None:
-            raise AttributeError(f'{stk_name} is Wrong name as an stock name')
+            raise AttributeError(f'{stk_name} is Wrong name as a stock name')
 
-        item_name = soup.attrs['data-nm']
-        isuCd = soup.attrs['data-cd']  # data-cd='KR7333430007'
-        isuCd2 = soup.attrs['data-tp']  # data-tp='307070'
+        self.item_name = soup.attrs['data-nm']
+        self.isuCd = soup.attrs['data-cd']  # data-cd looks like 'KR7333430007'
+        self.isuCd2 = soup.attrs['data-tp']  # data-tp looks like '307070'
 
-        return item_name, isuCd, isuCd2
+    def convert_code_to_name(self, stk_code):
+        # ER/PBR/배당수익률(개별종목) [12021] 을 위한 전종목 기본정보 [12005] 데이터
+        request_data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
+            'mktId': 'ALL',
+            'share': 1,
+        }
+        data = self.requests_data(request_data)
+        for i in data['OutBlock_1']:
+            if i['ISU_SRT_CD'] == str(stk_code):
+                return i['ISU_ABBRV']
 
 
 class ItemPrice(Stock):
@@ -491,9 +506,7 @@ class Detail(Stock):
             '코스피': '001'
         }
         stk_code = kwargs.get('stk_code', None)
-        if stk_code:
-            stk_name = self.convert_code_to_name(stk_code)
-        super().__init__(code, start, end, day, division, stk_name, code_to_function)
+        super().__init__(code, start, end, day, division, stk_name, stk_code, code_to_function)
         search_type = kwargs.get('search_type', '전종목')
         isuLmtRto = kwargs.get('no_foreign_only', None)
         business = kwargs.get('business', None)
@@ -506,17 +519,6 @@ class Detail(Stock):
         if code in ['12024']:
             self.idxIndCd = business_to_number[business]
 
-    def convert_code_to_name(self, stk_code):
-        # ER/PBR/배당수익률(개별종목) [12021] 을 위한 전종목 기본정보 [12005] 데이터
-        request_data = {
-            'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
-            'mktId': 'ALL',
-            'share': 1,
-            }
-        data = self.requests_data(request_data)
-        for i in data['OutBlock_1']:
-            if i['ISU_SRT_CD'] == str(stk_code):
-                return i['ISU_ABBRV']
 
 
 
@@ -546,8 +548,8 @@ class Detail(Stock):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03601',
             'mktId': self.division_category[self.division],
-            'strtDd': 20210126,
-            'endDd': 20210202,
+            'strtDd': self.start,
+            'endDd': self.end,
             'share': 2,
             'money': 3
         }
@@ -579,9 +581,12 @@ class Detail(Stock):
     def distribution_per_business(self):
         """
         업종별 분포 [12024]
-        searchType = 1 (전종목) <- search_type, day, division
-        searchType = 2 (개별추이) <- search_type, dividion, business, start, end
-        division <- KOSPI, KOSDAQ
+        :arg
+            [searchType = 1 (전종목)]
+                search_type, day, division
+            [searchType = 2 (개별추이)]
+                search_type, division, business, start, end
+        division in (KOSPI, KOSDAQ)
         """
         data = {
             'bld': f'dbms/MDC/STAT/standard/MDCSTAT0380{self.search_type}',
@@ -599,8 +604,9 @@ class Detail(Stock):
     def stock_and_business_table(self):
         """
         업종분류 현황 [12025]
-        :: division, day
-        mktId <- KOSPI, KOSDAQ
+        :arg
+            division, day
+        division in (KOSPI, KOSDAQ)
         """
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03901',
@@ -613,8 +619,11 @@ class Detail(Stock):
     def substitution_price_of_stock(self):
         """
         주식 대용가 [12026]
-        searchType = 1 (전종목) <- search_type, day, division
-        searchType = 2 (개별추이) <- search_type, dividion, business, start, end
+        :arg
+            [searchType = 1 (전종목)]
+                search_type, day, division
+            [searchType = 2 (개별추이)]
+                search_type, dividion, business, start, end
         """
         data = {
             'bld': f'dbms/MDC/STAT/standard/MDCSTAT0400{self.search_type}',
@@ -634,8 +643,11 @@ class Detail(Stock):
     def substitution_price_of_beneficiary_certificate(self):
         """
         수익증권 대용가 [12027]
-        searchType = 1 (전종목) <- search_type, day, division
-        searchType = 2 (개별추이) <- search_type, start, end, company, certificate
+        :arg
+            [searchType = 1 (전종목)]
+                search_type, day, division
+            [searchType = 2 (개별추이)]
+                search_type, start, end, company, certificate
         """
         if self.search_type == 1:
             strtYy = self.day[:4]
@@ -662,8 +674,11 @@ class Detail(Stock):
     def substitution_price_of_mutual_fund(self):
         """
         뮤추얼펀드 대용가 [12028]
-        searchType = 1 (전종목) <- search_type, day, division
-        searchType = 2 (개별추이) <- search_type, start, end, company, certificate
+        :arg
+            [searchType = 1 (전종목)]
+                search_type, day, division
+            [searchType = 2 (개별추이)]
+                search_type, start, end, company, certificate
         """
         if self.search_type == 1:
             strtYy = self.day[:4]

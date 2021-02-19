@@ -3,16 +3,14 @@ from datetime import datetime, timedelta
 import requests
 
 class Info:
-    def __init__(self, code, start, end, day):
+    def __init__(self, start, end, day):
         """ 지수
-        :param code: 항목 고유 번호
         :param start: 시작일
         :param end: 종료일
         :param day: 기준일
         """
         today = datetime.now()
         a_month_ago = today - timedelta(days=60)
-        self.code = code
         self.start = a_month_ago.strftime('%Y%m%d') if start is None else str(start)
         self.end = today.strftime('%Y%m%d') if end is None else str(end)
         self.day = today.strftime('%Y%m%d') if day is None else str(day)

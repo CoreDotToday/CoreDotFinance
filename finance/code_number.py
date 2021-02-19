@@ -9,10 +9,12 @@ index_code_list_derivation = ['11010', '11011', '11012', '11013', '11014']
 
 stock_code_list_item = ['12001', '12002', '12003', '12004']
 stock_code_list_info = ['12005', '12006', '12007']
-stock_code_list_trade = ['12008', '12009', '12010', '12011', '12012']
-stock_code_list_others = ['12013', '12014', '12015', '12016', '12017', '12018', '12019']
-stock_code_list_detail = ['12020', '12021', '12022', '12023', '12024', '12025', '12026', '12027', '12028']
-
+stock_code_list_trade = [str(code) for code in range(12008, 12013)]
+stock_code_list_others = [str(code) for code in range(12013, 12020)]
+stock_code_list_detail = [str(code) for code in range(12020, 12029)]
+product_code_list_ETF = [str(code) for code in range(13101, 13118)]
+product_code_list_ETN = [str(code) for code in range(13201, 13217)]
+product_code_list_ELW = [str(code) for code in range(13301, 13314)]
 
 stock_code_list = [code for code in range(12001, 120029)]
 product_code_list = [code for code in range(13001, 13313)]

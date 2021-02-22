@@ -102,6 +102,20 @@ class ETF(Product):
         """전종목 기본정보[13104]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT04601',
+            'share': 1
+            }
+        return self.requests_data(data)
+
+    def info_of_item(self):
+        """개별종목 종합정보[13105]"""
+        '''Not now'''
+        pass
+
+    def trade_performance_per_investor(self):
+        """투자자별 거래실적 [13106]"""
+        inquiry_map = {
+            '기간합계': 1,
+            '일별추이': 2,
             '거래량': 2,
             '거래대금': 1,
             '순매수': 1,

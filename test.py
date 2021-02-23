@@ -1,8 +1,7 @@
 import finance
 from finance.statistics.basic.index import Index
 
-data = finance.data_reader('12021', division='kospi', search_type = '개별추이', start=20210101, end=20210201, stk_name='기아')
+data = finance.data_reader('13110', inquiry='개별종목', product='arirang 단', start=20210119, end=20210219)
+
 
 print(data)
-
-

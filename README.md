@@ -60,7 +60,9 @@ data = finance.data_reader('12021', division='kospi', search_type = '개별추�
 ```
 # 문제점
 1. json_to_df.py에서 중복되는 key 값들  
-<예를 들어서 [120xx] 에서는 'PRICE' 가 '가격' 으로 웹 상테 나타나고 [120xy] 에서는 'PRICE' 가 '금액' 으로 나타남.>
+<예를 들어서 [120xx] 에서는 'OBJ_STKPRC_IDX' 가 '종가' 로 웸 페이지에 변환되고 [13112] 에서는 'OBJ_STKPRC_IDX' 가 '기초지수' 로 나타남.>
 2. 필요없는 값을 넣어줘도 동작함  
 <예를 들어서 [120xx] 는 day값만 있어도 동작하지만 start, end를 넣어줘도 똑같이 동작함. 사용자 입장에서 혼란을 준다.>
 3. stock.py 에서 def sort_options 를 쓰지말고 **kwargs 를 쓰도록 하자 product.py를 참고하도록.
+4. stc_name 으로 동작하는 기능들은 stc_code로도 동작이 되도록 수정한다 (ex [12023])
+5. "증감" 데이터가 1,2로 나타남. 문제가 아닌가..?

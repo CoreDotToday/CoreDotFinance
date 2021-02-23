@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 
-col_map = {
+_col_map = {
     'IDX_NM': '지수명',
     'IDX_IND_NM': '지수명',
     'IDX_ENG_NM': '지수영문명',
@@ -178,28 +178,75 @@ col_map = {
     'NUM_ITM_VAL22': '기간법인',
     'NUM_ITM_VAL23': '개인',
     'NUM_ITM_VAL24': '외국인 합계',
-    'NUM_ITM_VAL25': '전체'
+    'NUM_ITM_VAL25': '전체',
+    'INVST_NM': '투자자 구분',
+    'COMPST_ISU_CD': '종목코드',
+    'COMPST_ISU_NM': '종목명',
+    'COMPST_ISU_CU1_SHRS': '주식',
+    'VALU_AMT': '평가금액',
+    'COMPST_AMT': '시가총액',
+    'COMPST_RTO': '시가총액기준구성비중',
+    'CLSPRC1': '비교지수종가 시작일',
+    'BAS_IDX1': '비교지수종가 종료일',
+    'CLSPRC2': 'ETF종가 시작일',
+    'BAS_IDX2': 'ETF종가 종료',
+    'DISTR_AMT': '누적 분배금',
+    'NAV_CHG_RT': '순자산가치(NAV)변동률',
+    'IDX_CHG_RTO': '기초지수',
+    'DIVRG_RT': '장마감 괴리율',
+    'TRD_REL_MBR_NM': '거래상대방명',
+    'OTC_DRV_CLSS_FND_GIV_TP_NM': '장외파생상품 유형',
+    'ETF_NETASST_TOTAMT': '순자산총액(a)',
+    'ETF_TOT_RISK_EXPOSR_AMT': '총위험노출액(b)',
+    'ETF_COLTRL_VALU_AMT': '담보평가액(c)',
+    'ETF_COLTRL_RTO': '담보비율(c/b)',
+    'ETF_RISK_VALU_AMT': '위험평가액(d=b-c)',
+    'ETF_RISK_VALU_AMT_RTO': '위험평가액비율(d/a)',
+    'MKTCLS_NAV': '장마감 순자산가치(NAV)',
+    'CLSPRC_DIVRG_RT': '장마감 괴리',
+    'ISU_KOR_ABBRV': '종목명',
+    'SYNTH_ETF_BAS_IDX_OVRVW': '지수산출내역',
+    'SYNTH_ETF_COLTRL_ADM_OVRVW': '담보관리정책',
+    'BAS_IDX_REL_ASSTCOM_HPAGE_ADDR': '지수산출내역링크',
+    'COLTRL_ADM_ASSTCOM_HPAGE_ADDR': '담보관리정책',
+    'TRACE_YD_MULT': '추적수익률 배수',
+    'TRACE_ERR_RT': '추적오차율'
+
 }
 
 
-def convert(data):
+def convert(data, new_col_map):
+    global _col_map
+    col_map = _col_map.copy()
+    if new_col_map:
+        col_map = adjust_new_col_map(col_map, new_col_map)
     converted = []
-    not_in_map = set() # delete later
+    not_in_map = set()  # delete later
+    ignored = set()  # delete later
     key = list(data.keys())[0]
     for d in data[key]:
-        new = {}
+        column_in_kor = {}
         for k, v in d.items():
             try:
-                new[col_map[k]] = v
+                column_in_kor[col_map[k]] = v
+                #  column_in_kor[k] = v  # In order to check origin column name
             except:
-                # ISU_ABBRV_STR in [12021]
-                if k in ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID', 'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR']:
-                    print(f'Ignored {k}')
+                if k in ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID', 'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR', 'ETF_ISU_CD']:
+                    ignored.add(k)
                     continue
-                new[k] = v
+                column_in_kor[k] = v
                 not_in_map.add(k)  # delete try except no need to use
-        converted.append(new)
+        converted.append(column_in_kor)
     if len(not_in_map) > 0:
         print(not_in_map)
+    if len(ignored) > 0:
+        print('ignored : ', ignored)
     return pd.json_normalize(converted)
+
+
+def adjust_new_col_map(col_map, new_col_map):
+    for key, val in new_col_map.items():
+        col_map[key] = val
+    return col_map
+    
 

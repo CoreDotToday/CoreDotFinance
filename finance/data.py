@@ -1,8 +1,8 @@
-from finance.statistics.basic.index import *
-from finance.statistics.basic.stock import *
+from finance.statistics.basic.index import StockIndex, BondIndex, DerivationIndex
+from finance.statistics.basic.stock import ItemInfo, ItemPrice, TradePerform, OtherSecurity, Detail
 from finance.statistics.basic.products import *
 from finance.code_number import *
-from finance.json_to_df import *
+from finance.json_to_df import convert
 
 
 # statistics
@@ -12,24 +12,27 @@ def data_reader(code, start=None, end=None, day=None,
                 options=[], **kwargs):
     # assert f"{code}" in code_list, "Wrong code number"
     if code in index_code_list_stock:
-        df = StockIndex(code, start, end, day, division, ind_name).read()
+        df, new_col_map = StockIndex(code, start, end, day, division, ind_name).read()
     elif code in index_code_list_bond:
-        df = BondIndex(code, start, end, day, division).read()
+        df, new_col_map = BondIndex(code, start, end, day, division).read()
     elif code in index_code_list_derivation:
-        df = DerivationIndex(code, start, end, day, division, ind_name).read()
+        df, new_col_map = DerivationIndex(code, start, end, day, division, ind_name).read()
     elif code in stock_code_list_item:
-        df = ItemPrice(code, start, end, day, division, adj_price, stk_name).read()
+        df, new_col_map = ItemPrice(code, start, end, day, division, adj_price, stk_name).read()
     elif code in stock_code_list_info:
-        df = ItemInfo(code, start, end, day, division, stk_name).read()
+        df, new_col_map = ItemInfo(code, start, end, day, division, stk_name).read()
     elif code in stock_code_list_trade:
-        df = TradePerform(code, start, end, day, division, stk_name, options, inverstor, **kwargs).read()
+        df, new_col_map = TradePerform(code, start, end, day, division, stk_name, options, inverstor, **kwargs).read()
     elif code in stock_code_list_others:
-        df = OtherSecurity(code, start, end, day, division, stk_name).read()
+        df, new_col_map = OtherSecurity(code, start, end, day, division, stk_name).read()
     elif code in stock_code_list_detail:
-        df = Detail(code, start, end, day, division, stk_name, **kwargs).read()
+        df, new_col_map = Detail(code, start, end, day, division, stk_name, **kwargs).read()
     elif code in product_code_list_ETF:
-        df = ETF(code, start, end, day, product, **kwargs).read()
-    return convert(df)
+        df, new_col_map = ETF(code, start, end, day, product, **kwargs).read()
+
+    else:
+        raise ValueError(f"No function code, [{code}]")
+    return convert(df, new_col_map)
 
 
 # visual

@@ -387,3 +387,106 @@ class ETF(Product):
         """분기별 LP 평가[]13117"""
         '''Web page error '''
         pass
+
+class ETN(Product):
+    def __init__(self):
+
+        code_to_function = {
+            '13101': self.price_of_entire_items,
+            '13102': self.fluc_of_entire_items,
+            '13103': self.price_trend_of_item,
+            '13104': self.info_of_entire_items,
+            '13105': self.info_of_item,
+            '13106': self.trade_performance_per_investor,
+            '13107': self.trade_performance_per_investor_item
+        }
+
+    def price_of_entire_items(self):
+        """
+        전종목 시세 [13201]
+        """
+        pass
+
+    def fluc_of_entire_items(self):
+        """
+        전종목 등락률 [13202]
+        """
+        pass
+
+    def price_trend_of_item(self):
+        """
+        개별종목 시세추이 [13203]
+        """
+        pass
+
+    def info_of_entire_items(self):
+        """
+        전종목 기본정보 [13204]
+        """
+        pass
+
+    def info_of_item(self):
+        """
+        개별종목 종합정보 [13205]
+        """
+        pass
+
+    def trade_performance_per_investor(self):
+        """
+        투자자별 거래실적 [13206]
+        """
+        pass
+
+    def trade_performance_per_investor_item(self):
+        """
+        투자자별 거래실적(개별종목) [13207]
+        """
+        pass
+
+    def detail_of_ETN(self):
+        """
+        ETN 상세검색 [13208]
+        """
+        pass
+
+    def product_consisting_of_index(self):
+        """
+        기초지수 구성요소 [13209]
+        """
+        pass
+
+    def credit_and_NCR(self):
+        """
+        발행사 신용등급 및 NCR [13210]
+        """
+        pass
+
+    def risk_of_credit(self):
+        """
+        발행사 신용위험지표 [13211]
+        """
+        pass
+
+    def condition_of_early_repayment_loss_limited_ETN(self):
+        """
+        손실제한ETN 조기상환 조건 [13212]
+        """
+        pass
+
+    def consideration_of_range_accurual_of_loss_limited_ETN(self):
+        """
+        손실제한ETN 레인지어쿠루얼 참고사항 [13213]
+        """
+        pass
+
+    def trend_of_differential(self):
+        """
+        괴리율 추이 [13214]
+        """
+        pass
+
+
+    '13114': self.trend_of_closing_differential,
+    '13115': self.risk_of_multi_ETF_trader,
+    '13116': self.managing_index_and_security_of_multi_ETF,
+    '13117': self.assessment_of_LP_per_quarter

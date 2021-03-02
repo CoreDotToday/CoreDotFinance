@@ -29,6 +29,8 @@ def data_reader(code, start=None, end=None, day=None,
         df, new_col_map = Detail(code, start, end, day, division, stk_name, **kwargs).read()
     elif code in product_code_list_ETF:
         df, new_col_map = ETF(code, start, end, day, product, **kwargs).read()
+    elif code in product_code_list_ETN:
+        df, new_col_map = ETN(code, start, end, day, product, **kwargs).read()
 
     else:
         raise ValueError(f"No function code, [{code}]")

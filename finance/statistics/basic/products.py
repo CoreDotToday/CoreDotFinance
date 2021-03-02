@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
 
 class Product(Info):
-    def __init__(self, code, start, end, day, product, code_to_function):
+    def __init__(self, code, start, end, day, product, product_type, code_to_function):
         """
         증권상품
         :param code:
@@ -17,13 +17,15 @@ class Product(Info):
         super(Product, self).__init__(start, end, day)
         self.function = code_to_function[code]
         self.product = product
-        self.data_cd, self.data_nm, self.data_tp = self.init_product_(product)
+        self.data_cd, self.data_nm, self.data_tp = self.init_product_(product, product_type)
 
-    def init_product_(self, product):
+    def init_product_(self, product, product_type):
         if product is None:
             return None, None, None
-
-        auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etf&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etf_autocomplete'
+        if product_type == 'etf':
+            auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etf&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etf_autocomplete'
+        elif product_type == 'etn':
+            auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etn&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etn_autocomplete'
         response = requests.get(auto_complete_url.format(product=product))
         soup = bs(response.content, 'html.parser').li
 
@@ -65,7 +67,7 @@ class ETF(Product):
             '13117': self.assessment_of_LP_per_quarter
         }
 
-        super(ETF, self).__init__(code, start, end, day, product, code_to_function)
+        super(ETF, self).__init__(code, start, end, day, product, 'etf', code_to_function)
         self.kwargs = kwargs
         self.inquiry = self.kwargs.get('inquiry', None)
         self.val_vol = self.kwargs.get('val_vol', None)
@@ -389,45 +391,89 @@ class ETF(Product):
         pass
 
 class ETN(Product):
-    def __init__(self):
+    def __init__(self, code, start, end, day, product, **kwargs):
 
         code_to_function = {
-            '13101': self.price_of_entire_items,
-            '13102': self.fluc_of_entire_items,
-            '13103': self.price_trend_of_item,
-            '13104': self.info_of_entire_items,
-            '13105': self.info_of_item,
-            '13106': self.trade_performance_per_investor,
-            '13107': self.trade_performance_per_investor_item
+            '13201': self.price_of_entire_items,
+            '13202': self.fluc_of_entire_items,
+            '13203': self.price_trend_of_item,
+            '13204': self.info_of_entire_items,
+            '13205': self.info_of_item,
+            '13206': self.trade_performance_per_investor,
+            '13207': self.trade_performance_per_investor_item,
+            '13208': self.detail_of_ETN,
+            '13209': self.product_consisting_of_index,
+            '13210': self.credit_and_NCR,
+            '13211': self.risk_of_credit,
+            '13212': self.condition_of_early_repayment_loss_limited_ETN,
+            '13213': self.consideration_of_range_accurual_of_loss_limited_ETN,
+            '13214': self.trend_of_differential,
+            '13215': self.trend_of_closing_differential
         }
+        super(ETN, self).__init__(code, start, end, day, product, 'etn', code_to_function)
+        self.kwargs = kwargs
+        self.inquiry = self.kwargs.get('inquiry', None)
+        self.val_vol = self.kwargs.get('val_vol', None)
+        self.trade = self.kwargs.get('trade', None)
+        self.issuing = self.kwargs.get('issuing', None)
+
 
     def price_of_entire_items(self):
         """
         전종목 시세 [13201]
         """
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT06401',
+            'trdDd': self.day,
+            'share': 1,
+            'money': 1,
+        }
+        return self.requests_data(data)
 
     def fluc_of_entire_items(self):
         """
         전종목 등락률 [13202]
         """
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT06501',
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
 
     def price_trend_of_item(self):
         """
         개별종목 시세추이 [13203]
         """
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT06601',
+            'tboxisuCd_finder_secuprodisu2_5': f'{self.data_tp}/{self.data_nm}',
+            'isuCd': self.data_cd,
+            'codeNmisuCd_finder_secuprodisu2_5': self.data_nm,
+            'strtDd': self.start,
+            'endDd': self.end,
+        }
+        new_col_map = {
+            'CMPPREVDD_IDX': '기초지수대비',
+            'FLUC_TP_CD1': '기초지수증감',
+            'IDX_FLUC_RT': '기초지수등락률',
+            'OBJ_STKPRC_IDX': '기초지수종가'
+        }
+        return self.requests_data(data, new_col_map)
 
     def info_of_entire_items(self):
         """
         전종목 기본정보 [13204]
         """
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT06701'
+        }
+        return self.requests_data(data)
 
     def info_of_item(self):
         """
         개별종목 종합정보 [13205]
+        not now
         """
         pass
 
@@ -435,47 +481,162 @@ class ETN(Product):
         """
         투자자별 거래실적 [13206]
         """
-        pass
+        inquiry_map = {
+            '기간합계': 1,
+            '일별추이': 2,
+        }
+        valvol_map = {
+            '거래대금': 1,
+            '거래량': 2,
+        }
+        trade_map = {
+            '순매수': 1,
+            '매수': 2,
+            '매도': 3
+        }
+        if self.inquiry == '일별추이':
+            val_vol = valvol_map[self.val_vol]
+            trade = trade_map[self.trade]
+        else:
+            val_vol, trade = None, None
+
+        inquiry = inquiry_map[self.inquiry]
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0690{inquiry}',
+            'inqTpCd': inquiry,
+            'inqCondTpCd1': val_vol,
+            'inqCondTpCd2': trade,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+
+        return self.requests_data(data)
 
     def trade_performance_per_investor_item(self):
         """
         투자자별 거래실적(개별종목) [13207]
         """
-        pass
+        if self.product is None:
+            raise ValueError(f'{self.product} is Wrong name as a product')
+        inquiry_map = {
+            '기간합계': 1,
+            '일별추이': 2,
+        }
+        valvol_map = {
+            '거래대금': 1,
+            '거래량': 2,
+        }
+        trade_map = {
+            '순매수': 1,
+            '매수': 2,
+            '매도': 3
+        }
+        if self.inquiry == '일별추이':
+            val_vol = valvol_map[self.val_vol]
+            trade = trade_map[self.trade]
+        else:
+            val_vol, trade = None, None
+
+        inquiry = inquiry_map[self.inquiry]
+
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0700{inquiry}',
+            'inqTpCd': inquiry,
+            'inqCondTpCd1': val_vol,
+            'inqCondTpCd2': trade,
+            'tboxisuCd_finder_secuprodisu2_10': f'{self.data_tp}/{self.data_nm}',
+            'isuCd': self.data_cd,
+            'codeNmisuCd_finder_secuprodisu2_10': self.data_nm,
+            'strtDd': self.start,
+            'endDd': self.end,
+            'share': 1,
+            'money': 1
+        }
+        return self.requests_data(data)
 
     def detail_of_ETN(self):
         """
         ETN 상세검색 [13208]
+        not now
         """
         pass
+
 
     def product_consisting_of_index(self):
         """
         기초지수 구성요소 [13209]
         """
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT07601',
+            'tboxisuCd_finder_secuprodisu2_2': self.data_nm,
+            'isuCd': self.data_cd,
+            'isuCd2': self.data_tp,
+            'codeNmisuCd_finder_secuprodisu2_2': self.data_nm,
+            'trdDd': self.day
+        }
+        return self.requests_data(data)
 
     def credit_and_NCR(self):
         """
         발행사 신용등급 및 NCR [13210]
         """
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT07701',
+            'tboxisuCd_finder_secuprodisu2_3': f'{self.data_tp}/{self.data_nm}',
+            'isuCd': self.data_cd,
+            'codeNmisuCd_finder_secuprodisu2_3': self.data_nm
+        }
+        return self.requests_data(data)
 
     def risk_of_credit(self):
         """
         발행사 신용위험지표 [13211]
         """
-        pass
+        issuing_map = {
+            "KB증권": "00345",
+            "NH투자증권": "00594",
+            "노무라": "12928",
+            "대신증권": "00354",
+            "미래에셋대우": "00680",
+            "삼성증권": "01636",
+            "신영증권": "00172",
+            "신한투자": "00867",
+            "한국증권": "03049",
+        }
+        issuing = issuing_map[self.issuing]
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT07801',
+            'isurCd': issuing,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        new_col_map = {
+            'INDIC_VAL_AMT': 'ENT 매출',
+            'INVST_HD_MKTCAP': 'ELW 매출',
+            'AGG_VAL': '매출합계',
+        }
+        return self.requests_data(data, new_col_map)
 
     def condition_of_early_repayment_loss_limited_ETN(self):
         """
         손실제한ETN 조기상환 조건 [13212]
         """
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT07901',
+            'isuCd': self.data_cd,
+            'trdDd': self.day
+        }
+        new_col_map = {
+            'IDX_IND_NM': '기초지수',
+            'CLSPRC_IDX': '현재기초지수수준'
+
+        }
+        return self.requests_data(data, new_col_map)
 
     def consideration_of_range_accurual_of_loss_limited_ETN(self):
         """
         손실제한ETN 레인지어쿠루얼 참고사항 [13213]
+        No data!!
         """
         pass
 
@@ -483,10 +644,27 @@ class ETN(Product):
         """
         괴리율 추이 [13214]
         """
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT08101',
+            'isuCd': self.data_cd,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
+
+    def trend_of_closing_differential(self):
+        """
+        장마감 괴리율 추이 [13215]
+        """
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT17201',
+            'isuCd': self.data_cd,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
+
+    def assessment_of_LP_per_quarter(self):
+        """분기별 LP 평가 [13216]"""
+        '''Web page error '''
         pass
-
-
-    '13114': self.trend_of_closing_differential,
-    '13115': self.risk_of_multi_ETF_trader,
-    '13116': self.managing_index_and_security_of_multi_ETF,
-    '13117': self.assessment_of_LP_per_quarter

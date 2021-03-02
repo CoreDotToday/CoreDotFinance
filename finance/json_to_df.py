@@ -210,8 +210,39 @@ _col_map = {
     'BAS_IDX_REL_ASSTCOM_HPAGE_ADDR': '지수산출내역링크',
     'COLTRL_ADM_ASSTCOM_HPAGE_ADDR': '담보관리정책',
     'TRACE_YD_MULT': '추적수익률 배수',
-    'TRACE_ERR_RT': '추적오차율'
-
+    'TRACE_ERR_RT': '추적오차율',
+    'PER1SECU_INDIC_VAL': '지표가치(IV)',
+    'INDIC_VAL_AMT': '지표가치총액',
+    'COMP_PRC': '대비',
+    'LSTTRD_DD': '최종거래일',
+    'TRACE_IDX_NM': '기초지수명',
+    'IDX_CALC_INST_NM': '지수산출기관',
+    'IDX_LVRG_INVRS_TP_CD': '추적배수',
+    'ETP_PROD_TP_CD': '상품구분',
+    'ISUR_NM': '발행사',
+    'EXPS_RTO': '총보수',
+    'CREDIT_GRD_CONTN': '최근신용등급_1',
+    'CREDIT_VALU_INST_NM': '최근신용평가회사_1',
+    'CREDIT_GRD_CHG_DD': '변경일_1',
+    'CREDIT_GRD_CONTN2': '최근신용등급_2',
+    'CREDIT_VALU_INST_NM2': '최근신용평가회사_2',
+    'CREDIT_GRD_CHG_DD2': '변경일_2',
+    'NUM_RTO': 'NCR 기준월말(8월)',
+    'NUM_RTO1': 'NCR 기준월 전월말',
+    'NUM_RTO2': 'NCR 기준원 전전월말',
+    'AGG_VAL': '합계',
+    'EQTYCAP': '자기자본금액',
+    'EQTYCAP_RTO': '자기자본비율',
+    'CREDIT_GRD': '신용등급',
+    'NCR': 'NCR',
+    'LOSS_LMT_ETN_EARNG_STRUCT_NM': '수익구조유형',
+    'ETN_EARY_REDMPT_CYCLE_CD_NM': '조기상환주기',
+    'STR_CONST_VAL': '조기상환조건 차수',
+    'EARY_REDMPT_VALU_DD': '조기상환조건 평가일',
+    'EARY_REDMPT_COND_REL_CD': '조기상환조건기준',
+    'EARY_REDMPT_PRC': '조기상환가격(제비용차감젙)',
+    'DIFF_PRC': '차이',
+    'CMP_RTO2': '버퍼'
 }
 
 
@@ -229,7 +260,7 @@ def convert(data, new_col_map):
         for k, v in d.items():
             try:
                 column_in_kor[col_map[k]] = v
-                #  column_in_kor[k] = v  # In order to check origin column name
+                column_in_kor[k] = v  # In order to check origin column name
             except:
                 if k in ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID', 'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR', 'ETF_ISU_CD']:
                     ignored.add(k)

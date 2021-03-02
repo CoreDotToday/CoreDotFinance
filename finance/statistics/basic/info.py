@@ -27,6 +27,7 @@ class Info:
         r = requests.post(self.url, data=data, headers=self.headers)
         data = json.loads(r.content)
 
+
         return data, new_col_map
 
     def read(self):

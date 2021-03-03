@@ -14,7 +14,7 @@ stock_code_list_others = [str(code) for code in range(12013, 12020)]
 stock_code_list_detail = [str(code) for code in range(12020, 12029)]
 product_code_list_ETF = [str(code) for code in range(13101, 13118)]
 product_code_list_ETN = [str(code) for code in range(13201, 13217)]
-product_code_list_ELW = [str(code) for code in range(13301, 13314)]
+product_code_list_ELW = [str(code) for code in range(13301, 13313)]
 
 stock_code_list = [code for code in range(12001, 120029)]
 product_code_list = [code for code in range(13001, 13313)]

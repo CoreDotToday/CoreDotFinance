@@ -26,6 +26,9 @@ class Product(Info):
             auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etf&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etf_autocomplete'
         elif product_type == 'etn':
             auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etn&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etn_autocomplete'
+        elif product_type == 'elw':
+            auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_elw&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_elw_autocomplete'
+
         response = requests.get(auto_complete_url.format(product=product))
         soup = bs(response.content, 'html.parser').li
 
@@ -666,5 +669,257 @@ class ETN(Product):
 
     def assessment_of_LP_per_quarter(self):
         """분기별 LP 평가 [13216]"""
+        '''Web page error '''
+        pass
+
+class ELW(Product):
+    def __init__(self, code, start, end, day, product, **kwargs):
+        code_to_function = {
+            '13301': self.price_of_entire_items,
+            '13302': self.trend_of_item,
+            '13303': self.info_of_entire_items,
+            '13304': self.entire_info_of_item,
+            '13305': self.trade_performance_per_investor,
+            '13306': self.trade_performance_per_basic_asset,
+            '13307': self.item_of_residual_expiration_status,
+            '13308': self.item_of_beneficial_expiration_status,
+            '13309': self.approach_level_of_early_close,
+            '13310': self.log_of_early_close,
+            '13311': self.status_of_floating_per_basic_asset,
+            '13312': self.status_of_floating_per_issuing,
+            '13313': self.assessment_of_LP_per_quarter
+        }
+        super(ELW, self).__init__(code, start, end, day, product, 'elw', code_to_function)
+        self.kwargs = kwargs
+        self.inquiry = self.kwargs.get('inquiry', None)
+        self.val_vol = self.kwargs.get('val_vol', None)
+        self.trade = self.kwargs.get('trade', None)
+        self.basic_asset = self.kwargs.get('basic_asset', None)
+
+    def price_of_entire_items(self):
+        """전종목 시세[13301]"""
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT08301',
+            'trdDd': self.day
+        }
+        new_col_map = {
+            'LIST_SHRS': '상장증권수',
+            'FLUC_TP_CD1': '증감',
+            'CMPPREVDD_PRC1': '대비'
+        }
+        return self.requests_data(data, new_col_map)
+
+    def trend_of_item(self):
+        """개별종목 시세 추이[13302]"""
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT08401',
+            'tboxisuCd_finder_secuprodisu3_34': f'{self.data_tp}/{self.data_nm}',
+            'isuCd': self.data_cd,
+            'isuCd2': self.data_tp,
+            'codeNmisuCd_finder_secuprodisu3_34': self.data_nm,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        new_col_map = {
+            'TDD_CLSPRC': '증감',
+            'LIST_SHRS': '상장증권수',
+            'CMPPREVDD_PRC1': '대비'
+        }
+        return self.requests_data(data, new_col_map)
+
+    def info_of_entire_items(self):
+        """전종목 기본정보[13303]
+        """
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT08501'
+        }
+        return self.requests_data(data)
+
+    def entire_info_of_item(self):
+        """개별종목 종합정보[13304]
+        Not now"""
+        pass
+
+    def trade_performance_per_investor(self):
+        """투자자별 거래실적[13305]"""
+        inquiry_map = {
+            '기간합계': 1,
+            '일별추이': 2,
+        }
+        valvol_map = {
+            '거래대금': 1,
+            '거래량': 2,
+        }
+        trade_map = {
+            '순매수': 1,
+            '매수': 2,
+            '매도': 3
+        }
+        if self.inquiry == '일별추이':
+            val_vol = valvol_map[self.val_vol]
+            trade = trade_map[self.trade]
+        else:
+            val_vol, trade = None, None
+
+        inquiry = inquiry_map[self.inquiry]
+
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0870{inquiry}',
+            'inqTpCd': inquiry,
+            'inqCondTpCd1': val_vol,
+            'inqCondTpCd2': trade,
+            'strtDd': self.start,
+            'endDd': self.end
+                }
+        return self.requests_data(data)
+
+    def trade_performance_per_basic_asset(self):
+        """기초자산별 거래실적[13306]"""
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT08801',
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        new_col_map = {
+            'ISU_CNT1': 'CALL 종목수',
+            'TRDVOL1': 'CALL 거래량',
+            'TRDVAL1': 'CALL 거래대금',
+            'ISU_CNT2': 'PUT 종목수',
+            'TRDVOL2': 'PUT 거래량',
+            'TRDVAL2': 'PUT 거래대금'
+        }
+        return self.requests_data(data, new_col_map)
+
+    def item_of_residual_expiration_status(self):
+        """개별종목 잔존만기현황[13307]"""
+        inquiry_map = {
+            '전체': 'T',
+            '일반': 1,
+            '조기종료': 2
+        }
+        if self.inquiry == None:
+            inquiry = inquiry_map['전체']
+        else:
+            inquiry = inquiry_map[self.inquiry]
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT08901',
+            'elwEoTpCd': inquiry,
+            'trdDd': self.day
+        }
+        return self.requests_data(data)
+
+    def item_of_beneficial_expiration_status(self):
+        """개별종목 만기손익현황[13308]"""
+        inquiry_map = {
+            '전체': 'T',
+            '일반': 1,
+            '조기종료': 2
+        }
+        if self.inquiry == None:
+            inquiry = inquiry_map['전체']
+        else:
+            inquiry = inquiry_map[self.inquiry]
+
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT09001',
+            'elwEoTpCd': inquiry,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        new_col_map = {
+            'ULY_NM2': '기초자산면'
+        }
+        return self.requests_data(data, new_col_map)
+
+
+    def approach_level_of_early_close(self):
+        """조기종료 접근[13309]"""
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT09201',
+            'trdDd': self.day
+        }
+        return self.requests_data(data)
+
+    def log_of_early_close(self):
+        """조기종료 발생내역[13310]"""
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT09301',
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
+
+    def status_of_floating_per_basic_asset(self):
+        """기초자산별 상장현황[13311]"""
+        inquiry_map = {
+            '전체': 'T',
+            '일반': 1,
+            '조기종료': 2
+        }
+        if self.inquiry == None:
+            inquiry = inquiry_map['전체']
+        else:
+            inquiry = inquiry_map[self.inquiry]
+
+        basic_asset_map = {
+            '유가증권시장': 1,
+            '코스닥시장': 2,
+            '해외지수': 9,
+            '전체': 'T'
+        }
+        if self.basic_asset is None:
+            basic_asset = basic_asset_map['전체']
+        else:
+            basic_asset = basic_asset_map[self.basic_asset]
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT09401',
+            'elwRghtTpKindCd': inquiry,
+            'elwUlyTpCd': basic_asset,
+            'trdDd': self.day
+        }
+        new_col_map = {
+            'CALL_CNT': '상장종목수/CALL',
+            'PUT_CNT': '상장종목수/PUT',
+            'ETC_CNT': '상장종목수/기타',
+            'TOT_CNT': '상장종목수/합계',
+            'CALL_TRDFORM_CNT': '거래형성종목수/CALL',
+            'PUT_TRDFORM_CNT': '거래형성종목수/PUT'
+        }
+        return self.requests_data(data, new_col_map)
+
+    def status_of_floating_per_issuing(self):
+        """발행사별 상장현황[13312]"""
+        inquiry_map = {
+            '전체': 'T',
+            '일반': 1,
+            '조기종료': 2
+        }
+        if self.inquiry == None:
+            inquiry = inquiry_map['전체']
+        else:
+            inquiry = inquiry_map[self.inquiry]
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT09501',
+            'elwEoTpCd': inquiry,
+            'trdDd': self.day
+        }
+        new_col_map = {
+            'LIST_ISU_CNT1': '주식/CALL',
+            'LIST_ISU_CNT2': '주식/PUT',
+            'LIST_ISU_CNT3': '주식/합계',
+            'LIST_ISU_CNT4': '주식바스켓/CALL',
+            'LIST_ISU_CNT5': '주식바스켓/PUT',
+            'LIST_ISU_CNT6': '주식바스켓/소계',
+            'LIST_ISU_CNT7': '주가지수/CALL',
+            'LIST_ISU_CNT8': '주가지수/PUT',
+            'LIST_ISU_CNT9': '주가지수/소계',
+            'LIST_ISU_CNT10': '합계/CALL',
+            'LIST_ISU_CNT11': '합계/PUT',
+            'LIST_ISU_CNT12': '합계/소계'
+        }
+        return self.requests_data(data, new_col_map)
+
+    def assessment_of_LP_per_quarter(self):
+        """분기별 LP 평가 [13313]"""
         '''Web page error '''
         pass

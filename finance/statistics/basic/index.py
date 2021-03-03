@@ -7,7 +7,6 @@ from finance.statistics.basic.info import Info
 class Index(Info):
     pass
 
-
 class StockIndex(Index):
     def __init__(self, code, start, end, day, division, ind_name):
         """ 주가지수
@@ -18,7 +17,7 @@ class StockIndex(Index):
         :param division:
         :param ind_name:
         """
-        super(StockIndex, self).__init__(code, start, end, day)
+        super(StockIndex, self).__init__(start, end, day)
 
         code_to_function = {
             '11001': self.price_of_entire_index,

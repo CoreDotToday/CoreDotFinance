@@ -12,9 +12,15 @@ stock_code_list_info = ['12005', '12006', '12007']
 stock_code_list_trade = [str(code) for code in range(12008, 12013)]
 stock_code_list_others = [str(code) for code in range(12013, 12020)]
 stock_code_list_detail = [str(code) for code in range(12020, 12029)]
+
 product_code_list_ETF = [str(code) for code in range(13101, 13118)]
 product_code_list_ETN = [str(code) for code in range(13201, 13217)]
 product_code_list_ELW = [str(code) for code in range(13301, 13313)]
+
+bond_code_list_price = ['14001', '14002']
+bond_code_list_info = ['14003', '14004']
+bond_code_list_trade = ['14005', '14006', '14007', '14008']
+bond_code_list_detail = []
 
 stock_code_list = [code for code in range(12001, 120029)]
 product_code_list = [code for code in range(13001, 13313)]

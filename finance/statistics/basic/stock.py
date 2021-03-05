@@ -52,11 +52,11 @@ class Stock(Info):
         # ER/PBR/배당수익률(개별종목) [12021] 을 위한 전종목 기본정보 [12005] 데이터
         request_data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
-            'mktId': 'ALL',
-            'share': 1,
+            'mktId': '전체'
         }
         data = self.requests_data(request_data)
-        for i in data['OutBlock_1']:
+        #print(data)
+        for i in data[0]['OutBlock_1']:
             if i['ISU_SRT_CD'] == str(stk_code):
                 return i['ISU_ABBRV']
 
@@ -372,6 +372,7 @@ class TradePerform(Stock):
         }
         return self.requests_data(data)
 
+
 class OtherSecurity(Stock):
     def __init__(self, code, start, end, day, division, stk_name):
 
@@ -459,6 +460,7 @@ class OtherSecurity(Stock):
         }
         return self.requests_data(data)
 
+
 class Detail(Stock):
     def __init__(self, code, start, end, day, division, stk_name, **kwargs):
 
@@ -511,6 +513,13 @@ class Detail(Stock):
         isuLmtRto = kwargs.get('no_foreign_only', None)
         business = kwargs.get('business', None)
 
+        # info.py 에서 input_to_value가 동작하는지 테스트 해본다
+        self.search_type_test = kwargs.get('search_type', '전종목')
+        self.isuLmtRto_test = kwargs.get('no_foreign_only', None)
+        self.business_test = kwargs.get('business', None)
+        print(self.business_test)
+        ############################################
+
         self.company = kwargs.get('company', None)
         self.certificate = kwargs.get('certificate', None)
 
@@ -532,6 +541,20 @@ class Detail(Stock):
             'bld': f'dbms/MDC/STAT/standard/MDCSTAT0350{n}',
             'searchType': n,
             'mktId': self.division_category[self.division],
+            'trdDd': self.day,
+            'tboxisuCd_finder_stkisu0_0': f'{self.isuCd2}/{self.item_name}',
+            'isuCd': self.isuCd,
+            'isuCd2': self.isuCd,
+            'codeNmisuCd_finder_stkisu0_0': self.item_name,
+            'param1isuCd_finder_stkisu0_0': self.division_category[self.division],
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        ####### test ######
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT03501',
+            'searchType': self.search_type_test,
+            'mktId': self.division,
             'trdDd': self.day,
             'tboxisuCd_finder_stkisu0_0': f'{self.isuCd2}/{self.item_name}',
             'isuCd': self.isuCd,
@@ -599,6 +622,21 @@ class Detail(Stock):
             'share': 2,
             'money': 3
         }
+
+        #### test #####
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT03801',
+            'searchType': self.search_type_test,
+            'mktId': self.division,
+            'trdDd': self.day,
+            'idxIndCd': self.business_test,
+            'strtDd': self.start,
+            'endDd': self.end,
+            'share': 2,
+            'money': 3
+        }
+        print(data)
+        ##############################
         return self.requests_data(data)
 
     def stock_and_business_table(self):
@@ -638,6 +676,22 @@ class Detail(Stock):
             'strtDd': self.start,
             'endDd': self.end
         }
+        ######### test ##########
+
+        data = {
+            'bld': f'dbms/MDC/STAT/standard/MDCSTAT04001',
+            'searchType': self.search_type_test,
+            'mktId': self.division,
+            'trdDd': self.day,
+            'tboxisuCd_finder_stkisu0_1': f'{self.isuCd2}/{self.item_name}',
+            'isuCd': self.isuCd,
+            'isuCd2': self.isuCd2,
+            'codeNmisuCd_finder_stkisu0_1': self.item_name,
+            'param1isuCd_finder_stkisu0_1': 'STK',
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+
         return self.requests_data(data)
 
     def substitution_price_of_beneficiary_certificate(self):

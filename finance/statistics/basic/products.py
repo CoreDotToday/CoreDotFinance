@@ -17,9 +17,9 @@ class Product(Info):
         super(Product, self).__init__(start, end, day)
         self.function = code_to_function[code]
         self.product = product
-        self.data_cd, self.data_nm, self.data_tp = self.init_product_(product, product_type)
+        self.data_cd, self.data_nm, self.data_tp = self.autocomplete(product, product_type)
 
-    def init_product_(self, product, product_type):
+    def autocomplete(self, product, product_type):
         if product is None:
             return None, None, None
         if product_type == 'etf':
@@ -28,6 +28,7 @@ class Product(Info):
             auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etn&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etn_autocomplete'
         elif product_type == 'elw':
             auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_elw&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_elw_autocomplete'
+
 
         response = requests.get(auto_complete_url.format(product=product))
         soup = bs(response.content, 'html.parser').li

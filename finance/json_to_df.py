@@ -270,7 +270,16 @@ _col_map = {
     'EXP_VALU_PRC': '만기평가가격',
     'LP_MBR_NM': 'LP명',
     'ELW_PAY_DD': '지급일',
-    'ELW_RGHT_TP': 'CALL/PUT'
+    'ELW_RGHT_TP': 'CALL/PUT',
+    'BND_EXP_TP_NM': '만기년수',
+    'GOVBND_ISU_TP_NM': '종목구분',
+    'CLSPRC_YD': '종가 수익률',
+    'OPNPRC': '시가',
+    'OPNPRC_YD': '시가 수익률',
+    'HGPRC': '고가',
+    'HGPRC_YD': '고가 수익률',
+    'LWPRC': '저가',
+    'LWPRC_YD': '저가 수익률'
 }
 
 

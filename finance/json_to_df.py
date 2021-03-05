@@ -279,7 +279,12 @@ _col_map = {
     'HGPRC': '고가',
     'HGPRC_YD': '고가 수익률',
     'LWPRC': '저가',
-    'LWPRC_YD': '저가 수익률'
+    'LWPRC_YD': '저가 수익률',
+
+
+
+    'BND_CLSS_NM1': '구분1',
+    'BND_CLSS_NM2': '구분2'
 }
 
 
@@ -297,7 +302,7 @@ def convert(data, new_col_map):
         for k, v in d.items():
             try:
                 column_in_kor[col_map[k]] = v
-                column_in_kor[k] = v  # In order to check origin column name
+                # column_in_kor[k] = v  # In order to check origin column name
             except:
                 if k in ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID', 'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR', 'ETF_ISU_CD']:
                     ignored.add(k)

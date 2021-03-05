@@ -36,7 +36,7 @@ class Info:
         return data, new_col_map
 
     def input_to_value(self, soup, data):
-        print(data)
+        # print(data)
         anwser_map = self.get_answer_map(soup)
         for key in data.keys():
             inner = anwser_map.get(key, None)
@@ -54,7 +54,7 @@ class Info:
             bld = data['bld']
             new_bld = bld[:-1] + searchtype
             data['bld'] = new_bld
-            print(data)
+            # print(data)
         return data
 
     def get_jsp_soup(self, data):
@@ -118,7 +118,7 @@ class Info:
                 no_use.append(key)
         for no in no_use:
             answer.pop(no)
-        print(answer)
+        # print(answer)
         return answer
 
     def function_(self, s):

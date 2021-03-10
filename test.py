@@ -3,5 +3,6 @@ import finance
 from finance.statistics.basic.index import Index
 import datetime
 
-data = finance.data_reader('14005', market='전체', inquiry='채권유형별')
+data = finance.data_reader('14020', inquiry='개별추이', product='금호')
+
 print(data)

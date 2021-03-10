@@ -283,8 +283,8 @@ _col_map = {
 
 
 
-    'BND_CLSS_NM1': '구분1',
-    'BND_CLSS_NM2': '구분2'
+    'BND_CLSS_NM1': '구분1',  # <- row map
+    'BND_CLSS_NM2': '구분2'  # <- row map
 }
 
 
@@ -304,7 +304,7 @@ def convert(data, new_col_map):
                 column_in_kor[col_map[k]] = v
                 # column_in_kor[k] = v  # In order to check origin column name
             except:
-                if k in ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID', 'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR', 'ETF_ISU_CD']:
+                if k in ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID', 'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR', 'ETF_ISU_CD', 'BND_CLSS_CD', 'NUSUAL_ISU_COND_CONTN']:
                     ignored.add(k)
                     continue
                 column_in_kor[k] = v

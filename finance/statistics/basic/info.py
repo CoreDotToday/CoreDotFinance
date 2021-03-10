@@ -37,12 +37,12 @@ class Info:
 
     def input_to_value(self, soup, data):
         # print(data)
-        anwser_map = self.get_answer_map(soup)
+        answer_map = self.get_answer_map(soup)
         for key in data.keys():
-            inner = anwser_map.get(key, None)
+            inner = answer_map.get(key, None)
             if inner is not None:
                 user_input = data[key]
-                value = inner[user_input]
+                value = inner.get(user_input, None)
                 data[key] = value
 
         if 'searchType' in data.keys():
@@ -65,11 +65,27 @@ class Info:
         soup = bs(html.content, 'html.parser')
         return soup, tag
 
-    def find_column_name(self, soup, tag):
-        a = soup.find('div', {'id': f'jsGrid_{tag}_0'}).thead
-        b = a.find_all('th')
+    def find_table_name(self, soup, tag):
+        tbody = soup.find('table', {'id': f'jsGrid_{tag}_0'}).tbody
         dic = {}
-        for i in b:
+        for tr in tbody.find_all('tr'):
+            th = tr.find_all('th')
+            td = tr.find_all('td')
+            for name, id in zip(th, td):
+                dic[id.attrs['data-bind']] = name.text
+        return dic
+
+
+    def find_column_name(self, soup, tag):
+        try:
+            thead = soup.find('div', {'id': f'jsGrid_{tag}_0'}).thead
+        except:
+            #table 형태의 데이터 (ex. 채권/세부안내/상장현황/상장채권 발행정보)
+            return self.find_table_name(soup, tag)
+
+        th = thead.find_all('th')
+        dic = {}
+        for i in th:
             dic[i.attrs['name']] = {
                 'text': i.text,
                 'parent': i.attrs.get('parent', None)
@@ -81,7 +97,7 @@ class Info:
             if p is not None:
                 child_name = dic[key]['text']
                 parent_name = dic[p]['text']
-                dic[key]['text'] = f'{parent_name}{child_name}'
+                dic[key]['text'] = f'{parent_name} {child_name}'
                 p_list.add(p)
         [dic.pop(p) for p in p_list]
         for d in dic:
@@ -92,7 +108,6 @@ class Info:
         select = soup.find_all('select')
         label = soup.find_all('label')
         input_ = soup.find_all('input')
-
         label_map = {}
         for i in label:
             label_map[i.attrs['for']] = i.text
@@ -106,9 +121,14 @@ class Info:
                     inner[text] = i.attrs['value']
 
         for s in select:
-            if s.attrs['class'] == ['selectbox']:
+            if s.attrs.get('class', None) == ['selectbox']:
                 result = self.function_(s)
                 answer[s.attrs['name']] = result
+            elif s.find_all('option') != '':
+                dic = {}
+                for option in s.find_all('option'):
+                    dic[option.text] = option.attrs['value']
+                answer[s.attrs['name']] = dic
             else:
                 answer[s.attrs['name']] = {s.text: s.next.attrs['value']}
 

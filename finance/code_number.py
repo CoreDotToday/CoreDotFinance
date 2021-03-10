@@ -20,7 +20,7 @@ product_code_list_ELW = [str(code) for code in range(13301, 13313)]
 bond_code_list_price = ['14001', '14002']
 bond_code_list_info = ['14003', '14004']
 bond_code_list_trade = ['14005', '14006', '14007', '14008']
-bond_code_list_detail = []
+bond_code_list_detail = [str(code) for code in range(14009, 14028)]
 
 stock_code_list = [code for code in range(12001, 120029)]
 product_code_list = [code for code in range(13001, 13313)]

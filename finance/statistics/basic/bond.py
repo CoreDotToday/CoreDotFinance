@@ -12,7 +12,8 @@ class Bond(Info):
     def autocomplete(self, product, code):
         if product is None:
             return None, None, None
-        if code in ['14011']:
+        if code in ['14011', '14021', '14023']:
+            #  발행기관명
             auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_bndordisu' \
                                 '&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder' \
                                 '%2Ffinder_bndordisu_autocomplete'
@@ -298,7 +299,7 @@ class Detail(Bond):
         return self.requests_data(data)
 
     def substitution_price_of_bond(self):
-        """채권 대용가 [14020]"""????
+        """채권 대용가 [14020]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT11701',
             'searchType': self.inquiry,
@@ -310,33 +311,84 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return None  # 위 기능같은 경우, 개별추이를 선택했을 때 2개의 data(각각 bld가 다르다)를 요청해 결과를 받는다.
 
     def substitution_price_of_bond_per_issuer(self):
         """발행기관별 채권 대용가 [14021]"""
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT11801',
+            'tboxisurCd_finder_bndordisu0_1': f'{self.data_tp}/{self.data_nm}',
+            'isurCd': self.data_tp,
+            'isurCd2': self.data_tp,
+            'codeNmisurCd_finder_bndordisu0_1': self.data_nm,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
 
     def substitution_price_of_bond_per_type(self):
         """유형별 채권 대용가 [14022]"""
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT11901',
+            'bndTpCd': self.bond_type,
+            'bndClssCd': self.inquiry,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
 
     def credit_per_issuer(self):
         """발행기관별 신용등급 [14023]"""
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT12001',
+            'tboxisurCd_finder_bndordisu0_14': f'{self.data_tp}/{self.data_nm}',
+            'isurCd': self.data_tp,
+            'isurCd2': self.data_tp,
+            'codeNmisurCd_finder_bndordisu0_14': self.data_nm,
+            'creditValuInstCd': self.inquiry,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return  self.requests_data(data)
 
     def publication_situation_per_credit(self):
         """신용등급별 상장현황 [14024]"""
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT12101',
+            'creditValuInstCd': self.inquiry,
+            'trdDd': self.day
+        }
+        return self.requests_data(data)
 
     def investment_index_of_convertible_bond(self):
         """전환사채 투자지표 [14025]"""
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT12201',
+            'trdDd': self.day
+        }
+        return self.requests_data(data)
 
     def exercise_of_right_of_bond_about_stock(self):
         """주식관련채권 권리행사 [14026]"""
-        pass
+        # 'bld': 'dbms/MDC/STAT/standard/MDCSTAT12301' 을 데이터로 사용하면 전체 데이터가 출력된다.
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT12302',
+            'tboxisuCd_finder_bondisu0_17': f'{self.data_cd}/{self.data_nm}',
+            'isuCd': self.data_cd,
+            'isuCd2': self.data_cd,
+            'param1isuCd_finder_bondisu0_17': 2,
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
 
     def strike_price_of_bond_about_stock(self):
         """주식관련채권 행사가액 [14027]"""
-        pass
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT12401',
+            'strtDd': self.start,
+            'endDd': self.end
+        }
+        return self.requests_data(data)
+
 

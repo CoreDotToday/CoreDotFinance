@@ -36,7 +36,6 @@ class Info:
         return data, new_col_map
 
     def input_to_value(self, soup, data):
-        # print(data)
         answer_map = self.get_answer_map(soup)
         for key in data.keys():
             inner = answer_map.get(key, None)
@@ -54,7 +53,6 @@ class Info:
             bld = data['bld']
             new_bld = bld[:-1] + searchtype
             data['bld'] = new_bld
-            # print(data)
         return data
 
     def get_jsp_soup(self, data):
@@ -121,7 +119,8 @@ class Info:
                     inner[text] = i.attrs['value']
 
         for s in select:
-            if s.attrs.get('class', None) == ['selectbox']:
+            if s.attrs.get('class', None) == 'selectbox' \
+                    or s.attrs.get('name', None) == 'bndClssCd': # [14021]
                 result = self.function_(s)
                 answer[s.attrs['name']] = result
             elif s.find_all('option') != '':
@@ -138,7 +137,6 @@ class Info:
                 no_use.append(key)
         for no in no_use:
             answer.pop(no)
-        # print(answer)
         return answer
 
     def function_(self, s):

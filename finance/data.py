@@ -3,6 +3,7 @@ from finance.statistics.basic import stock
 from finance.statistics.basic.stock import OtherSecurity, Detail
 from finance.statistics.basic.products import ELW, ETN, ETF
 from finance.statistics.basic import bond
+from finance.statistics.basic.commodity import Oil, Gold, CarbonEmission
 from finance.code_number import *
 from finance.json_to_df import convert
 
@@ -46,6 +47,13 @@ def data_reader(code, start=None, end=None, day=None,
         df, new_col_map = bond.TradePerform(code, start, end, day, product, **kwargs).read()
     elif code in bond_code_list_detail:
         df, new_col_map = bond.Detail(code, start, end, day, product, **kwargs).read()
+
+    elif code in commodities_code_list_oil:
+        df, new_col_map = Oil(code, start, end, day, product, **kwargs).read()
+    elif code in commodities_code_list_gold:
+        df, new_col_map = Gold(code, start, end, day, product, **kwargs).read()
+    elif code in commodities_code_list_carbonemission:
+        df, new_col_map = CarbonEmission(code, start, end, day, product, **kwargs).read()
 
     else:
         raise ValueError(f"No function code, [{code}]")

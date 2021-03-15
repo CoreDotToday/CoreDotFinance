@@ -22,10 +22,10 @@ bond_code_list_info = ['14003', '14004']
 bond_code_list_trade = ['14005', '14006', '14007', '14008']
 bond_code_list_detail = [str(code) for code in range(14009, 14028)]
 
-stock_code_list = [code for code in range(12001, 120029)]
-product_code_list = [code for code in range(13001, 13313)]
-bond_code_list = [code for code in range(14001, 14028)]
-derivative_code_list = [code for code in range(15001, 15018)]
+derivative_code_list_price = ['15001', '15002', '15003']
+derivative_code_list_info = ['15004', '15005']
+derivative_code_list_trade = ['15006', '15007', '15008', '15009']
+derivative_code_list_detail = [str(code) for code in range(15010, 15017)]
 
 #code_list = [code for code in code_to_menuId.keys()]
 

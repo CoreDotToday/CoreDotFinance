@@ -281,10 +281,9 @@ _col_map = {
     'LWPRC': '저가',
     'LWPRC_YD': '저가 수익률',
 
-
-
     'BND_CLSS_NM1': '구분1',  # <- row map
-    'BND_CLSS_NM2': '구분2'  # <- row map
+    'BND_CLSS_NM2': '구분2',  # <- row map
+
 }
 
 

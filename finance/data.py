@@ -13,6 +13,7 @@ def data_reader(code, start=None, end=None, day=None,
                 adj_price=False, investor=None, product=None,
                 options=[], **kwargs):
     # assert f"{code}" in code_list, "Wrong code number"
+
     if code in index_code_list_stock:
         df, new_col_map = StockIndex(code, start, end, day, division, ind_name).read()
     elif code in index_code_list_bond:

@@ -28,13 +28,13 @@ class Info:
         data['csvxls_isNo'] = 'false'
 
         jsp_soup, tag = self.get_jsp_soup(data)
-        new_col_map = self.find_column_name(jsp_soup, tag)
+        column_map = self.get_column_map(jsp_soup, tag)
         modified_data = self.input_to_value(jsp_soup, data)
-        print(modified_data)
         r = requests.post(self.url, data=modified_data, headers=self.headers)
+        print(modified_data)
         data = json.loads(r.content)
 
-        return data, new_col_map
+        return data, column_map
 
     def input_to_value(self, soup, data):
         answer_map = self.get_answer_map(soup)
@@ -58,45 +58,54 @@ class Info:
 
     def get_jsp_soup(self, data):
         bld = data['bld']
-        tag = bld.split('/')[-1][:-2]
-        url = f'http://data.krx.co.kr/contents/MDC/STAT/standard/{tag}.jsp'
+        jsp_filename = bld.split('/')[-1][:-2]
+        url = f'http://data.krx.co.kr/contents/MDC/STAT/standard/{jsp_filename}.jsp'
         html = requests.get(url)
         soup = bs(html.content, 'html.parser')
-        return soup, tag
+        return soup, jsp_filename
 
-    def find_table_name(self, soup, tag):
+    def get_table_map(self, table_tag):
         dic = {}
-        table_soup = soup.find('table', {'id': f'jsGrid_{tag}_0'})
-        if table_soup:
-            for tr in table_soup.find_all('tr'):
-                th = tr.find_all('th')
-                td = tr.find_all('td')
-                for name, id in zip(th, td):
-                    dic[id.attrs['data-bind']] = name.text
-
-        thead = soup.find('div', {'id': f'jsGrid_{tag}_1'})  # [15013] 돈육시세 동향에서 추가한 코
-        if thead:
-            for th in thead.find_all('th'):
-                dic[th.attrs['name']] = th.text
-
+        for tr in table_tag.find_all('tr'):
+            th = tr.find_all('th')
+            td = tr.find_all('td')
+            for name, id in zip(th, td):
+                dic[id.attrs['data-bind']] = name.text
         return dic
 
+    def get_column_map(self, soup, jsp_filename):
+        table_tag = soup.find('table', {'id': f'jsGrid_{jsp_filename}_0'})
+        div_tag_0 = soup.find('div', {'id': f'jsGrid_{jsp_filename}_0'})
+        div_tag_1 = soup.find('div', {'id': f'jsGrid_{jsp_filename}_1'})
 
-    def find_column_name(self, soup, tag):
-        try:
-            thead = soup.find('div', {'id': f'jsGrid_{tag}_0'}).thead
-            assert thead is not None
-        except:
-            #table 형태의 데이터 (ex. 채권/세부안내/상장현황/상장채권 발행정보)
-            return self.find_table_name(soup, tag)
+        map = {}
+        if table_tag:
+            table_map = self.get_table_map(table_tag)
+            map.update(table_map)
+        if div_tag_0:
+            div_map_0 = self.get_div_map(div_tag_0)
+            map.update(div_map_0)
+        if div_tag_1:
+            div_map_1 = self.get_div_map(div_tag_1)
+            map.update(div_map_1)
+        print(jsp_filename)
+        return map
 
-        th = thead.find_all('th')
+    def get_div_map(self, div_tag):
+        thead = div_tag.thead
+        if thead is None:
+            return {}
+        tag_list = []
+        tag_list.extend(thead.find_all('th'))
+        tag_list.extend(thead.find_all('td'))
+
         dic = {}
-        for i in th:
+        for i in tag_list:
             dic[i.attrs['name']] = {
                 'text': i.text,
                 'parent': i.attrs.get('parent', None)
             }
+
         p_list = set()
         for key in dic:
             p = dic[key]['parent']
@@ -132,8 +141,7 @@ class Info:
         for select_tag in select:
             if select_tag.attrs.get('class', None) == 'selectbox' \
                     or select_tag.attrs.get('name', None) in ['bndClssCd', 'prodId', 'isuCd']: # [14021], [15001], [15007]
-                print('efrb')
-                result = self.efrb(select_tag)
+                result = self.execute_for_resource_bundle(select_tag)
                 answer[select_tag.attrs['name']] = result
             elif select_tag.find_all('option') != '':
                 dic = {}
@@ -152,7 +160,7 @@ class Info:
         print(answer)
         return answer
 
-    def efrb(self, s):
+    def execute_for_resource_bundle(self, s):
         the_script = s.next.next
         extaction = str(the_script).split('baseName:')[1].split('}')[0]
         for e in extaction.split('\''):

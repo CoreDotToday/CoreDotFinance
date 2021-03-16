@@ -33,6 +33,8 @@ commodity_code_list_oil = [str(code) for code in range(16101, 16106)]
 commodity_code_list_gold = [str(code) for code in range(16201, 16208)]
 commodity_code_list_carbonemission = [str(code) for code in range(16301, 16305)]
 
+oversees_code_list_euro = [str(code) for code in range(17101, 17109)]
+
 #code_list = [code for code in code_to_menuId.keys()]
 
 

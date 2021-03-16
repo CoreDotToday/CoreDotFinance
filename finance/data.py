@@ -3,7 +3,7 @@ from finance.statistics.basic import stock
 from finance.statistics.basic.stock import OtherSecurity, Detail
 from finance.statistics.basic.products import ELW, ETN, ETF
 from finance.statistics.basic.commodity import Oil, Gold, CarbonEmission
-from finance.statistics.basic import bond, derivative
+from finance.statistics.basic import bond, derivative, oversees
 from finance.code_number import *
 from finance.json_to_df import convert
 
@@ -16,59 +16,62 @@ def data_reader(code, start=None, end=None, day=None,
     # assert f"{code}" in code_list, "Wrong code number"
 
     if code in index_code_list_stock:
-        df, new_col_map = StockIndex(code, start, end, day, division, ind_name).read()
+        data_json, column_map = StockIndex(code, start, end, day, division, ind_name).read()
     elif code in index_code_list_bond:
-        df, new_col_map = BondIndex(code, start, end, day, division).read()
+        data_json, column_map = BondIndex(code, start, end, day, division).read()
     elif code in index_code_list_derivation:
-        df, new_col_map = DerivationIndex(code, start, end, day, division, ind_name).read()
+        data_json, column_map = DerivationIndex(code, start, end, day, division, ind_name).read()
 
     elif code in stock_code_list_item:
-        df, new_col_map = stock.ItemPrice(code, start, end, day, division, adj_price, stk_name).read()
+        data_json, column_map = stock.ItemPrice(code, start, end, day, division, adj_price, stk_name).read()
     elif code in stock_code_list_info:
-        df, new_col_map = stock.ItemInfo(code, start, end, day, division, stk_name).read()
+        data_json, column_map = stock.ItemInfo(code, start, end, day, division, stk_name).read()
     elif code in stock_code_list_trade:
-        df, new_col_map = stock.TradePerform(code, start, end, day, division, stk_name, options, investor, **kwargs).read()
+        data_json, column_map = stock.TradePerform(code, start, end, day, division, stk_name, options, investor, **kwargs).read()
     elif code in stock_code_list_others:
-        df, new_col_map = OtherSecurity(code, start, end, day, division, stk_name).read()
+        data_json, column_map = OtherSecurity(code, start, end, day, division, stk_name).read()
     elif code in stock_code_list_detail:
-        df, new_col_map = Detail(code, start, end, day, division, stk_name, **kwargs).read()
+        data_json, column_map = Detail(code, start, end, day, division, stk_name, **kwargs).read()
 
     elif code in product_code_list_ETF:
-        df, new_col_map = ETF(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = ETF(code, start, end, day, product, **kwargs).read()
     elif code in product_code_list_ETN:
-        df, new_col_map = ETN(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = ETN(code, start, end, day, product, **kwargs).read()
     elif code in product_code_list_ELW:
-        df, new_col_map = ELW(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = ELW(code, start, end, day, product, **kwargs).read()
 
     elif code in bond_code_list_price:
-        df, new_col_map = bond.ItemPrice(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = bond.ItemPrice(code, start, end, day, product, **kwargs).read()
     elif code in bond_code_list_info:
-        df, new_col_map = bond.ItemInfo(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = bond.ItemInfo(code, start, end, day, product, **kwargs).read()
     elif code in bond_code_list_trade:
-        df, new_col_map = bond.TradePerform(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = bond.TradePerform(code, start, end, day, product, **kwargs).read()
     elif code in bond_code_list_detail:
-        df, new_col_map = bond.Detail(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = bond.Detail(code, start, end, day, product, **kwargs).read()
 
     elif code in derivative_code_list_price:
-        df, new_col_map = derivative.ItemPrice(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = derivative.ItemPrice(code, start, end, day, product, **kwargs).read()
     elif code in derivative_code_list_info:
-        df, new_col_map = derivative.ItemInfo(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = derivative.ItemInfo(code, start, end, day, product, **kwargs).read()
     elif code in derivative_code_list_trade:
-        df, new_col_map = derivative.TradePerform(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = derivative.TradePerform(code, start, end, day, product, **kwargs).read()
     elif code in derivative_code_list_detail:
-        df, new_col_map = derivative.Detail(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = derivative.Detail(code, start, end, day, product, **kwargs).read()
         
     elif code in commodity_code_list_oil:
-        df, new_col_map = Oil(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = Oil(code, start, end, day, **kwargs).read()
     elif code in commodity_code_list_gold:
-        df, new_col_map = Gold(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = Gold(code, start, end, day, **kwargs).read()
     elif code in commodity_code_list_carbonemission:
-        df, new_col_map = CarbonEmission(code, start, end, day, product, **kwargs).read()
+        data_json, column_map = CarbonEmission(code, start, end, day, **kwargs).read()
+
+    elif code in oversees_code_list_euro:
+        data_json, column_map = oversees.EUREX(code, start, end, day, **kwargs).read()
 
 
     else:
         raise ValueError(f"No function code, [{code}]")
-    return convert(df, new_col_map)
+    return convert(data_json, column_map)
 
 
 # visual

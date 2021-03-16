@@ -48,11 +48,11 @@ def data_reader(code, start=None, end=None, day=None,
     elif code in bond_code_list_detail:
         df, new_col_map = bond.Detail(code, start, end, day, product, **kwargs).read()
 
-    elif code in commodities_code_list_oil:
+    elif code in commodity_code_list_oil:
         df, new_col_map = Oil(code, start, end, day, product, **kwargs).read()
-    elif code in commodities_code_list_gold:
+    elif code in commodity_code_list_gold:
         df, new_col_map = Gold(code, start, end, day, product, **kwargs).read()
-    elif code in commodities_code_list_carbonemission:
+    elif code in commodity_code_list_carbonemission:
         df, new_col_map = CarbonEmission(code, start, end, day, product, **kwargs).read()
 
     else:

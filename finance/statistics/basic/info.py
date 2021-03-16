@@ -15,7 +15,7 @@ class Info:
         self.start = a_month_ago.strftime('%Y%m%d') if start is None else str(start)
         self.end = today.strftime('%Y%m%d') if end is None else str(end)
         self.day = today.strftime('%Y%m%d') if day is None else str(day)
-
+ 
         self.headers = {
             'User-Agent':
                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15'
@@ -30,6 +30,7 @@ class Info:
         jsp_soup, tag = self.get_jsp_soup(data)
         new_col_map = self.find_column_name(jsp_soup, tag)
         modified_data = self.input_to_value(jsp_soup, data)
+        print(modified_data)
         r = requests.post(self.url, data=modified_data, headers=self.headers)
         data = json.loads(r.content)
 
@@ -64,19 +65,27 @@ class Info:
         return soup, tag
 
     def find_table_name(self, soup, tag):
-        tbody = soup.find('table', {'id': f'jsGrid_{tag}_0'}).tbody
         dic = {}
-        for tr in tbody.find_all('tr'):
-            th = tr.find_all('th')
-            td = tr.find_all('td')
-            for name, id in zip(th, td):
-                dic[id.attrs['data-bind']] = name.text
+        table_soup = soup.find('table', {'id': f'jsGrid_{tag}_0'})
+        if table_soup:
+            for tr in table_soup.find_all('tr'):
+                th = tr.find_all('th')
+                td = tr.find_all('td')
+                for name, id in zip(th, td):
+                    dic[id.attrs['data-bind']] = name.text
+
+        thead = soup.find('div', {'id': f'jsGrid_{tag}_1'})  # [15013] 돈육시세 동향에서 추가한 코
+        if thead:
+            for th in thead.find_all('th'):
+                dic[th.attrs['name']] = th.text
+
         return dic
 
 
     def find_column_name(self, soup, tag):
         try:
             thead = soup.find('div', {'id': f'jsGrid_{tag}_0'}).thead
+            assert thead is not None
         except:
             #table 형태의 데이터 (ex. 채권/세부안내/상장현황/상장채권 발행정보)
             return self.find_table_name(soup, tag)
@@ -96,10 +105,12 @@ class Info:
                 child_name = dic[key]['text']
                 parent_name = dic[p]['text']
                 dic[key]['text'] = f'{parent_name} {child_name}'
+
                 p_list.add(p)
         [dic.pop(p) for p in p_list]
         for d in dic:
             dic[d] = dic[d]['text']
+        print(dic)
         return dic
 
     def get_answer_map(self, soup):
@@ -118,18 +129,19 @@ class Info:
                 if text is not None:
                     inner[text] = i.attrs['value']
 
-        for s in select:
-            if s.attrs.get('class', None) == 'selectbox' \
-                    or s.attrs.get('name', None) == 'bndClssCd': # [14021]
-                result = self.function_(s)
-                answer[s.attrs['name']] = result
-            elif s.find_all('option') != '':
+        for select_tag in select:
+            if select_tag.attrs.get('class', None) == 'selectbox' \
+                    or select_tag.attrs.get('name', None) in ['bndClssCd', 'prodId', 'isuCd']: # [14021], [15001], [15007]
+                print('efrb')
+                result = self.efrb(select_tag)
+                answer[select_tag.attrs['name']] = result
+            elif select_tag.find_all('option') != '':
                 dic = {}
-                for option in s.find_all('option'):
+                for option in select_tag.find_all('option'):
                     dic[option.text] = option.attrs['value']
-                answer[s.attrs['name']] = dic
+                answer[select_tag.attrs['name']] = dic
             else:
-                answer[s.attrs['name']] = {s.text: s.next.attrs['value']}
+                answer[select_tag.attrs['name']] = {select_tag.text: select_tag.next.attrs['value']}
 
         no_use = []
         for key in answer.keys():
@@ -137,9 +149,10 @@ class Info:
                 no_use.append(key)
         for no in no_use:
             answer.pop(no)
+        print(answer)
         return answer
 
-    def function_(self, s):
+    def efrb(self, s):
         the_script = s.next.next
         extaction = str(the_script).split('baseName:')[1].split('}')[0]
         for e in extaction.split('\''):
@@ -148,8 +161,8 @@ class Info:
             elif 'bld' in e:
                 key = e
         market = 'kospi'
-        efrb = f'http://data.krx.co.kr/comm/bldAttendant/executeForResourceBundle.cmd?baseName={baseName}&key={key}&type={market}'
-        html = requests.get(efrb)
+        efrb_url = f'http://data.krx.co.kr/comm/bldAttendant/executeForResourceBundle.cmd?baseName={baseName}&key={key}&type={market}'
+        html = requests.get(efrb_url)
         soup = bs(html.content, 'html.parser')
         the = json.loads(str(soup))
         new = the['result']['output']

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import requests
 from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
@@ -64,10 +63,8 @@ class StockIndex(Index):
         print(f'division : {self.division}')
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT00101',
-            'idxIndMidclssCd': self.division_category[self.division],
+            'idxIndMidclssCd': self.division,
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
@@ -77,7 +74,7 @@ class StockIndex(Index):
         print(f'division : {self.division}')
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT00201',
-            'idxIndMidclssCd': self.division_category[self.division],
+            'idxIndMidclssCd': self.division,
             'strtDd': self.start,
             'endDd': self.end,
             'share': '2',

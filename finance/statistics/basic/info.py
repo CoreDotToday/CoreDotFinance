@@ -132,15 +132,14 @@ class Info:
 
         answer = {}
         for i in input_:
-            if i.attrs['value'] != '':
+            if i.attrs.get('value', None) != '':
                 inner = answer.setdefault(i.attrs['name'], {})
-                text = label_map.get(i.attrs['id'], None)
+                text = label_map.get(i.attrs.get('id', None), None)
                 if text is not None:
-                    inner[text] = i.attrs['value']
+                    inner[text] = i.attrs.get('value', None)
 
         for select_tag in select:
-            if select_tag.attrs.get('class', None) == 'selectbox' \
-                    or select_tag.attrs.get('name', None) in ['bndClssCd', 'prodId', 'isuCd']: # [14021], [15001], [15007]
+            if select_tag.attrs.get('name', None) in ['bndClssCd', 'prodId', 'isuCd', 'selecbox']: # [14021], [15001], [15007]
                 result = self.execute_for_resource_bundle(select_tag)
                 answer[select_tag.attrs['name']] = result
             elif select_tag.find_all('option') != '':

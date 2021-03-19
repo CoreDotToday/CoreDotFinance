@@ -9,7 +9,7 @@ second_column_map = {
 no_display_columns = ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID',
                       'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR', 'ETF_ISU_CD',
                       'BND_CLSS_CD', 'NUSUAL_ISU_COND_CONTN',
-                      'KRW_FLUC_TP_CD', 'OZ_FLUC_TP_CD']
+                      'KRW_FLUC_TP_CD', 'OZ_FLUC_TP_CD', 'FLUC_TP']
 
 def convert(data_json, column_map):
     global second_column_map
@@ -26,15 +26,12 @@ def convert(data_json, column_map):
                 readable_column[column_map[column]] = data_value
                 # readable_column[column] = data_value  # In order to check origin column name
             except:
-                if column in no_display_columns or column.endswith('TP_CD'):
+                if column in no_display_columns or 'TP_CD' in column:
                     ignored.add(column)
                     continue
                 readable_column[column] = data_value
                 not_in_map.add(column)  # delete try except no need to use
         readable_column_list.append(readable_column)
-    if len(not_in_map) > 0:
-        print(not_in_map)
-    if len(ignored) > 0:
-        print('ignored : ', ignored)
+    print(f'ignored{ignored}')
     return pd.json_normalize(readable_column_list)
 

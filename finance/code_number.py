@@ -3,7 +3,7 @@ import json
 #with open('finance/code_to_menuId.json', 'r', encoding='utf-8') as f:
 #    code_to_menuId = json.load(f)
 
-index_code_list_stock = ['11001', '11002', '11003', '11004', '11005', '11006', '11007_a', '11007_b']
+index_code_list_stock = ['11001', '11002', '11003', '11004', '11005', '11006', '11007']
 index_code_list_bond = ['11008', '11009']
 index_code_list_derivation = ['11010', '11011', '11012', '11013', '11014']
 

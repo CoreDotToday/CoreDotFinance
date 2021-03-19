@@ -10,24 +10,25 @@ from finance.json_to_df import convert
 
 # statistics
 def data_reader(code, start=None, end=None, day=None,
-                division=None, ind_name=None, stk_name=None,
+                division=None,  stk_name=None,
                 adj_price=False, investor=None, product=None,
-                options=[], **kwargs):
+                options=[], search_type=None, item=None, **kwargs):
+    # (code, start, end, day, division, item, search_type
     # assert f"{code}" in code_list, "Wrong code number"
 
     if code in index_code_list_stock:
-        data_json, column_map = StockIndex(code, start, end, day, division, ind_name).read()
+        data_json, column_map = StockIndex(code, start, end, day, division, item, search_type).read()
     elif code in index_code_list_bond:
         data_json, column_map = BondIndex(code, start, end, day, division).read()
     elif code in index_code_list_derivation:
-        data_json, column_map = DerivationIndex(code, start, end, day, division, ind_name).read()
+        data_json, column_map = DerivationIndex(code, start, end, day, division, item).read()
 
     elif code in stock_code_list_item:
-        data_json, column_map = stock.ItemPrice(code, start, end, day, division, adj_price, stk_name).read()
+        data_json, column_map = stock.ItemPrice(code, start, end, day, division, item, **kwargs).read()
     elif code in stock_code_list_info:
-        data_json, column_map = stock.ItemInfo(code, start, end, day, division, stk_name).read()
+        data_json, column_map = stock.ItemInfo(code, start, end, day, division).read()
     elif code in stock_code_list_trade:
-        data_json, column_map = stock.TradePerform(code, start, end, day, division, stk_name, options, investor, **kwargs).read()
+        data_json, column_map = stock.TradePerform(code, start, end, day, division, item, search_type, **kwargs).read()
     elif code in stock_code_list_others:
         data_json, column_map = OtherSecurity(code, start, end, day, division, stk_name).read()
     elif code in stock_code_list_detail:

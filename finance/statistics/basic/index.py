@@ -11,7 +11,7 @@ class Index(Info):
 
 
 class StockIndex(Index):
-    def __init__(self, code, start, end, day, division, item, search_type):
+    def __init__(self, code, start, end, day, division, item, **kwargs):
         """ 주가지수
         :param code: 항목 고유 번호
         :param start: 시작일
@@ -33,8 +33,7 @@ class StockIndex(Index):
         super().__init__(code, code_to_function, start, end, day)
         self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
         self.division = 'KRX' if division is None else division.upper()
-        self.search_type = '전체지수' if search_type is None else search_type
-        # self.search_type = '개별지수' if item else '전체지수'
+        self.search_type = kwargs.get('search_type', '전체지수')
 
     def autocomplete(self, item):
 

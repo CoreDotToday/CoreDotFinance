@@ -168,7 +168,7 @@ class ItemInfo(Stock):
 
 
 class TradePerform(Stock):
-    def __init__(self, code, start, end, day, division, item, search_type, **kwargs):
+    def __init__(self, code, start, end, day, division, item, **kwargs):
         """ 종목시세
         :param code: 항목 고유 번호
         :param start: 시작일
@@ -185,13 +185,14 @@ class TradePerform(Stock):
         }
 
         super().__init__(code, code_to_function, division, item, start, end, day, **kwargs)
-        self.search_type = search_type
+        self.search_type = kwargs.get('search_type', None)
+        self.investor = kwargs.get('investor', None)
         addition_item = kwargs.get('addition_item', None)
         if addition_item:
             addition_item = [item.upper() for item in addition_item]
-        self.etf = 'ETF' if 'ETF' in addition_item else None
-        self.etn = 'ETN' if 'ETN' in addition_item else None
-        self.elw = 'ELW' if 'ELW' in addition_item else None
+            self.etf = 'ETF' if 'ETF' in addition_item else None
+            self.etn = 'ETN' if 'ETN' in addition_item else None
+            self.elw = 'ELW' if 'ELW' in addition_item else None
 
 
     def trade_perform_by_invastor(self):
@@ -199,9 +200,9 @@ class TradePerform(Stock):
         # 기간합계(1)/일별추이(2)(inqTqCd) - 거래량(1)/거래대금(2)(trdValVol), 매도(1)/매수(2)/순매수(3)(askBid)
         # 기간합계는 detailView, trdValVol, askBid 가 없음.
         # KOSDAQ, KONEX는 ETF, ETN, ELW가 없음
-        if self.search_type == '상세보기':
+        if self.detail == '상세보기':
             bld = 'dbms/MDC/STAT/standard/MDCSTAT02203'
-        elif self.detail == '일별추이':
+        elif self.search_type == '일별추이':
             bld = 'dbms/MDC/STAT/standard/MDCSTAT02202'
         else:
             bld = 'dbms/MDC/STAT/standard/MDCSTAT02201'
@@ -222,27 +223,24 @@ class TradePerform(Stock):
 
     def trade_perform_by_item(self):
         """투자자별 거래실적(개별종목) [12009]"""
-
-        if self.detailView == '1':
-            n = 3
+        if self.detail == '상세보기':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT02303'
+        elif self.search_type == '일별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT02302'
         else:
-            n = self.inqtpcd
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT02301'
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0230{n}',
-            'inqTpCd': self.inqtpcd,
-            'trdVolVal': self.trdvolval,
-            'askBid': self.askbid,
-            'mktId': self.division,
+            'bld': bld,
+            'inqTpCd': self.search_type,
+            'trdVolVal': self.trade_index,
+            'askBid': self.trade_check,
             'tboxisuCd_finder_stkisu0_3': f'{self.data_tp}/{self.data_nm}',
             'isuCd': self.data_cd,
             'isuCd2': self.data_cd,
             'codeNmisuCd_finder_stkisu0_3': self.data_nm,
-            'param1isuCd_finder_stkisu0_3': 'STK',
             'strtDd': self.start,
             'endDd': self.end,
-            'detailView': self.detailView,
-            'share': 2,
-            'money': 3
+            'detailView': self.detail,
         }
         return self.requests_data(data)
 
@@ -254,8 +252,6 @@ class TradePerform(Stock):
             'invstTpCd': self.investor,
             'strtDd': self.start,
             'endDd': self.end,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
@@ -264,7 +260,6 @@ class TradePerform(Stock):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02501',
             'mktId': self.division,
-            'share': 1
         }
         return self.requests_data(data)
 
@@ -275,14 +270,12 @@ class TradePerform(Stock):
             'mktId': self.division,
             'strtDd': self.start,
             'endDd': self.end,
-            'share': 2,
-            'money': 3
         }
         return self.requests_data(data)
 
 
 class OtherSecurity(Stock):
-    def __init__(self, code, start, end, day, division, item):
+    def __init__(self, code, start, end, day, division):
 
         code_to_function = {
             '12013': self.price_of_REITs,
@@ -294,15 +287,14 @@ class OtherSecurity(Stock):
             '12019': self.price_of_subscription_warranty
         }
 
-        super().__init__(code, code_to_function, division, item, start, end, day)
+
+        super().__init__(code, code_to_function, division, None, start, end, day)
 
     def price_of_REITs(self):
         """REITs시세 [12013]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02701',
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
@@ -311,8 +303,6 @@ class OtherSecurity(Stock):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02801',
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
@@ -321,50 +311,40 @@ class OtherSecurity(Stock):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02901',
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
     def price_of_infra_investor(self):
         """인프라투융자회사 시세 [12016]"""
-        data ={
+        data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03001',
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
     def price_of_certificate(self):
         """수익증권 시세 [12017]"""
-        data ={
+        data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03101',
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
     def price_of_warranty(self):
         """신주인수권증권 시세 [12018]"""
-        data ={
+        data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03201',
             'mktId': self.division,
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
     def price_of_subscription_warranty(self):
         """신주인수권증서 시세 [12019]"""
-        data ={
+        data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03301',
             'mktId': self.division,
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
@@ -373,7 +353,7 @@ class Detail(Stock):
     def __init__(self, code, start, end, day, division, item, **kwargs):
 
         code_to_function = {
-            '12020': 'Not now',
+            '12020': self.detail_search_of_listed_company,
             '12021': self.per_pbr_dividend_of_stock,
             '12022': self.holding_amount_of_foreigner,
             '12023': self.holding_amount_of_foreigner_by_item,
@@ -384,54 +364,41 @@ class Detail(Stock):
             '12028': self.substitution_price_of_mutual_fund
 
         }
-
-        item_code = kwargs.get('item_code', None)
-        super().__init__(code, start, end, day, division, item, item_code, code_to_function)
-        search_type = kwargs.get('search_type', '전종목')
-        isuLmtRto = kwargs.get('no_foreign_only', None)
-        business = kwargs.get('business', None)
-
-        # info.py 에서 input_to_value가 동작하는지 테스트 해본다
-        self.search_type_test = kwargs.get('search_type', '전종목')
-        self.isuLmtRto_test = kwargs.get('no_foreign_only', None)
-        self.business_test = kwargs.get('business', None)
-        print(self.business_test)
-        ############################################
-
+        if code in ['12027', '12028']:
+            self.item = item
+            item = None
+        super().__init__(code, code_to_function, division, item, start, end, day, **kwargs)
+        self.inquiry = kwargs.get('inquiry', None)
+        self.search_type = kwargs.get('search_type', '전종목')
+        self.sort_type = kwargs.get('sort_type', '종목명')
+        self.isuLmtRto = kwargs.get('no_foreign_only', None)
+        self.business = kwargs.get('business', None)
         self.company = kwargs.get('company', None)
-        self.certificate = kwargs.get('certificate', None)
-
-        self.search_type = self.search_type_to_number[search_type]
-        self.isuLmRto = 1 if isuLmtRto is True else None
-        if code in ['12024']:
-            self.idxIndCd = business_to_number[business]
 
 
-
+    def detail_search_of_listed_company(self):
+        """상장회사 상세검색 [12020]"""
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT03402',
+            'mktTpCd': self.division,
+            'tboxisuSrtCd_finder_listisu0_3': f'{self.data_tp}/{self.data_nm}',
+            'isuSrtCd': self.data_cd,
+            'isuSrtCd2': 'A'+self.data_tp,
+            'codeNmisuSrtCd_finder_listisu0_3': self.data_nm,
+            'sortType': self.sort_type,
+            }
+        return self.requests_data(data)
 
     def per_pbr_dividend_of_stock(self):
         """"PER/PBR/배당수익률(개별종목) [12021]"""
-        if self.division == 'KONEX':
-            raise Exception("No KONEX")
-        n = self.search_type
-        if n is 2: print(self.data_nm)
+        if self.search_type == '개별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT03502'
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT03501'
+
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0350{n}',
-            'searchType': n,
-            'mktId': self.division,
-            'trdDd': self.day,
-            'tboxisuCd_finder_stkisu0_0': f'{self.data_tp}/{self.data_nm}',
-            'isuCd': self.data_cd,
-            'isuCd2': self.data_cd,
-            'codeNmisuCd_finder_stkisu0_0': self.data_nm,
-            'param1isuCd_finder_stkisu0_0': self.division,
-            'strtDd': self.start,
-            'endDd': self.end
-        }
-        ####### test ######
-        data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT03501',
-            'searchType': self.search_type_test,
+            'bld': bld,
+            'searchType': self.search_type,
             'mktId': self.division,
             'trdDd': self.day,
             'tboxisuCd_finder_stkisu0_0': f'{self.data_tp}/{self.data_nm}',
@@ -451,29 +418,26 @@ class Detail(Stock):
             'mktId': self.division,
             'strtDd': self.start,
             'endDd': self.end,
-            'share': 2,
-            'money': 3
         }
         return self.requests_data(data)
 
     def holding_amount_of_foreigner_by_item(self):
         """외국인보유량(개별종목) [12023]"""
-        n = self.search_type
-        if n is 2:
-            print(self.data_nm)
-        print(self.isuLmRto)
+        if self.search_type == '개별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT03702'
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT03701'
 
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0370{n}',
-            'searchType': n,
+            'bld': bld,
+            'searchType': self.search_type,
             'mktId': self.division,
             'trdDd': self.day,
             'tboxisuCd_finder_stkisu0_0': f'{self.data_tp}/{self.data_nm}',
-            'isuLmtRto': self.isuLmRto,
             'isuCd': self.data_cd,
             'isuCd2': self.data_cd,
             'codeNmisuCd_finder_stkisu0_0': self.data_nm,
-            'param1isuCd_finder_stkisu0_0': 'STK', #self.division,
+            'param1isuCd_finder_stkisu0_0': self.division,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -489,32 +453,20 @@ class Detail(Stock):
                 search_type, division, business, start, end
         division in (KOSPI, KOSDAQ)
         """
+        if self.search_type == '개별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT03802'
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT03801'
+
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0380{self.search_type}',
+            'bld': bld,
             'searchType': self.search_type,
             'mktId': self.division,
             'trdDd': self.day,
-            'idxIndCd': self.idxIndCd,
+            'idxIndCd': self.inquiry,
             'strtDd': self.start,
-            'endDd': self.end,
-            'share': 2,
-            'money': 3
+            'endDd': self.end
         }
-
-        #### test #####
-        data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT03801',
-            'searchType': self.search_type_test,
-            'mktId': self.division,
-            'trdDd': self.day,
-            'idxIndCd': self.business_test,
-            'strtDd': self.start,
-            'endDd': self.end,
-            'share': 2,
-            'money': 3
-        }
-        print(data)
-        ##############################
         return self.requests_data(data)
 
     def stock_and_business_table(self):
@@ -527,8 +479,7 @@ class Detail(Stock):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03901',
             'mktId': self.division,
-            'trdDd': self.day,
-            'money': 1
+            'trdDd': self.day
         }
         return self.requests_data(data)
 
@@ -541,8 +492,12 @@ class Detail(Stock):
             [searchType = 2 (개별추이)]
                 search_type, dividion, business, start, end
         """
+        if self.search_type == '개별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04002'
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04001'
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0400{self.search_type}',
+            'bld': bld,
             'searchType': self.search_type,
             'mktId': self.division,
             'trdDd': self.day,
@@ -554,22 +509,6 @@ class Detail(Stock):
             'strtDd': self.start,
             'endDd': self.end
         }
-        ######### test ##########
-
-        data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT04001',
-            'searchType': self.search_type_test,
-            'mktId': self.division,
-            'trdDd': self.day,
-            'tboxisuCd_finder_stkisu0_1': f'{self.data_tp}/{self.data_nm}',
-            'isuCd': self.data_cd,
-            'isuCd2': self.data_tp,
-            'codeNmisuCd_finder_stkisu0_1': self.data_nm,
-            'param1isuCd_finder_stkisu0_1': 'STK',
-            'strtDd': self.start,
-            'endDd': self.end
-        }
-
         return self.requests_data(data)
 
     def substitution_price_of_beneficiary_certificate(self):
@@ -581,22 +520,24 @@ class Detail(Stock):
             [searchType = 2 (개별추이)]
                 search_type, start, end, company, certificate
         """
-        if self.search_type == 1:
+        if self.search_type == '전종목':
             strtYy = self.day[:4]
             strtMm = self.day[4:6]
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04101'
         else:
             strtYy = self.start[:4]
             strtMm = self.start[4:6]
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04102'
         endYy = self.end[:4]
         endMm = self.end[4:6]
 
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0410{self.search_type}',
+            'bld': bld,
             'strtYy': strtYy,
             'strtMm': strtMm,
             'searchType': self.search_type,
             'comNm': self.company,
-            'isuNm': self.certificate,
+            'isuNm': self.item,
             'endYy': endYy,
             'endMm': endMm
         }
@@ -612,22 +553,24 @@ class Detail(Stock):
             [searchType = 2 (개별추이)]
                 search_type, start, end, company, certificate
         """
-        if self.search_type == 1:
+        if self.search_type == '전종목':
             strtYy = self.day[:4]
             strtMm = self.day[4:6]
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04201'
         else:
             strtYy = self.start[:4]
             strtMm = self.start[4:6]
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04202'
         endYy = self.end[:4]
         endMm = self.end[4:6]
 
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0420{self.search_type}',
+            'bld': bld,
             'strtYy': strtYy,
             'strtMm': strtMm,
             'searchType': self.search_type,
             'comNm': self.company,
-            'isuNm': self.certificate,
+            'isuNm': self.item,
             'endYy': endYy,
             'endMm': endMm
         }

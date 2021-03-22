@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup as bs
@@ -27,11 +28,12 @@ class Info:
         data['MIME Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         data['csvxls_isNo'] = 'false'
 
-        jsp_soup, tag = self.get_jsp_soup(data)
-        column_map = self.get_column_map(jsp_soup, tag)
+        jsp_soup, mdcstat = self.get_jsp_soup(data)
+        column_map = self.get_column_map(jsp_soup, mdcstat)
         modified_data = self.input_to_value(jsp_soup, data)
         r = requests.post(self.url, data=modified_data, headers=self.headers)
-        print(modified_data)
+        print('before', data)
+        print('after', modified_data)
         data = json.loads(r.content)
 
         return data, column_map
@@ -44,25 +46,16 @@ class Info:
                 user_input = data[key]
                 value = inner.get(user_input, None)
                 data[key] = value
-
-        if 'searchType' in data.keys():
-            searchtype = data['searchType']
-            if searchtype == 'A':
-                searchtype = '1'
-            elif searchtype == 'P':
-                searchtype = '2'
-            bld = data['bld']
-            new_bld = bld[:-1] + searchtype
-            data['bld'] = new_bld
         return data
 
     def get_jsp_soup(self, data):
         bld = data['bld']
-        jsp_filename = bld.split('/')[-1][:-2]
+        mdcstat = bld.split('/')[-1]
+        jsp_filename = mdcstat[:-2]
         url = f'http://data.krx.co.kr/contents/MDC/STAT/standard/{jsp_filename}.jsp'
         html = requests.get(url)
-        soup = bs(html.content, 'html.parser')
-        return soup, jsp_filename
+        jsp_soup = bs(html.content, 'html.parser')
+        return jsp_soup, mdcstat
 
     def get_table_map(self, table_tag):
         dic = {}
@@ -73,23 +66,36 @@ class Info:
                 dic[id.attrs['data-bind']] = name.text
         return dic
 
-    def get_column_map(self, soup, jsp_filename):
-        table_tag = soup.find('table', {'id': f'jsGrid_{jsp_filename}_0'})
-        div_tag_0 = soup.find('div', {'id': f'jsGrid_{jsp_filename}_0'})
-        div_tag_1 = soup.find('div', {'id': f'jsGrid_{jsp_filename}_1'})
+    def get_jspGird_dict(self, jsp_soup):
+        jscode_list = jsp_soup.find_all('script')
+        for s in jscode_list:
+            if 'jsGrid' in str(s):
+                jscode = s
+                break
+        jscode_str = str(jscode)
+        mdcstat_list = re.findall(r'template: \$content\.select\(\'\#(jsGrid_MDCSTAT[0-9]*\_[0-9])', jscode_str)
+        bld_list = re.findall(r'bld: \'dbms/MDC/STAT/standard/(MDCSTAT[0-9]*)', jscode_str)
+        jsGrid_dict = {}
+        for mdcstat, bld in zip(mdcstat_list, bld_list):
+            lis = jsGrid_dict.setdefault(bld, [])
+            lis.append(mdcstat)
+        return jsGrid_dict
 
-        map = {}
+    def get_column_map(self, jsp_soup, mdcstat):
+        map_ = {}
+        jsGird_dict = self.get_jspGird_dict(jsp_soup)
+        jsGrid = jsGird_dict[mdcstat]
+
+        table_tag = jsp_soup.find('table', {'id': jsGrid})
+        div_tag = jsp_soup.find('div', {'id': jsGrid})
+
         if table_tag:
             table_map = self.get_table_map(table_tag)
-            map.update(table_map)
-        if div_tag_0:
-            div_map_0 = self.get_div_map(div_tag_0)
-            map.update(div_map_0)
-        if div_tag_1:
-            div_map_1 = self.get_div_map(div_tag_1)
-            map.update(div_map_1)
-        print(jsp_filename)
-        return map
+            map_.update(table_map)
+        if div_tag:
+            div_map = self.get_div_map(div_tag)
+            map_.update(div_map)
+        return map_
 
     def get_div_map(self, div_tag):
         thead = div_tag.thead
@@ -139,7 +145,7 @@ class Info:
                     inner[text] = i.attrs.get('value', None)
 
         for select_tag in select:
-            if select_tag.attrs.get('name', None) in ['bndClssCd', 'prodId', 'isuCd', 'selecbox']: # [14021], [15001], [15007]
+            if select_tag.attrs.get('name', None) in ['bndClssCd', 'idxIndCd', 'prodId', 'isuCd', 'selecbox', 'invstTpCd']: # [14021], [15001], [15007]
                 result = self.execute_for_resource_bundle(select_tag)
                 answer[select_tag.attrs['name']] = result
             elif select_tag.find_all('option') != '':

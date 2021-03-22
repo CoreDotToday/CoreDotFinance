@@ -9,7 +9,8 @@ second_column_map = {
 no_display_columns = ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID',
                       'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR', 'ETF_ISU_CD',
                       'BND_CLSS_CD', 'NUSUAL_ISU_COND_CONTN',
-                      'KRW_FLUC_TP_CD', 'OZ_FLUC_TP_CD', 'FLUC_TP']
+                      'KRW_FLUC_TP_CD', 'OZ_FLUC_TP_CD', 'FLUC_TP',
+                      'ISU_ABBRV', 'SUB_IDX_IND_NM']
 
 def convert(data_json, column_map):
     global second_column_map

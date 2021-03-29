@@ -42,7 +42,7 @@ class Stock(Info):
         return soup.attrs['data-nm'], soup.attrs['data-cd'], soup.attrs['data-tp']
 
     def convert_code_to_name(self, item_code):
-        # ER/PBR/배당수익률(개별종목) [12021] 을 위한 전종목 기본정보 [12005] 데이터
+        # 전종목 기본정보 [12005] 데이터
         request_data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
             'mktId': '전체'

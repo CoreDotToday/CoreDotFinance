@@ -23,17 +23,18 @@ class Info:
         }
         self.url = 'http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd'
 
-    def requests_data(self, data, new_col_map=None):
-
+    def requests_data(self, data):
+        print('<<<before>>>\n', data ,'\n')
         data['MIME Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         data['csvxls_isNo'] = 'false'
+
 
         jsp_soup, mdcstat = self.get_jsp_soup(data)
         column_map = self.get_column_map(jsp_soup, mdcstat)
         modified_data = self.input_to_value(jsp_soup, data)
         r = requests.post(self.url, data=modified_data, headers=self.headers)
-        print('before', data)
-        print('after', modified_data)
+
+        print('<<<after>>>\nr', modified_data ,'\n')
         data = json.loads(r.content)
 
         return data, column_map
@@ -84,6 +85,7 @@ class Info:
     def get_column_map(self, jsp_soup, mdcstat):
         map_ = {}
         jsGird_dict = self.get_jspGird_dict(jsp_soup)
+        print(f'<<<jsGird_dict>>>\n{jsGird_dict}\n')
         jsGrid = jsGird_dict[mdcstat]
 
         table_tag = jsp_soup.find('table', {'id': jsGrid})
@@ -95,6 +97,7 @@ class Info:
         if div_tag:
             div_map = self.get_div_map(div_tag)
             map_.update(div_map)
+        print(f'<<<column_map>>>\n{map_}\n')
         return map_
 
     def get_div_map(self, div_tag):
@@ -125,7 +128,6 @@ class Info:
         [dic.pop(p) for p in p_list]
         for d in dic:
             dic[d] = dic[d]['text']
-        print(dic)
         return dic
 
     def get_answer_map(self, soup):
@@ -145,7 +147,7 @@ class Info:
                     inner[text] = i.attrs.get('value', None)
 
         for select_tag in select:
-            if select_tag.attrs.get('name', None) in ['bndClssCd', 'idxIndCd', 'prodId', 'isuCd', 'selecbox', 'invstTpCd']: # [14021], [15001], [15007]
+            if select_tag.attrs.get('name', None) in ['bndClssCd', 'isurCd', 'idxIndCd', 'prodId', 'isuCd', 'selecbox', 'invstTpCd']: # [14021], [15001], [15007]
                 result = self.execute_for_resource_bundle(select_tag)
                 answer[select_tag.attrs['name']] = result
             elif select_tag.find_all('option') != '':
@@ -162,7 +164,7 @@ class Info:
                 no_use.append(key)
         for no in no_use:
             answer.pop(no)
-        print(answer)
+        print(f'<<<answer>>>\n{answer}\n')
         return answer
 
     def execute_for_resource_bundle(self, s):

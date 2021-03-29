@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
 
 class Product(Info):
-    def __init__(self, code, start, end, day, product, product_type, code_to_function):
+    def __init__(self, code, start, end, day, item, item_type, code_to_function, **kwargs):
         """
         증권상품
         :param code:
@@ -15,29 +15,48 @@ class Product(Info):
         :param code_to_function:
         """
         super(Product, self).__init__(start, end, day)
+        item_code = kwargs.get('item_code', None)
+        if item_code:
+            item = self.convert_code_to_item(item_code, item_type)
         self.function = code_to_function[code]
-        self.product = product
-        self.data_cd, self.data_nm, self.data_tp = self.autocomplete(product, product_type)
+        self.data_cd, self.data_nm, self.data_tp = self.autocomplete(item, item_type)
+        self.search_type = kwargs.get('search_type', None)
+        self.trade_index = kwargs.get('trade_index', None)
+        self.trade_check = kwargs.get('trade_check', None)
 
-    def autocomplete(self, product, product_type):
-        if product is None:
-            return None, None, None
-        if product_type == 'etf':
-            auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etf&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etf_autocomplete'
-        elif product_type == 'etn':
-            auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etn&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etn_autocomplete'
-        elif product_type == 'elw':
-            auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_elw&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_elw_autocomplete'
+    def autocomplete(self, item, item_type):
+            if item is None:
+                return 'ALL', '전체', 'ALL'
+            if item_type == 'ETF':
+                auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etf&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etf_autocomplete'
+            elif item_type == 'ETN':
+                auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etn&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etn_autocomplete'
+            elif item_type == 'ELW':
+                auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_elw&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_elw_autocomplete'
+            response = requests.get(auto_complete_url.format(item=item))
+            soup = bs(response.content, 'html.parser').li
+            if soup is None:
+                raise ValueError(f'{item} is Wrong name as a product')
+            print(soup.attrs['data-nm'])
+            return soup.attrs['data-cd'], soup.attrs['data-nm'], soup.attrs['data-tp']
 
+    def convert_code_to_item(self, item_code, item_type):
+        if item_type == 'ETF':
+            request_data = {
+                'bld': 'dbms/MDC/STAT/standard/MDCSTAT04301',
+                'trdDd': self.day,
+            }
+        elif item_type == 'ETN':
+            request_data = {
+                'bld': 'dbms/MDC/STAT/standard/MDCSTAT06401',
+                'trdDd': self.day
+            }
 
-        response = requests.get(auto_complete_url.format(product=product))
-        soup = bs(response.content, 'html.parser').li
+        data = self.requests_data(request_data)
+        for i in data[0]['output']:
+            if i['ISU_SRT_CD'] == str(item_code):
+                return i['ISU_ABBRV']
 
-        if soup is None:
-            raise ValueError(f'{product} is Wrong name as a product')
-
-        print(soup.attrs['data-nm'])
-        return soup.attrs['data-cd'], soup.attrs['data-nm'], soup.attrs['data-tp']
 
 
 class ETF(Product):
@@ -62,7 +81,7 @@ class ETF(Product):
             '13108': self.portfolio_deposit_file,
             '13109': self.detail_of_ETF,
             '13110': self.result_of_active_ETF,
-            '13111': self.incorporated_asset_of_active_ETF,
+            '13111': 'not now',
             '13112': self.trend_of_tracking_error,
             '13113': self.trend_of_differential,
             '13114': self.trend_of_closing_differential,
@@ -71,11 +90,8 @@ class ETF(Product):
             '13117': self.assessment_of_LP_per_quarter
         }
 
-        super(ETF, self).__init__(code, start, end, day, product, 'etf', code_to_function)
-        self.kwargs = kwargs
-        self.inquiry = self.kwargs.get('inquiry', None)
-        self.val_vol = self.kwargs.get('val_vol', None)
-        self.trade = self.kwargs.get('trade', None)
+        super(ETF, self).__init__(code, start, end, day, product, 'ETF', code_to_function, **kwargs)
+        self.quarter = kwargs.get('quarter', None)
 
     def price_of_entire_items(self):
         """
@@ -86,8 +102,6 @@ class ETF(Product):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT04301',
             'trdDd': self.day,
-            'share': 1,
-            'money': 1
         }
         return self.requests_data(data)
 
@@ -101,8 +115,6 @@ class ETF(Product):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT04401',
             'strtDd': self.start,
             'endDd': self.end,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
@@ -120,8 +132,6 @@ class ETF(Product):
             'codeNmisuCd_finder_secuprodisu1_31': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end,
-            'share': 1,
-            'money': 1
         }
         return self.requests_data(data)
 
@@ -142,36 +152,19 @@ class ETF(Product):
         """
         투자자별 거래실적 [13106]
         :arg
-            inquiry, val_vol, trade, start, end
+            search_type, trade_index, trade, start, end
         """
-        inquiry_map = {
-            '기간합계': 1,
-            '일별추이': 2,
-        }
-        valvol_map = {
-            '거래대금': 1,
-            '거래량': 2,
-        }
-        trade_map = {
-            '순매수': 1,
-            '매수': 2,
-            '매도': 3
-        }
-        if self.inquiry == '일별추이':
-            val_vol = valvol_map[self.val_vol]
-            trade = trade_map[self.trade]
+        if self.search_type == '일별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04802'
         else:
-            val_vol, trade = None, None
-
-        inquiry = inquiry_map[self.inquiry]
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04801'
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0480{inquiry}',
-            'inqTpCd': inquiry,
-            'inqCondTpCd1': val_vol,
-            'inqCondTpCd2': trade,
+            'bld': bld,
+            'inqTpCd': self.search_type,
+            'inqCondTpCd1': self.trade_index,
+            'inqCondTpCd2': self.trade_check,
             'strtDd': self.start,
             'endDd': self.end,
-            'money': 1
         }
         return self.requests_data(data)
 
@@ -179,44 +172,23 @@ class ETF(Product):
         """
         투자자별 거래실적(개별종목) [13107]
         :arg
-            inquiry, val_vol, trade, product, start, end
+            search_type, trade_index, trade, product, start, end
         """
-        if self.product is None:
-            raise ValueError(f'{self.product} is Wrong name as a product')
-        inquiry_map = {
-            '기간합계': 1,
-            '일별추이': 2,
-        }
-        valvol_map = {
-            '거래대금': 1,
-            '거래량': 2,
-        }
-        trade_map = {
-            '순매수': 1,
-            '매수': 2,
-            '매도': 3
-        }
-        if self.inquiry == '일별추이':
-            val_vol = valvol_map[self.val_vol]
-            trade = trade_map[self.trade]
+        if self.search_type == '일별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04902'
         else:
-            val_vol, trade = None, None
-
-        inquiry = inquiry_map[self.inquiry]
-
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT04901'
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0490{inquiry}',
-            'inqTpCd': inquiry,
-            'inqCondTpCd1': val_vol,
-            'inqCondTpCd2': trade,
+            'bld': bld,
+            'inqTpCd': self.search_type,
+            'inqCondTpCd1': self.trade_index,
+            'inqCondTpCd2': self.trade_check,
             'tboxisuCd_finder_secuprodisu1_4': f'{self.data_tp}/{self.data_nm}',
             'isuCd': self.data_cd,
             'isuCd2': self.data_cd,
             'codeNmisuCd_finder_secuprodisu1_4': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end,
-            'share': 1,
-            'money': 1
             }
         return self.requests_data(data)
 
@@ -234,8 +206,6 @@ class ETF(Product):
             'isuCd2': self.data_cd,
             'codeNmisuCd_finder_secuprodisu1_6': self.data_nm,
             'trdDd': self.day,
-            'share': 1,
-            'money': 1
             }
         return self.requests_data(data)
 
@@ -249,17 +219,12 @@ class ETF(Product):
     def result_of_active_ETF(self):
         """
         액티브 ETF 실적 [13110]
-        inquiry, product, start, end
+        search_type, product, start, end
         """
-        inquiry_map = {
-            '전종목': ['a', None],
-            '개별종목': ['c', self.data_cd]
-        }
-        cls, isuCd = inquiry_map[self.inquiry]
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT05701',
-            'cls': cls,
-            'isuCd': isuCd,
+            'cls': self.search_type,
+            'isuCd': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end
             }
@@ -269,42 +234,21 @@ class ETF(Product):
         """
         액티브ETF 편입자산현황 [13111]
         :arg
-            day, product, inquiry
+            day, product, search_type
         """
-        inquiry_map = {
-            '잔존만기': 1,
-            '신용평가등급': 2
-        }
-        new_col_map_1 = {
-            'NUM_ITM_VAL1': '1년 미만',
-            'NUM_ITM_VAL2': '1년-5년',
-            'NUM_ITM_VAL3': '5년-10년',
-            'NUM_ITM_VAL4': '10년 이상',
-            'NUM_ITM_VAL5': '채권 외 기타',
-            'NUM_ITM_VAL6': '평균 잔존 만기'
-        }
-        new_col_map_2 = {
-            'NUM_ITM_VAL1': 'RF(국고통안)',
-            'NUM_ITM_VAL2': 'AAA',
-            'NUM_ITM_VAL3': 'AA',
-            'NUM_ITM_VAL4': 'A',
-            'NUM_ITM_VAL5': 'BBB',
-            'NUM_ITM_VAL6': 'BB',
-            'NUM_ITM_VAL7': 'B 이하',
-            'NUM_ITM_VAL8': '기타(CP, CD등)',
-            'NUM_ITM_VAL9': '채권 외 기타',
-        }
-        inquiry = inquiry_map[self.inquiry]
+        if self.search_type == '잔존만기':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT05801'
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT05802'
         year = self.day[:4]
         month = self.day[4:6]
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0580{inquiry}',
-            'isuCd': self.data_cd,
+            'bld': bld,
+            'isuCd': self.data_nm,
             'startYear': year,
             'startMonth': month
         }
-        new_col_map = new_col_map_1 if inquiry == 1 else new_col_map_2
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
 
     def trend_of_tracking_error(self):
@@ -315,15 +259,11 @@ class ETF(Product):
         """
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT05901',
-            'isuCd': self.data_cd,
+            'isuCd': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end
         }
-        new_col_map = {
-            'OBJ_STKPRC_IDX': '기초지수',
-            'IDX_CHG_RTO': '기초지수변동률'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def trend_of_differential(self):
         """
@@ -333,14 +273,11 @@ class ETF(Product):
         """
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT06001',
-            'isuCd': self.data_cd,
+            'isuCd': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end
         }
-        new_col_map = {
-            'CLSPRC': '종가'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def trend_of_closing_differential(self):
         """
@@ -350,7 +287,7 @@ class ETF(Product):
         """
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT17101',
-            'isuCd': self.data_cd,
+            'isuCd': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -362,20 +299,14 @@ class ETF(Product):
         """
         합성ETF 거래상대방 위험 [13115]
         :arg
-            product, inquiry
+            product, search_type
         """
-        inquiry_map = {
-            '전종목': ['a', None],
-            '개별종목': ['c', self.data_cd]
-        }
-        cls, isuCd = inquiry_map[self.inquiry]
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT06101',
-            'cls': cls,
-            'isuCd': isuCd,
+            'cls': self.search_type,
+            'isuCd': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end,
-            'money': 1
         }
         return self.requests_data(data)
 
@@ -391,8 +322,13 @@ class ETF(Product):
 
     def assessment_of_LP_per_quarter(self):
         """분기별 LP 평가[]13117"""
-        '''Web page error '''
-        pass
+        year = self.day[:4]
+        data = {
+            'bld': 'dbms/MDC/STAT/standard/MDCSTAT06301',
+            'year': year,
+            'quarter': self.quarter
+        }
+        return self.requests_data(data)
 
 class ETN(Product):
     def __init__(self, code, start, end, day, product, **kwargs):
@@ -414,12 +350,8 @@ class ETN(Product):
             '13214': self.trend_of_differential,
             '13215': self.trend_of_closing_differential
         }
-        super(ETN, self).__init__(code, start, end, day, product, 'etn', code_to_function)
-        self.kwargs = kwargs
-        self.inquiry = self.kwargs.get('inquiry', None)
-        self.val_vol = self.kwargs.get('val_vol', None)
-        self.trade = self.kwargs.get('trade', None)
-        self.issuing = self.kwargs.get('issuing', None)
+        super(ETN, self).__init__(code, start, end, day, product, 'ETN', code_to_function, **kwargs)
+        self.issuing = kwargs.get('issuing', None)
 
 
     def price_of_entire_items(self):
@@ -429,8 +361,6 @@ class ETN(Product):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT06401',
             'trdDd': self.day,
-            'share': 1,
-            'money': 1,
         }
         return self.requests_data(data)
 
@@ -457,13 +387,7 @@ class ETN(Product):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        new_col_map = {
-            'CMPPREVDD_IDX': '기초지수대비',
-            'FLUC_TP_CD1': '기초지수증감',
-            'IDX_FLUC_RT': '기초지수등락률',
-            'OBJ_STKPRC_IDX': '기초지수종가'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def info_of_entire_items(self):
         """
@@ -485,31 +409,16 @@ class ETN(Product):
         """
         투자자별 거래실적 [13206]
         """
-        inquiry_map = {
-            '기간합계': 1,
-            '일별추이': 2,
-        }
-        valvol_map = {
-            '거래대금': 1,
-            '거래량': 2,
-        }
-        trade_map = {
-            '순매수': 1,
-            '매수': 2,
-            '매도': 3
-        }
-        if self.inquiry == '일별추이':
-            val_vol = valvol_map[self.val_vol]
-            trade = trade_map[self.trade]
+        if self.search_type == '일별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT06902'
         else:
-            val_vol, trade = None, None
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT06901'
 
-        inquiry = inquiry_map[self.inquiry]
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0690{inquiry}',
-            'inqTpCd': inquiry,
-            'inqCondTpCd1': val_vol,
-            'inqCondTpCd2': trade,
+            'bld': bld,
+            'inqTpCd': self.search_type,
+            'inqCondTpCd1': self.trade_index,
+            'inqCondTpCd2': self.trade_check,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -520,41 +429,21 @@ class ETN(Product):
         """
         투자자별 거래실적(개별종목) [13207]
         """
-        if self.product is None:
-            raise ValueError(f'{self.product} is Wrong name as a product')
-        inquiry_map = {
-            '기간합계': 1,
-            '일별추이': 2,
-        }
-        valvol_map = {
-            '거래대금': 1,
-            '거래량': 2,
-        }
-        trade_map = {
-            '순매수': 1,
-            '매수': 2,
-            '매도': 3
-        }
-        if self.inquiry == '일별추이':
-            val_vol = valvol_map[self.val_vol]
-            trade = trade_map[self.trade]
+        if self.search_type == '일별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT07002'
         else:
-            val_vol, trade = None, None
-
-        inquiry = inquiry_map[self.inquiry]
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT07001'
 
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0700{inquiry}',
-            'inqTpCd': inquiry,
-            'inqCondTpCd1': val_vol,
-            'inqCondTpCd2': trade,
+            'bld': bld,
+            'inqTpCd': self.search_type,
+            'inqCondTpCd1': self.trade_index,
+            'inqCondTpCd2': self.trade_check,
             'tboxisuCd_finder_secuprodisu2_10': f'{self.data_tp}/{self.data_nm}',
             'isuCd': self.data_cd,
             'codeNmisuCd_finder_secuprodisu2_10': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end,
-            'share': 1,
-            'money': 1
         }
         return self.requests_data(data)
 
@@ -596,30 +485,13 @@ class ETN(Product):
         """
         발행사 신용위험지표 [13211]
         """
-        issuing_map = {
-            "KB증권": "00345",
-            "NH투자증권": "00594",
-            "노무라": "12928",
-            "대신증권": "00354",
-            "미래에셋대우": "00680",
-            "삼성증권": "01636",
-            "신영증권": "00172",
-            "신한투자": "00867",
-            "한국증권": "03049",
-        }
-        issuing = issuing_map[self.issuing]
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT07801',
-            'isurCd': issuing,
+            'isurCd': self.issuing,
             'strtDd': self.start,
             'endDd': self.end
         }
-        new_col_map = {
-            'INDIC_VAL_AMT': 'ENT 매출',
-            'INVST_HD_MKTCAP': 'ELW 매출',
-            'AGG_VAL': '매출합계',
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def condition_of_early_repayment_loss_limited_ETN(self):
         """
@@ -630,12 +502,7 @@ class ETN(Product):
             'isuCd': self.data_cd,
             'trdDd': self.day
         }
-        new_col_map = {
-            'IDX_IND_NM': '기초지수',
-            'CLSPRC_IDX': '현재기초지수수준'
-
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def consideration_of_range_accurual_of_loss_limited_ETN(self):
         """
@@ -650,7 +517,7 @@ class ETN(Product):
         """
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT08101',
-            'isuCd': self.data_cd,
+            'isuCd': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -662,7 +529,7 @@ class ETN(Product):
         """
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT17201',
-            'isuCd': self.data_cd,
+            'isuCd': self.data_nm,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -690,12 +557,8 @@ class ELW(Product):
             '13312': self.status_of_floating_per_issuing,
             '13313': self.assessment_of_LP_per_quarter
         }
-        super(ELW, self).__init__(code, start, end, day, product, 'elw', code_to_function)
-        self.kwargs = kwargs
-        self.inquiry = self.kwargs.get('inquiry', None)
-        self.val_vol = self.kwargs.get('val_vol', None)
-        self.trade = self.kwargs.get('trade', None)
-        self.basic_asset = self.kwargs.get('basic_asset', None)
+        super(ELW, self).__init__(code, start, end, day, product, 'ELW', code_to_function, **kwargs)
+        self.basic_asset = kwargs.get('basic_asset', None)
 
     def price_of_entire_items(self):
         """전종목 시세[13301]"""
@@ -703,12 +566,7 @@ class ELW(Product):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT08301',
             'trdDd': self.day
         }
-        new_col_map = {
-            'LIST_SHRS': '상장증권수',
-            'FLUC_TP_CD1': '증감',
-            'CMPPREVDD_PRC1': '대비'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def trend_of_item(self):
         """개별종목 시세 추이[13302]"""
@@ -721,12 +579,7 @@ class ELW(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        new_col_map = {
-            'TDD_CLSPRC': '증감',
-            'LIST_SHRS': '상장증권수',
-            'CMPPREVDD_PRC1': '대비'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def info_of_entire_items(self):
         """전종목 기본정보[13303]
@@ -743,32 +596,18 @@ class ELW(Product):
 
     def trade_performance_per_investor(self):
         """투자자별 거래실적[13305]"""
-        inquiry_map = {
-            '기간합계': 1,
-            '일별추이': 2,
-        }
-        valvol_map = {
-            '거래대금': 1,
-            '거래량': 2,
-        }
-        trade_map = {
-            '순매수': 1,
-            '매수': 2,
-            '매도': 3
-        }
-        if self.inquiry == '일별추이':
-            val_vol = valvol_map[self.val_vol]
-            trade = trade_map[self.trade]
+        if self.search_type == '일별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT08702'
+        elif self.search_type == '상세보기':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT08703'
         else:
-            val_vol, trade = None, None
-
-        inquiry = inquiry_map[self.inquiry]
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT08701'
 
         data = {
-            'bld': f'dbms/MDC/STAT/standard/MDCSTAT0870{inquiry}',
-            'inqTpCd': inquiry,
-            'inqCondTpCd1': val_vol,
-            'inqCondTpCd2': trade,
+            'bld': bld,
+            'inqTpCd': self.search_type,
+            'inqCondTpCd1': self.trade_index,
+            'inqCondTpCd2': self.trade_check,
             'strtDd': self.start,
             'endDd': self.end
                 }
@@ -781,56 +620,26 @@ class ELW(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        new_col_map = {
-            'ISU_CNT1': 'CALL 종목수',
-            'TRDVOL1': 'CALL 거래량',
-            'TRDVAL1': 'CALL 거래대금',
-            'ISU_CNT2': 'PUT 종목수',
-            'TRDVOL2': 'PUT 거래량',
-            'TRDVAL2': 'PUT 거래대금'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def item_of_residual_expiration_status(self):
         """개별종목 잔존만기현황[13307]"""
-        inquiry_map = {
-            '전체': 'T',
-            '일반': 1,
-            '조기종료': 2
-        }
-        if self.inquiry == None:
-            inquiry = inquiry_map['전체']
-        else:
-            inquiry = inquiry_map[self.inquiry]
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT08901',
-            'elwEoTpCd': inquiry,
+            'elwEoTpCd': self.search_type,
             'trdDd': self.day
         }
         return self.requests_data(data)
 
     def item_of_beneficial_expiration_status(self):
         """개별종목 만기손익현황[13308]"""
-        inquiry_map = {
-            '전체': 'T',
-            '일반': 1,
-            '조기종료': 2
-        }
-        if self.inquiry == None:
-            inquiry = inquiry_map['전체']
-        else:
-            inquiry = inquiry_map[self.inquiry]
-
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT09001',
-            'elwEoTpCd': inquiry,
+            'elwEoTpCd': self.search_type,
             'strtDd': self.start,
             'endDd': self.end
         }
-        new_col_map = {
-            'ULY_NM2': '기초자산면'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
 
     def approach_level_of_early_close(self):
@@ -852,73 +661,22 @@ class ELW(Product):
 
     def status_of_floating_per_basic_asset(self):
         """기초자산별 상장현황[13311]"""
-        inquiry_map = {
-            '전체': 'T',
-            '일반': 1,
-            '조기종료': 2
-        }
-        if self.inquiry == None:
-            inquiry = inquiry_map['전체']
-        else:
-            inquiry = inquiry_map[self.inquiry]
-
-        basic_asset_map = {
-            '유가증권시장': 1,
-            '코스닥시장': 2,
-            '해외지수': 9,
-            '전체': 'T'
-        }
-        if self.basic_asset is None:
-            basic_asset = basic_asset_map['전체']
-        else:
-            basic_asset = basic_asset_map[self.basic_asset]
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT09401',
-            'elwRghtTpKindCd': inquiry,
-            'elwUlyTpCd': basic_asset,
+            'elwRghtTpKindCd': self.search_type,
+            'elwUlyTpCd': self.basic_asset,
             'trdDd': self.day
         }
-        new_col_map = {
-            'CALL_CNT': '상장종목수/CALL',
-            'PUT_CNT': '상장종목수/PUT',
-            'ETC_CNT': '상장종목수/기타',
-            'TOT_CNT': '상장종목수/합계',
-            'CALL_TRDFORM_CNT': '거래형성종목수/CALL',
-            'PUT_TRDFORM_CNT': '거래형성종목수/PUT'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def status_of_floating_per_issuing(self):
         """발행사별 상장현황[13312]"""
-        inquiry_map = {
-            '전체': 'T',
-            '일반': 1,
-            '조기종료': 2
-        }
-        if self.inquiry == None:
-            inquiry = inquiry_map['전체']
-        else:
-            inquiry = inquiry_map[self.inquiry]
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT09501',
-            'elwEoTpCd': inquiry,
+            'elwEoTpCd': self.search_type,
             'trdDd': self.day
         }
-        new_col_map = {
-            'LIST_ISU_CNT1': '주식/CALL',
-            'LIST_ISU_CNT2': '주식/PUT',
-            'LIST_ISU_CNT3': '주식/합계',
-            'LIST_ISU_CNT4': '주식바스켓/CALL',
-            'LIST_ISU_CNT5': '주식바스켓/PUT',
-            'LIST_ISU_CNT6': '주식바스켓/소계',
-            'LIST_ISU_CNT7': '주가지수/CALL',
-            'LIST_ISU_CNT8': '주가지수/PUT',
-            'LIST_ISU_CNT9': '주가지수/소계',
-            'LIST_ISU_CNT10': '합계/CALL',
-            'LIST_ISU_CNT11': '합계/PUT',
-            'LIST_ISU_CNT12': '합계/소계'
-        }
-        return self.requests_data(data, new_col_map)
+        return self.requests_data(data)
 
     def assessment_of_LP_per_quarter(self):
         """분기별 LP 평가 [13313]"""

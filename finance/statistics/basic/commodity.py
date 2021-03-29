@@ -43,7 +43,7 @@ class Oil(Commodity):  # 석유 [16101~16105]
 
     def trade_performance_per_investor(self):
         """참가자별 거래실적[16103]"""
-        if self.inquiry == '개별추이':
+        if self.inquiry == '일별추이':
             bld = 'dbms/MDC/STAT/standard/MDCSTAT14502'
         else:
             bld = 'dbms/MDC/STAT/standard/MDCSTAT14501'
@@ -112,28 +112,31 @@ class Gold(Commodity):  # 금 [16201~16207]
     def info_of_item(self):  # [16204] 개별종목 종합정보
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT15201',
-            'isuCd': self.isucd,  # KRD040200002(금 99.99K), KRD040201000(미니금 100g)
+            'isuCd': self.gold,  # KRD040200002(금 99.99K), KRD040201000(미니금 100g)
         }
         """ 데이터 총 3개
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT15202',
-            'isuCd': self.isucd,  # KRD040200002(금 99.99K), KRD040201000(미니금 100g)
+            'isuCd': self.gold,  # KRD040200002(금 99.99K), KRD040201000(미니금 100g)
         }
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT15203',
-            'isuCd': self.isucd,  # KRD040200002(금 99.99K), KRD040201000(미니금 100g)
+            'isuCd': self.gold,  # KRD040200002(금 99.99K), KRD040201000(미니금 100g)
         }
         """
         return 'Not now'
 
-    def trade_performance_per_investor(self):  # [16205] 투자자별 거래실
+    def trade_performance_per_investor(self):  # [16205] 투자자별 거래실적
+        if self.inquiry == "일별추이":
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT15302'
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT15301'
         data = {
-            'bld': 'dbms/MDC/STAT/standard/MDCSTAT15301',
-            'inqTpCd': self.inquiry,  # 1(기간합계), 2(일별추이)
-            'trdVolVal': self.trade_index,  # 1(거래량), 2(거래대금)
-            'bidAskNet': self.trade_check,  # 1(매도), 2(매수), 3(순매수)
+            'bld': bld,
             'strtDd': self.start,
             'endDd': self.end,
+            'trdVolVal': self.trade_index,  # 1(거래량), 2(거래대금)
+            'bidAskNet': self.trade_check,  # 1(매도), 2(매수), 3(순매수)
         }
         return self.requests_data(data)
 

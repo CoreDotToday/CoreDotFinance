@@ -122,7 +122,7 @@ class Info:
             if p is not None:
                 child_name = dic[key]['text']
                 parent_name = dic[p]['text']
-                dic[key]['text'] = f'{parent_name} {child_name}'
+                dic[key]['text'] = f'{parent_name}//{child_name}'
 
                 p_list.add(p)
         [dic.pop(p) for p in p_list]
@@ -189,5 +189,5 @@ class Info:
             result[n['name']] = n['value']
         return result
 
-    def read(self):
-        return self.function()
+
+

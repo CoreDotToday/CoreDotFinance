@@ -3,7 +3,8 @@ http://data.krx.co.kr 의 데이터를 Python library로 쉽게 사용한다.
 #  사용법
 ## 1. 지수
 #### 1.1 주가 지수
-```
+
+```python
 import finance
 
 # 전체 지수 시세 11001
@@ -31,7 +32,8 @@ data = finance.data_reader('11006', day=20210121, divison='kospi')
 data = finance.data_reader('11006', start=20210101, end=20210121, ind_name='코스피 200')
 ```
 #### 1.2 채권 지수
-```
+```python
+import finance
 # 전체 지수 시세 11008
 data = finanace.data_reader('11008', day=20210121)
 
@@ -39,7 +41,8 @@ data = finanace.data_reader('11008', day=20210121)
 data = finance.data_reader('11009', start=20210101, end=20210121, bond='KRX채권지수') 
 ```
 #### 1.3 파생 및 기타지수
-```
+```python
+import finance
 pass
 ```
 
@@ -49,7 +52,8 @@ pass
 #### 2.3 거래실적
 #### 2.4 기타증권
 #### 2.5 세부안내
-```
+```python
+import finance
 # PER/PBR/배당수익률(개별종목) [12021]
 #   전종목 검색
 data = finance.data_reader('12021', division='kospi', search_type='전종목', day=20210101)
@@ -63,18 +67,19 @@ data = finance.data_reader('12021', division='kospi', search_type = '개별추�
 
 #### 4.1 종목시세
 
-```
+```python
+import finance
 # [14001] 전종목 시세 
 data = finance.data_reader('14001', day=20210317, market="소액채권시장")
 
 # [14002] 개별종목 시세 추이
-# product (코드 입력 X): 종목명
 data = finance.data_reader('14002', start=20210216, end=20210316, market="국채전문유통시장", product="국고01125-2509(20-6)")
 ```
 
 #### 4.2 종목정보
 
-```
+```python
+import finance
 # [14003] 전종목 기본정보
 data = finance.data_reader('14003', bond_type="국채")
 
@@ -84,7 +89,8 @@ pass
 
 #### 4.3 거래실적
 
-```
+```python
+import finance
 # [14005] 종류별 거래 실적
 data = finance.data_reader('14005', start=20210309, end=20210316, market="일반채권시장", inquiry="채권유형별")
 
@@ -100,7 +106,8 @@ data = finance.data_reader('14008', start=20210309, end=20210316)
 
 #### 4.4 세부안내
 
-```
+```python
+import finance
 # [14009] 개별종목 시가평가 추이
 data = finance.data_reader('14009', start=20210216, end=20210316, product="국고01125-2509(20-6)", inquiry="발표일")
 
@@ -108,15 +115,12 @@ data = finance.data_reader('14009', start=20210216, end=20210316, product="국�
 data = finance.data_reader('14010', start=20210310, end=20210317)
 
 # [14011] 상장채권 상세검색
-# 기능중 채권분류 및 상세검색은 추가하지 않았음
-# product (코드 입력 X): 발행기관명
 data = finance.data_reader('14011', product="AJ네트웍스", bond_type="회사채")
 
 # [14012] 상장채권 발행정보
-# product (코드 입력 X): 종목명
 data = finance.data_reader('14012', product="서울도시철도21-03")
 
-# [14013] 상장유형별 내역 --> inquiry, bond_type 미작동
+# [14013] 상장유형별 내역
 data = finance.data_reader('14013', start=20210216, end=20210316, inquiry="추가", bond_type="특수채")
 
 # [14014] 상장금액조정 내역
@@ -128,12 +132,10 @@ data = finance.data_reader('14015', start=20210216, end=20210316, inquiry="중�
 # [14016] 채권상장폐지
 data = finance.data_reader('14016', start=20200316, end=20210316, inquiry="상장폐지")
 
-# [14017] 장외 채권수익률  --> 일부 미작동
-
 # inquiry="전종목"
 data = finance.data_reader('14017', inquiry="전종목", day=20210310)
 
-# inquiry="개별추이"  --> 미작동
+# inquiry="개별추이"
 # bond_type: 채권종류
 data = finance.data_reader('14017', inquiry="개별추이", bond_type="국고채 3년", start=20210217, end=20210317)
 
@@ -179,24 +181,24 @@ data = finance.data_reader('14027', start=20190316, end=20210317)
 
 #### 5.1 종목시세
 
-```
+```python
+import finance
 # [15001] 전종목 시세
-data = finance.data_reader('15001', day=20210317, product="코스피200 옵션", market="call")
+data = finance.data_reader('15001', day=20210317, item="코스피200 옵션", market="call")
 
-# [15002] 개별종목 시세 추이 --> column 항목 차이 (df: 현물가, origin: 내재변동성)
-data = finance.data_reader('15002', start=20210309, end=20210317, product="코스피200 C 202104 262.5")
+# [15002] 개별종목 시세 추이 
+data = finance.data_reader('15002', start=20210309, end=20210317, item="코스피200 C 202104 262.5")
 
 # [15003] 최근월물 시세 추이(선물) --> 상품구분에 따른 상세선택 항목 없음(예: 섹터지수 선물 선택시 상세선택 활성화됨)
-# 주의 : product_  ("_" 언더바를 입력해야 함)
-data = finance.data_reader('15003', start=20210309, end=20210317, product_="코스피200 선물", market="정규")
+data = finance.data_reader('15003', start=20210309, end=20210317, item="코스피200 선물", market="정규")
 ```
 
 #### 5.2 종목정보
 
-```
+```python
+import finance
 # [15004] 전종목 기본정보  --> 상품구분에 따른 상세선택 항목 없음(예: 섹터지수 선물 선택시 상세선택 활성화됨)
-# 주의 : product_  ("_" 언더바를 입력해야 함)
-data = finance.data_reader('15004', product_="코스피200 선물")
+data = finance.data_reader('15004', item="코스피200 선물")
 
 # [15005] 개별종목 종합정보
 pass
@@ -204,48 +206,42 @@ pass
 
 #### 5.3 거래실적
 
-```
+```python
+import finance
 # [15006] 전체상품 거래실적
 data = finance.data_reader('15006', day=20210316)
 
 # [15007] 투자자별 거래실적 --> 일부 미작동, 상세선택 및 권리유형 미구현
-# 주의 : product_  ("_" 언더바를 입력해야 함)
-
 # inquiry="기간합계"
-data = finance.data_reader('15007', start=20210309, end=20210316, product_="코스피200 옵션", inquiry="기간합계", market="정규")
-
-# inquiry="일별추이" --> 미작동 (기간합계로 구현됨)
-data = finance.data_reader('15007', start=20210309, end=20210316, product_="코스닥150 선물", inquiry="일별추이", trade_index="거래량", trade_check="매수")
+data = finance.data_reader('15007', start=20210309, end=20210316, item="코스피200 옵션", search_type="기간합계")
+# inquiry="일별추이"
+data = finance.data_reader('15007', start=20210309, end=20210316, item="코스닥150 선물", search_type="일별추이", trade_index="거래량", trade_check="매수")
 
 # [15008] 협의대량거래실적 추이 --> 상세선택 및 권리유형 미구현
-# 주의 : product_  ("_" 언더바를 입력해야 함)
-data = finance.data_reader('15008', start=20210309, end=20210316, product_="코스피200 선물")
+data = finance.data_reader('15008', start=20210309, end=20210316, item="코스피200 선물")
 
 # [15009] 기초자산별 거래실적(주식선물/옵션)
-# 주의 : product_  ("_" 언더바를 입력해야 함)
-data = finance.data_reader('15009', start=20210309, end=20210316, product_="주식선물")
-data = finance.data_reader('15009', start=20210309, end=20210316, product_="주식옵션", right_type="CALL")
+data = finance.data_reader('15009', start=20210309, end=20210316, item="주식선물")
+data = finance.data_reader('15009', start=20210309, end=20210316, item="주식옵션", right_type="CALL")
 ```
 
 #### 5.4 세부안내
 
-```
+```python
+import finance
 # [15010] 베이시스 추이(선물)  --> 일부 제대로 작동 안함
-# 주의 : product_  ("_" 언더바를 입력해야 함)
 
 # inquiry="상품" --> 상세선택 미구현
-data = finance.data_reader('15010', start=20210309, end=20210316, inquiry="상품", product_="10년국채 선물", detail="최근월물")
+data = finance.data_reader('15010', start=20210309, end=20210316, search_type="상품", item="10년국채 선물", detail="최근월물")
 
-# inquiry="개별종목" --> 제대로 작동 안함
-data = finance.data_reader('15010', start=20210309, end=20210316, inquiry="개별종목", product_="변동성지수 F 202109")
+# inquiry="개별종목"
+data = finance.data_reader('15010', start=20210309, end=20210316, search_type="개별종목", item="변동성지수 F 202109")
 
 # [15011] 내재변동성 추이(옵션)
-# 주의 : product_  ("_" 언더바를 입력해야 함)
-data = finance.data_reader('15011', start=20210216, end=20210316, product_="미니코스피200 옵션")
+data = finance.data_reader('15011', start=20210216, end=20210316, item="미니코스피200 옵션")
 
 # [15012] P/C Ratio 추이(옵션)
-# 주의 : product_  ("_" 언더바를 입력해야 함)
-data = finance.data_reader('15012', start=20210216, end=20210316, product_="코스피200 위클리 옵션")
+data = finance.data_reader('15012', start=20210216, end=20210316, item="코스피200 위클리 옵션")
 
 # [15013] 행사가격/만기별 가격표(옵션)
 pass
@@ -271,7 +267,8 @@ data = finance.data_reader('15016', start=20210117, end=20210317)
 
 #### 6.1 석유
 
-```
+```python
+import finance
 # [16101] 전종목 기본정보
 data = finance.data_reader('16101', oil="휘발유")
 
@@ -292,7 +289,8 @@ data = finance.data_reader('16104', start=20210309, end=20210316, oil="휘발유
 
 #### 6.2 금
 
-```
+```python
+import finance
 # [16201] 전종목 시세
 data = finance.data_reader('16201', day=20210317)
 
@@ -321,13 +319,14 @@ data = finance.data_reader('16206', start=20210309, end=20210316)
 # 아래 표
 data = finance.data_reader('16207', start=20210309, end=20210316)
 
-# 위 표  --> $/온스 행 안뜸
+# 위 표  --> 이용불가능
 data = finance.data_reader('16207', start=20210309, end=20210316, inquiry="현재가")
 ```
 
 #### 6.3 배출권
 
-```
+```python
+import finance
 # [16301] 전종목 시세
 data = finance.data_reader('16301', day=20210317)
 
@@ -345,7 +344,8 @@ pass
 
 #### 7.1 EUREX
 
-```
+```python
+import finance
 # [17101~17103] 미구현
 
 # [17104] 개별종목 시세 추이
@@ -368,7 +368,8 @@ data = finance.data_reader('17108', start=20201216, end=20210316)
 
 #### 7.2 동경거래소 시세
 
-```
+```python
+import finance
 # [17109] 개별종목 종합정보
 pass
 ```

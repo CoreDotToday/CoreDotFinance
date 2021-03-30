@@ -66,7 +66,6 @@ def data_reader(code, start=None, end=None, day=None,
     elif code in oversees_code_list_euro:
         data_json, column_map = oversees.EUREX(code, start, end, day, **kwargs).read()
 
-
     else:
         raise ValueError(f"No function code, [{code}]")
     return convert(data_json, column_map)

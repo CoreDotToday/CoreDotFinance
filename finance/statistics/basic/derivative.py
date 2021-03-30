@@ -4,40 +4,41 @@ from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
 
 class Derivative(Info):
-    def __init__(self, code, start, end, day, product, code_to_function, kwargs):
+    def __init__(self, code, start, end, day, item, code_to_function, kwargs):
         super().__init__(start, end, day)
         self.function = code_to_function[code]
-        if product:
-            self.data_cd, self.data_nm, self.data_tp = self.autocomplete(product)
+        if item and code in ['15002']:
+            self.data_cd, self.data_nm, self.data_tp = self.autocomplete(item)
+        self.item = item
         self.inquiry = kwargs.get('inquiry', None)
-        self.product = kwargs.get('product_', None)
         self.trade_index = kwargs.get('trade_index', None)
         self.trade_check = kwargs.get('trade_check', None)
         self.market = kwargs.get('market', None)
         self.right_type = kwargs.get('right_type', None)
         self.detail = kwargs.get('detail', None)
+        self.search_type = kwargs.get('search_type', None)
 
-    def autocomplete(self, product):
+    def autocomplete(self, item):
         auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_drvprodisu&' \
-                            f'value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_drvprodisu_autocomplete'
-        response = requests.get(auto_complete_url.format(product=product))
+                            f'value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_drvprodisu_autocomplete'
+        response = requests.get(auto_complete_url.format(item=item))
         soup = bs(response.content, 'html.parser').li
 
         if soup is None:
-            raise ValueError(f'{product} is Wrong name as a product')
+            raise ValueError(f'{item} is Wrong name as a item')
 
         print(soup.attrs['data-nm'])
         return soup.attrs['data-cd'], soup.attrs['data-nm'], soup.attrs['data-tp']
 
 
 class ItemPrice(Derivative):
-    def __init__(self, code, start, end, day, product, **kwargs):
+    def __init__(self, code, start, end, day, item, **kwargs):
         code_to_function = {
             '15001': self.price_of_entire_item,
             '15002': self.price_trend_of_item,
             '15003': self.price_trend_of_futures
         }
-        super().__init__(code, start, end, day, product, code_to_function, kwargs)
+        super().__init__(code, start, end, day, item, code_to_function, kwargs)
 
 
     def price_of_entire_item(self):
@@ -45,7 +46,7 @@ class ItemPrice(Derivative):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT12501',
             'trdDd': self.day,
-            'prodId': self.product,
+            'prodId': self.item,
             'mktTpCd': self.market,
         }
         return self.requests_data(data)
@@ -65,7 +66,8 @@ class ItemPrice(Derivative):
         """최근월물 시세 추이(선물)[15003]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT12701',
-            'prodId': self.product,
+            'prodId': self.item,
+            #'subProdId': self.detail, # subProdId를 불러오는데 문제가 있었
             'strtDd': self.start,
             'endDd': self.end,
             'mktTpCd': self.market,
@@ -74,18 +76,18 @@ class ItemPrice(Derivative):
 
 
 class ItemInfo(Derivative):
-    def __init__(self, code, start, end, day, product, **kwargs):
+    def __init__(self, code, start, end, day, item, **kwargs):
         code_to_function = {
             '15004': self.info_of_entire_item,
             '15005': self.info_of_item,
         }
-        super().__init__(code, start, end, day, product, code_to_function, kwargs)
+        super().__init__(code, start, end, day, item, code_to_function, kwargs)
 
     def info_of_entire_item(self):
         """전종목 기본정보[15004]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT12801',
-            'prodId': self.product
+            'prodId': self.item
         }
         return self.requests_data(data)
 
@@ -95,14 +97,14 @@ class ItemInfo(Derivative):
 
 
 class TradePerform(Derivative):
-    def __init__(self, code, start, end, day, product, **kwargs):
+    def __init__(self, code, start, end, day, item, **kwargs):
         code_to_function = {
             '15006': self.trade_perform_of_entire_item,
             '15007': self.trade_perform_ber_invastor,
             '15008': self.trend_of_consulted_big_trade_performance,
             '15009': self.trade_performance_of_basic_asset
         }
-        super().__init__(code, start, end, day, product, code_to_function, kwargs)
+        super().__init__(code, start, end, day, item, code_to_function, kwargs)
 
     def trade_perform_of_entire_item(self):
         """전체상품 거래실적[15006]"""
@@ -114,12 +116,16 @@ class TradePerform(Derivative):
 
     def trade_perform_ber_invastor(self):
         """투자자별 거래실적[15007]"""
+        if self.search_type == '개별추이':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT13102'
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT13101'
         data = {
-            'bld': 'dbms/MDC/STAT/standard/MDCSTAT13101',
-            'isuCd': self.product,
+            'bld': bld,
+            'isuCd': self.item,
             'strtDd': self.start,
             'endDd': self.end,
-            'inqTpCd': self.inquiry,
+            'inqTpCd': self.search_type,
             'prtType': self.trade_index,
             'prtCheck': self.trade_check,
             'juya': self.market
@@ -130,7 +136,7 @@ class TradePerform(Derivative):
         """협의대향거래실적 추이[15008]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT13201',
-            'isuCd': self.product,
+            'isuCd': self.item,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -141,7 +147,7 @@ class TradePerform(Derivative):
         """기초자산별 거래실적(주식/선물/옵션)[15009]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT13301',
-            'secugrpId': self.product,
+            'secugrpId': self.item,
             'isuOpt': self.right_type,
             'strtDd': self.start,
             'endDd': self.end
@@ -150,7 +156,7 @@ class TradePerform(Derivative):
 
 
 class Detail(Derivative):
-    def __init__(self, code, start, end, day, product, **kwargs):
+    def __init__(self, code, start, end, day, item, **kwargs):
         code_to_function = {
             '15010': self.future_trend_of_basis,
             '15011': self.trend_of_implied_volatility,
@@ -160,15 +166,25 @@ class Detail(Derivative):
             '15015': self.sudden_change_of_setting_price,
             '15016': self.ratio_of_low_exercise_of_right
         }
-        super().__init__(code, start, end, day, product, code_to_function, kwargs)
+        super().__init__(code, start, end, day, item, code_to_function, kwargs)
 
     def future_trend_of_basis(self):
         """베이시스 추이(선물)[15010]"""
+        if self.search_type == '개별종목':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT13402'
+            data_cd, data_nm, data_tp = self.autocomplete(self.item)
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT13401'
+            data_cd, data_nm, data_tp = None, None, None
         data = {
-            'bld': 'dbms/MDC/STAT/standard/MDCSTAT13401',
-            'secugrpId': self.inquiry,
-            'prodId': self.product,
+            'bld': bld,
+            'secugrpId': self.search_type,
+            'prodId': self.item,
             'expmmNo': self.detail,
+            'tboxisuCd_finder_drvfuprodisu1_1': f'{data_tp}/{data_nm}',
+            'isuCd': data_cd,
+            'isuCd2': self.item,
+            'codeNmisuCd_finder_drvfuprodisu1_1': data_nm,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -178,7 +194,7 @@ class Detail(Derivative):
         """내재변동성 추이(옵션)[15011]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT13501',
-            'prodId': self.product,
+            'prodId': self.item,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -188,7 +204,7 @@ class Detail(Derivative):
         """P/C Ratio 추이(옵션)[15012]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT13601',
-            'prodId': self.product,
+            'prodId': self.item,
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -198,7 +214,7 @@ class Detail(Derivative):
         """행사가격/만기별 가격표(옵션)[15013]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT13701',
-            'prodId': self.product
+            'prodId': self.item
         }
         return 'Not now'  # 표를 띄우는 것이 쉽지 않음..
 

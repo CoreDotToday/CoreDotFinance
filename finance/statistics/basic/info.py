@@ -175,10 +175,13 @@ class Info:
                 baseName = e
             elif 'bld' in e:
                 key = e
+        print(f'baseName : {baseName}\nkey : {key}')
         market = 'kospi'
         efrb_url = f'http://data.krx.co.kr/comm/bldAttendant/executeForResourceBundle.cmd?baseName={baseName}&key={key}&type={market}'
+        print(efrb_url)
         html = requests.get(efrb_url)
         soup = bs(html.content, 'html.parser')
+        print(soup)
         the = json.loads(str(soup))
         new = the['result']['output']
         result = {}

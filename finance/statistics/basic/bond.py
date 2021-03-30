@@ -4,56 +4,47 @@ from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
 
 class Bond(Info):
-    def __init__(self, code, start, end, day, product, code_to_function):
+    def __init__(self, code, start, end, day, item, code_to_function):
         super(Bond, self).__init__(start, end, day)
         self.function = code_to_function[code]
-        self.data_cd, self.data_nm, self.data_tp = self.autocomplete(product, code)
+        self.data_cd, self.data_nm, self.data_tp = self.autocomplete(item, code)
 
-    def autocomplete(self, product, code):
-        if product is None:
+    def autocomplete(self, item, code):
+        if item is None:
             return None, None, None
         if code in ['14011', '14021', '14023']:
             #  발행기관명
             auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_bndordisu' \
-                                '&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder' \
+                                '&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder' \
                                 '%2Ffinder_bndordisu_autocomplete'
         else:
             auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_bondisu' \
-                                '&value={product}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder' \
+                                '&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder' \
                                 '%2Ffinder_bondisu_autocomplete'
-        response = requests.get(auto_complete_url.format(product=product))
+        response = requests.get(auto_complete_url.format(item=item))
         soup = bs(response.content, 'html.parser').li
 
         if soup is None:
-            raise ValueError(f'{product} is Wrong name as a product')
+            raise ValueError(f'{item} is Wrong name as a item')
 
         print(soup.attrs['data-nm'])
         return soup.attrs['data-cd'], soup.attrs['data-nm'], soup.attrs['data-tp']
 
 
-
-
 class ItemPrice(Bond):
-    def __init__(self, code, start, end, day, product, **kwargs):
+    def __init__(self, code, start, end, day, item, **kwargs):
         code_to_function = {
             '14001': self.price_of_entire_item,
             '14002': self.price_trend_of_item
         }
-        super().__init__(code, start, end, day, product, code_to_function)
-        market_map = {
-            '국채전문유통시장': 'KTS',
-            '일반채권시장': 'BND',
-            '소액채권시장': 'SMB'
-        }
-        self.market = market_map[kwargs.get('market', None)]
-        self.market_1 = kwargs.get('market', None)
-
+        super().__init__(code, start, end, day, item, code_to_function)
+        self.market = kwargs.get('market', None)
 
     def price_of_entire_item(self):
         """전종목 시세 [14001]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT09801',
-            'mktId': self.market_1,
+            'mktId': self.market,
             'trdDd': self.day
             }
         return self.requests_data(data)
@@ -62,7 +53,7 @@ class ItemPrice(Bond):
         """개별종목 시세 추이 [14002]"""
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT09901',
-            'mktId': self.market_1,
+            'mktId': self.market,
             'isuCd': self.data_cd,
             'tboxisuCdBox0_finder_bondisu0_2': self.data_nm,
             'strtDd': self.start,
@@ -72,14 +63,14 @@ class ItemPrice(Bond):
 
 
 class ItemInfo(Bond):
-    def __init__(self, code, start, end, day, product, **kwargs):
+    def __init__(self, code, start, end, day, item, **kwargs):
 
         code_to_function = {
             '14003': self.info_of_entire_item,
             '14004': ''
         }
         self.bond_type = kwargs.get('bond_type', None)
-        super(ItemInfo, self).__init__(code, start, end, day, product, code_to_function)
+        super(ItemInfo, self).__init__(code, start, end, day, item, code_to_function)
 
     def info_of_entire_item(self):
         """전종목 기본정보 [14003]"""
@@ -95,14 +86,14 @@ class ItemInfo(Bond):
 
 
 class TradePerform(Bond):
-    def __init__(self, code, start, end, day, product, **kwargs):
+    def __init__(self, code, start, end, day, item, **kwargs):
         code_to_function = {
             '14005': self.trade_performance_per_category,
             '14006': self.trade_performance_per_investor,
             '14007': self.trade_performance_of_bond_index_item,
             '14008': self.trade_performance_of_Repo
         }
-        super(TradePerform, self).__init__(code, start, end, day, product, code_to_function)
+        super(TradePerform, self).__init__(code, start, end, day, item, code_to_function)
         self.market = kwargs.get('market', None)
         self.inquiry = kwargs.get('inquiry', None)
 
@@ -149,7 +140,7 @@ class TradePerform(Bond):
 
 
 class Detail(Bond):
-    def __init__(self, code, start, end, day, product, **kwargs):
+    def __init__(self, code, start, end, day, item, **kwargs):
         code_to_funciton = {
             '14009': self.price_assessment_trend_of_item,
             '14010': self.reported_price_trend_of_small_bond,
@@ -171,10 +162,11 @@ class Detail(Bond):
             '14026': self.exercise_of_right_of_bond_about_stock,
             '14027': self.strike_price_of_bond_about_stock
         }
-        super().__init__(code, start, end, day, product, code_to_funciton)
+        super().__init__(code, start, end, day, item, code_to_funciton)
         self.market = kwargs.get('market', None)
         self.inquiry = kwargs.get('inquiry', None)
         self.bond_type = kwargs.get('bond_type', None)
+        self.search_type = kwargs.get('search_type', None)
 
     def price_assessment_trend_of_item(self):
         """개별종목 시가평가 추이 [14009]"""
@@ -225,9 +217,16 @@ class Detail(Bond):
 
     def histoty_per_type_of_publication(self):
         """상장유형별 내역 [14013]"""
+        if self.search_type == '추가':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT11002'
+        elif self.search_type == '변경':
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT11003'
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT11001'
+
         data = {
-            'bld': 'dbms/MDC/STAT/standard/MDCSTAT11001',
-            'inqTpCd': self.inquiry,
+            'bld': bld,
+            'inqTpCd': self.search_type,
             'BndMktactTpCd': self.bond_type,
             'strtDd': self.start,
             'endDd': self.end
@@ -265,15 +264,23 @@ class Detail(Bond):
 
     def rate_of_profit_of_bond_over_the_counter(self):
         """장외 채권수익률 [14017]"""
-        if self.inquiry == '개별추이':
+        #### ExecuteForResourceBundle 의 url이 requests.get으로 안받아와진다!!
+        #### http://data.krx.co.kr/comm/bldAttendant/executeForResourceBundle.cmd?baseName=krx.mdc.i18n.component&key=B160.bld&type=kospi
+        if self.search_type == '개별추이':
             bld = 'dbms/MDC/STAT/standard/MDCSTAT11402'
         else:
             bld = 'dbms/MDC/STAT/standard/MDCSTAT11401'
+        output = { "국고채 1년": "3006", "국고채 2년": "3019",
+                   "국고채 3년": "3000", "국고채 5년": "3007",
+                   "국고채 10년": "3013", "국고채 20년": "3014",
+                   "국고채 30년": "3017", "국민주택 1종 5년": "3008",
+                   "회사채 AA-(무보증 3년)": "3009", "회사채 BBB- (무보증 3년)": "3010",
+                   "CD(91일)": "4000"}
         data = {
             'bld': bld,
-            'inqTpCd': self.inquiry,
+            'inqTpCd': self.search_type,
             'trdDd': self.day,
-            'bndKindTpCd': self.bond_type,
+            'bndKindTpCd': output[self.bond_type],
             'strtDd': self.start,
             'endDd': self.end
         }
@@ -300,9 +307,12 @@ class Detail(Bond):
 
     def substitution_price_of_bond(self):
         """채권 대용가 [14020]"""
+        if self.search_type == '개별추이':
+            bld = None # jsGrid_dict를 찾지 못함...
+        else:
+            bld = 'dbms/MDC/STAT/standard/MDCSTAT11701'
         data = {
-            'bld': 'dbms/MDC/STAT/standard/MDCSTAT11701',
-            'searchType': self.inquiry,
+            'bld': bld,
             'tboxisuCd_finder_bondisu0_10': f'{self.data_cd}/{self.data_nm}',
             'isuCd': self.data_cd,
             'isuCd2': self.data_cd,
@@ -311,7 +321,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return None  # 위 기능같은 경우, 개별추이를 선택했을 때 2개의 data(각각 bld가 다르다)를 요청해 결과를 받는다.
+        return self.requests_data(data)
 
     def substitution_price_of_bond_per_issuer(self):
         """발행기관별 채권 대용가 [14021]"""

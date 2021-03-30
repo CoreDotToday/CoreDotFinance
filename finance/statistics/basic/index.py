@@ -9,7 +9,6 @@ class Index(Info):
         super(Index, self).__init__(start, end, day)
 
 
-
 class StockIndex(Index):
     def __init__(self, code, start, end, day, division, item, **kwargs):
         """ 주가지수
@@ -170,7 +169,8 @@ class DerivationIndex(Index):
             '11014': 'Not now'
         }
         super().__init__(code, code_to_function, start, end, day)
-        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
+        if item:
+            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
         self.division = '선물지수' if division is None else division.upper()
         self.function = code_to_function[code]
 

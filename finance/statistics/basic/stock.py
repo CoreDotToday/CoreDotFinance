@@ -19,7 +19,8 @@ class Stock(Info):
         item_code = kwargs.get('item_code', None)
         if item_code:
             item = self.convert_code_to_name(item_code)
-        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
+        if item:
+            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
         self.division = '전체' if division is None else division.upper()
         self.function = code_to_function[code]
         self.detail = kwargs.get('detail', None)
@@ -29,9 +30,6 @@ class Stock(Info):
 
 
     def autocomplete(self, item):
-        if item is None:
-            # 나중에 고쳐야함. item 이 필요한 함수들은 item이 없을 때 item이 없음을 알릴 필요가 있음.
-            item = '삼성전자'
         stock_autocomplete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_stkisu&value={value}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_stkisu_autocomplete'
         response = requests.get(stock_autocomplete_url.format(value=item))
         soup = bs(response.content, 'html.parser').li
@@ -71,7 +69,6 @@ class ItemPrice(Stock):
         }
 
         super(ItemPrice, self).__init__(code, code_to_function, division, item, start, end, day, **kwargs)
-
 
     def price_of_entire_item(self):
         """ 전종목 시세 [12001] """
@@ -144,8 +141,6 @@ class ItemInfo(Stock):
 
         super(ItemInfo, self).__init__(code, code_to_function, division, None, start, end, day)
 
-
-
     def info_of_entire_itme(self):
         """전체 종목 기본 정보 [12005]"""
         data = {
@@ -193,7 +188,6 @@ class TradePerform(Stock):
             self.etf = 'ETF' if 'ETF' in addition_item else None
             self.etn = 'ETN' if 'ETN' in addition_item else None
             self.elw = 'ELW' if 'ELW' in addition_item else None
-
 
     def trade_perform_by_invastor(self):
         """투자자별 거래실적 [12008]"""
@@ -286,7 +280,6 @@ class OtherSecurity(Stock):
             '12018': self.price_of_warranty,
             '12019': self.price_of_subscription_warranty
         }
-
 
         super().__init__(code, code_to_function, division, None, start, end, day)
 

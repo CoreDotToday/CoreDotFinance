@@ -18,15 +18,16 @@ class Product(Info):
         item_code = kwargs.get('item_code', None)
         if item_code:
             item = self.convert_code_to_item(item_code, item_type)
+        if item:
+            self.data_cd, self.data_nm, self.data_tp = self.autocomplete(item, item_type)
         self.function = code_to_function[code]
-        self.data_cd, self.data_nm, self.data_tp = self.autocomplete(item, item_type)
         self.search_type = kwargs.get('search_type', None)
         self.trade_index = kwargs.get('trade_index', None)
         self.trade_check = kwargs.get('trade_check', None)
 
     def autocomplete(self, item, item_type):
-            if item is None:
-                return 'ALL', '전체', 'ALL'
+            #if item is None:
+            #    return 'ALL', '전체', 'ALL'
             if item_type == 'ETF':
                 auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etf&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etf_autocomplete'
             elif item_type == 'ETN':
@@ -56,7 +57,6 @@ class Product(Info):
         for i in data[0]['output']:
             if i['ISU_SRT_CD'] == str(item_code):
                 return i['ISU_ABBRV']
-
 
 
 class ETF(Product):
@@ -330,6 +330,7 @@ class ETF(Product):
         }
         return self.requests_data(data)
 
+
 class ETN(Product):
     def __init__(self, code, start, end, day, product, **kwargs):
 
@@ -352,7 +353,6 @@ class ETN(Product):
         }
         super(ETN, self).__init__(code, start, end, day, product, 'ETN', code_to_function, **kwargs)
         self.issuing = kwargs.get('issuing', None)
-
 
     def price_of_entire_items(self):
         """
@@ -539,6 +539,7 @@ class ETN(Product):
         """분기별 LP 평가 [13216]"""
         '''Web page error '''
         pass
+
 
 class ELW(Product):
     def __init__(self, code, start, end, day, product, **kwargs):

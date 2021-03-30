@@ -40,7 +40,6 @@ class ItemPrice(Derivative):
         }
         super().__init__(code, start, end, day, item, code_to_function, kwargs)
 
-
     def price_of_entire_item(self):
         """전종목 시세[15001] """
         data = {

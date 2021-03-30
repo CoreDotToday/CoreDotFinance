@@ -39,6 +39,6 @@ def per(stock='all', start=None, end=None):
         return data_reader('12021', search_type='전종목', market='전체', day=start)
     else:
         if stock in stock_code_list:
-            return data_reader('12021', search_type='개별추이', item_code=stock, day=start)
+            return data_reader('12021', search_type='개별추이', item_code=stock, start=start, end=end)
         else:
-            return data_reader('12021', search_type='개별추이', item=stock, day=start)
+            return data_reader('12021', search_type='개별추이', item=stock, start=start, end=end)

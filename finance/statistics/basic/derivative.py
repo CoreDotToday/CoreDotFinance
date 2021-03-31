@@ -7,7 +7,7 @@ class Derivative(Info):
     def __init__(self, code, start, end, day, item, code_to_function, kwargs):
         super().__init__(start, end, day)
         self.function = code_to_function[code]
-        if item and code in ['15002']:
+        if code in ['15002']:
             self.data_cd, self.data_nm, self.data_tp = self.autocomplete(item)
         self.item = item
         self.inquiry = kwargs.get('inquiry', None)
@@ -19,6 +19,8 @@ class Derivative(Info):
         self.search_type = kwargs.get('search_type', None)
 
     def autocomplete(self, item):
+        if item is None:
+            return None, None, None
         auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_drvprodisu&' \
                             f'value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_drvprodisu_autocomplete'
         response = requests.get(auto_complete_url.format(item=item))

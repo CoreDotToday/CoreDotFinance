@@ -30,8 +30,10 @@ class Stock(Info):
 
     def autocomplete(self, item):
         if item is None:
-            # 나중에 고쳐야함. item 이 필요한 함수들은 item이 없을 때 item이 없음을 알릴 필요가 있음.
-            item = '삼성전자'
+            return None, None, None
+        if '&' in item:
+            # url에 item 문자열을 적용시키기 위 '&'를 변환시킴
+            item = item.replace('&', '%2526')
         stock_autocomplete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_stkisu&value={value}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_stkisu_autocomplete'
         response = requests.get(stock_autocomplete_url.format(value=item))
         soup = bs(response.content, 'html.parser').li

@@ -13,7 +13,7 @@ data = finance.get('삼성전자', 20200101, 2021101)
 data = finance.get('001120', 20200101, 2021101)
 ```
 `finance.get('종목명 또는 종목코드', '검색 시작일', '검색 종료일')`
-### 종목 per/pbr/배당수익률 검색
+### per / pbr / 배당수익률 검색
 ```python
 import finance
 # 전종목 per/pbr/배당수익률 검색

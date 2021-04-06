@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import re
-
 from finance.data_reader import data_reader
 
 stock_code_list = data_reader('12021', market='전체', search_type='전종목')['종목코드'].array

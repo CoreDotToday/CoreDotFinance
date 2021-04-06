@@ -3,6 +3,7 @@ import re
 from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup as bs
+from finance.dataframing import Data_nm
 
 class Info:
     def __init__(self, start, end, day):
@@ -58,7 +59,7 @@ class Info:
 
         if soup is None:
             raise AttributeError(f'{item} is Wrong name as a stock name')
-
+        Data_nm.data_nm = soup.attrs['data-nm']
         return soup.attrs['data-nm'], soup.attrs['data-cd'], soup.attrs['data-tp']
 
     def input_to_value(self, soup, data):

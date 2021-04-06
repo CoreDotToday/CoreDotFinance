@@ -15,11 +15,16 @@ no_display_columns = ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID',
                       'ISU_ABBRV', 'SUB_IDX_IND_NM', 'ISU_CD']
 
 
+class Data_nm:
+    data_nm = None
+
+
 def to_dataframe(data_json, column_map):
     data = apply_column_map(data_json, column_map)
     data = date_to_index(data)
     data = multi_columnize(data)
     data = string_to_float(data)
+    data = data_nm_column(data)
     return data
 
 
@@ -93,4 +98,12 @@ def date_to_index(data):
     date_list = [datetime.strptime(date, '%Y/%m/%d') for date in data['일자']]
     data.index = date_list
     return data.drop(['일자'], axis='columns')
+
+
+def data_nm_column(data):
+    if Data_nm.data_nm is None:
+        return data
+    data['종목명'] = [Data_nm.data_nm for _ in range(len(data))]
+    return data
+
 

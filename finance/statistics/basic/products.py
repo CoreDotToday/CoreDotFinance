@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import requests
-from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
+
 
 class Product(Info):
     def __init__(self, code, start, end, day, item, item_type, code_to_function, **kwargs):
@@ -18,28 +17,12 @@ class Product(Info):
         item_code = kwargs.get('item_code', None)
         if item_code:
             item = self.convert_code_to_item(item_code, item_type)
-        if item:
-            self.data_cd, self.data_nm, self.data_tp = self.autocomplete(item, item_type)
+
+        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, item_type)
         self.function = code_to_function[code]
         self.search_type = kwargs.get('search_type', None)
         self.trade_index = kwargs.get('trade_index', None)
         self.trade_check = kwargs.get('trade_check', None)
-
-    def autocomplete(self, item, item_type):
-            #if item is None:
-            #    return 'ALL', '전체', 'ALL'
-            if item_type == 'ETF':
-                auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etf&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etf_autocomplete'
-            elif item_type == 'ETN':
-                auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etn&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etn_autocomplete'
-            elif item_type == 'ELW':
-                auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_elw&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_elw_autocomplete'
-            response = requests.get(auto_complete_url.format(item=item))
-            soup = bs(response.content, 'html.parser').li
-            if soup is None:
-                raise ValueError(f'{item} is Wrong name as a product')
-            print(soup.attrs['data-nm'])
-            return soup.attrs['data-cd'], soup.attrs['data-nm'], soup.attrs['data-tp']
 
     def convert_code_to_item(self, item_code, item_type):
         if item_type == 'ETF':
@@ -50,6 +33,11 @@ class Product(Info):
         elif item_type == 'ETN':
             request_data = {
                 'bld': 'dbms/MDC/STAT/standard/MDCSTAT06401',
+                'trdDd': self.day
+            }
+        elif item_type == 'ELW':
+            request_data = {
+                'bld': 'dbms/MDC/STAT/standard/MDCSTAT08301',
                 'trdDd': self.day
             }
 

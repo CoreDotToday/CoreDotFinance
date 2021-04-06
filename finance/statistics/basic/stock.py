@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-
-import requests
-from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
+
 
 class Stock(Info):
     def __init__(self, code, code_to_function, division, item, start, end, day, **kwargs):
@@ -19,31 +17,13 @@ class Stock(Info):
         item_code = kwargs.get('item_code', None)
         if item_code:
             item = self.convert_code_to_name(item_code)
-        if item:
-            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
+        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, 'stock')
         self.division = '전체' if division is None else division.upper()
         self.function = code_to_function[code]
         self.detail = kwargs.get('detail', None)
         self.trade_index = kwargs.get('trade_index', None)
         self.trade_check = kwargs.get('trade_check', None)
 
-
-
-    def autocomplete(self, item):
-        if item is None:
-            return None, None, None
-        if '&' in item:
-            # url에 item 문자열을 적용시키기 위 '&'를 변환시킴
-            item = item.replace('&', '%2526')
-
-        stock_autocomplete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_stkisu&value={value}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_stkisu_autocomplete'
-        response = requests.get(stock_autocomplete_url.format(value=item))
-        soup = bs(response.content, 'html.parser').li
-
-        if soup is None:
-            raise AttributeError(f'{item} is Wrong name as a stock name')
-
-        return soup.attrs['data-nm'], soup.attrs['data-cd'], soup.attrs['data-tp']
 
     def convert_code_to_name(self, item_code):
         # 전종목 기본정보 [12005] 데이터

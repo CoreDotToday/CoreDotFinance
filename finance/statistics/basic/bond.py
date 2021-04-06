@@ -1,34 +1,15 @@
 # -*- coding: utf-8 -*-
-import requests
-from bs4 import BeautifulSoup as bs
 from finance.statistics.basic.info import Info
+
 
 class Bond(Info):
     def __init__(self, code, start, end, day, item, code_to_function):
         super(Bond, self).__init__(start, end, day)
         self.function = code_to_function[code]
-        self.data_cd, self.data_nm, self.data_tp = self.autocomplete(item, code)
-
-    def autocomplete(self, item, code):
-        if item is None:
-            return None, None, None
         if code in ['14011', '14021', '14023']:
-            #  발행기관명
-            auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_bndordisu' \
-                                '&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder' \
-                                '%2Ffinder_bndordisu_autocomplete'
+            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, 'publish')
         else:
-            auto_complete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_bondisu' \
-                                '&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder' \
-                                '%2Ffinder_bondisu_autocomplete'
-        response = requests.get(auto_complete_url.format(item=item))
-        soup = bs(response.content, 'html.parser').li
-
-        if soup is None:
-            raise ValueError(f'{item} is Wrong name as a item')
-
-        print(soup.attrs['data-nm'])
-        return soup.attrs['data-cd'], soup.attrs['data-nm'], soup.attrs['data-tp']
+            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, 'bond')
 
 
 class ItemPrice(Bond):

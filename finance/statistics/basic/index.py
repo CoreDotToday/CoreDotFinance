@@ -30,25 +30,10 @@ class StockIndex(Index):
         }
 
         super().__init__(code, code_to_function, start, end, day)
-        if item:
-            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
+        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
         self.division = 'KRX' if division is None else division.upper()
         self.search_type = kwargs.get('search_type', '전체지수')
 
-    def autocomplete(self, item):
-
-        index_autocomplete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_equidx&value={value}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_equidx_autocomplete'
-        response = requests.get(index_autocomplete_url.format(value=item))
-        soup = bs(response.content, 'html.parser').li
-
-        if soup is None:
-            raise AttributeError(f'{item} is Wrong name as an index name')
-
-        data_nm = soup.attrs['data-nm']
-        data_cd = soup.attrs['data-cd']
-        data_tp = soup.attrs['data-tp']
-
-        return data_nm, data_cd, data_tp
 
     def price_of_entire_index(self):
         """전체 지수 시세 [11001]"""

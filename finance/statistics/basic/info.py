@@ -27,7 +27,6 @@ class Info:
         data['MIME Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         data['csvxls_isNo'] = 'false'
 
-
         jsp_soup, mdcstat = self.get_jsp_soup(data)
         column_map = self.get_column_map(jsp_soup, mdcstat)
         modified_data = self.input_to_value(jsp_soup, data)
@@ -36,6 +35,31 @@ class Info:
         data = json.loads(r.content)
 
         return data, column_map
+
+    def autocomplete(self, item, item_type):
+        if item is None:
+            return None, None, None
+        if '&' in item:
+            # url에 item 문자열을 적용시키기 위 '&'를 변환시킴
+            item = item.replace('&', '%2526')
+
+        url_dict = {
+            'index': 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_equidx&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_equidx_autocomplete',
+            'stock': 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_stkisu&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_stkisu_autocomplete',
+            'ETF': 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etf&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etf_autocomplete',
+            'ETN': 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_etn&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_etn_autocomplete',
+            'ELW': 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_secuprodisu_elw&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_secuprodisu_elw_autocomplete',
+            'derivative': 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_drvprodisu&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_drvprodisu_autocomplete',
+            'publish': 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_bndordisu&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_bndordisu_autocomplete',
+            'bond': 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_bondisu&value={item}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_bondisu_autocomplete'
+        }
+        response = requests.get(url_dict[item_type].format(item=item))
+        soup = bs(response.content, 'html.parser').li
+
+        if soup is None:
+            raise AttributeError(f'{item} is Wrong name as a stock name')
+
+        return soup.attrs['data-nm'], soup.attrs['data-cd'], soup.attrs['data-tp']
 
     def input_to_value(self, soup, data):
         answer_map = self.get_answer_map(soup)

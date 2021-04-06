@@ -30,6 +30,12 @@ class Stock(Info):
 
 
     def autocomplete(self, item):
+        if item is None:
+            return None, None, None
+        if '&' in item:
+            # url에 item 문자열을 적용시키기 위 '&'를 변환시킴
+            item = item.replace('&', '%2526')
+
         stock_autocomplete_url = 'http://data.krx.co.kr/comm/finder/autocomplete.jspx?contextName=finder_stkisu&value={value}&viewCount=5&bldPath=%2Fdbms%2Fcomm%2Ffinder%2Ffinder_stkisu_autocomplete'
         response = requests.get(stock_autocomplete_url.format(value=item))
         soup = bs(response.content, 'html.parser').li

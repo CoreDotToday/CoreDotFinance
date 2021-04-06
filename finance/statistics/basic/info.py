@@ -24,7 +24,6 @@ class Info:
         self.url = 'http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd'
 
     def requests_data(self, data):
-        print('<<<before>>>\n', data ,'\n')
         data['MIME Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         data['csvxls_isNo'] = 'false'
 
@@ -34,7 +33,6 @@ class Info:
         modified_data = self.input_to_value(jsp_soup, data)
         r = requests.post(self.url, data=modified_data, headers=self.headers)
 
-        print('<<<after>>>\nr', modified_data ,'\n')
         data = json.loads(r.content)
 
         return data, column_map
@@ -85,7 +83,6 @@ class Info:
     def get_column_map(self, jsp_soup, mdcstat):
         map_ = {}
         jsGird_dict = self.get_jspGird_dict(jsp_soup)
-        print(f'<<<jsGird_dict>>>\n{jsGird_dict}\n')
         jsGrid = jsGird_dict[mdcstat]
 
         table_tag = jsp_soup.find('table', {'id': jsGrid})
@@ -97,7 +94,6 @@ class Info:
         if div_tag:
             div_map = self.get_div_map(div_tag)
             map_.update(div_map)
-        print(f'<<<column_map>>>\n{map_}\n')
         return map_
 
     def get_div_map(self, div_tag):
@@ -164,7 +160,6 @@ class Info:
                 no_use.append(key)
         for no in no_use:
             answer.pop(no)
-        print(f'<<<answer>>>\n{answer}\n')
         return answer
 
     def execute_for_resource_bundle(self, s):
@@ -175,13 +170,10 @@ class Info:
                 baseName = e
             elif 'bld' in e:
                 key = e
-        print(f'baseName : {baseName}\nkey : {key}')
         market = 'kospi'
         efrb_url = f'http://data.krx.co.kr/comm/bldAttendant/executeForResourceBundle.cmd?baseName={baseName}&key={key}&type={market}'
-        print(efrb_url)
         html = requests.get(efrb_url)
         soup = bs(html.content, 'html.parser')
-        print(soup)
         the = json.loads(str(soup))
         new = the['result']['output']
         result = {}

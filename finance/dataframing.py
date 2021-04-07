@@ -63,17 +63,27 @@ def apply_column_map(data_json, column_map):
 
 def multi_columnize(data):
     column_data = [column.split("//") for column in data.columns]
-    columns_length = max([len(c) for c in column_data])
-    if columns_length == 1:
+    columns_depth = max([len(c) for c in column_data])
+    # columns 가 single 인 경우
+    if columns_depth == 1:
         return data
     columns = []
-    for i in range(1, columns_length + 1):
+    # 같은 이름으로 multi columnize 되는 것을 방지
+    for i in column_data:
+        for _ in range(columns_depth - len(i)):
+            i.append('')
+    # column 만들기
+    for i in range(1, columns_depth + 1):
         layer = []
         for column in column_data:
             layer.append(column[:i][-1])
         columns.append(layer)
     data.columns = columns
     return data
+
+def remove_recursive_column_name(columns):
+    pass
+
 
 def string_to_float(data):
     new_values = []

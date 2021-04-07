@@ -16,7 +16,19 @@ no_display_columns = ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID',
 
 
 class Data_nm:
-    data_nm = None
+    _data_nm = None
+    def __init__(self):
+        pass
+
+    @property
+    def data_nm(self):
+        item_name = Data_nm._data_nm
+        Data_nm._data_nm = None
+        return item_name
+
+    @data_nm.setter
+    def data_nm(self, item_name):
+        Data_nm._data_nm = item_name
 
 
 def to_dataframe(data_json, column_map):
@@ -101,9 +113,11 @@ def date_to_index(data):
 
 
 def data_nm_column(data):
-    if Data_nm.data_nm is None:
+    item_name = Data_nm().data_nm
+    if item_name is None:
         return data
-    data['종목명'] = [Data_nm.data_nm for _ in range(len(data))]
+    data['종목명'] = [item_name for _ in range(len(data))]
+
     return data
 
 

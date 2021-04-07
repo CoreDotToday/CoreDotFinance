@@ -59,7 +59,7 @@ class Info:
 
         if soup is None:
             raise AttributeError(f'{item} is Wrong name as a stock name')
-        Data_nm.data_nm = soup.attrs['data-nm']
+        Data_nm().data_nm = soup.attrs['data-nm']
         return soup.attrs['data-nm'], soup.attrs['data-cd'], soup.attrs['data-tp']
 
     def input_to_value(self, soup, data):

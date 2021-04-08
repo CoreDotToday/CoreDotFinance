@@ -64,11 +64,11 @@ class Info:
         # item 입력값이 autocomplete 에서 반환해주는 soup에서 첫번째에 위치하지 않는 경우가 있다. (예 "바이온")
         # 따라서 입력된 item이 autocomlete 내에 있으면 그 soup을 반환해주는 기능을 구현한다.
         name_list = [soup.attrs['data-nm'] for soup in soup_list]
-        data_dict = {name: soup for name, soup in zip(name_list, soup_list)}
-        if item in data_dict:
-            soup = data_dict[item]
+        if item in name_list:
+            index = name_list.index(item)
+            soup = soup_list[index]
         else:
-            soup = data_dict[name_list[0]]
+            soup = soup_list[0]
         Data_nm().data_nm = soup.attrs['data-nm']
         return soup.attrs['data-nm'], soup.attrs['data-cd'], soup.attrs['data-tp']
 

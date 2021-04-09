@@ -32,12 +32,18 @@ class Data_nm:
 
 
 def to_dataframe(data_json, column_map):
+    data_validation(data_json)
     data = apply_column_map(data_json, column_map)
     data = date_to_index(data)
     data = multi_columnize(data)
     data = string_to_float(data)
     data = data_nm_column(data)
     return data
+
+
+def data_validation(data_json):
+    if len(list(data_json.values())[0]) == 0:
+        raise Exception("No data, Check parameters")
 
 
 def apply_column_map(data_json, column_map):

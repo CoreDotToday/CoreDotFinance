@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 import re
 
 
@@ -20,4 +21,41 @@ def classifier(param, item_type=None):
         return 'item code'
     else:
         return 'item name'
+
+
+def start_end_validation(start, end):
+    #  Make StartEndError
+    if start is None and end is None:
+        # 전종목
+        return True
+    elif end is None:
+        # from start to 60 days later
+        return True
+
+    start = str(start)
+    end = str(end)
+
+    if len(start) != 8 or len(end) != 8:
+        raise Exception('StartEndError("start and end have to be 8-digit")')
+    elif start < end:
+        # from start to end
+        return True
+    elif start == end:
+        y = int(start[:4])
+        m = int(start[4:6])
+        d = int(start[6:])
+        weekday = datetime.weekday(datetime(y, m, d))
+        if weekday == 5:
+            raise Exception('StartEndError("start and end are Saturday")')
+        elif weekday == 6:
+            raise Exception('StartEndError("start and end are Sunday")')
+        else:
+            return True
+    elif start > end:
+        raise Exception('StartEndError("start has to be earlier than end)')
+    else:
+        raise ValueError("start and end have to be 8-digit number ")
+
+
+
 

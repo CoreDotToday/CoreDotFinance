@@ -1,9 +1,12 @@
 import json
 import re
+import logging
+
 from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup as bs
 from finance.dataframing import Data_nm
+
 
 class Info:
     def __init__(self, start, end, day):
@@ -17,7 +20,7 @@ class Info:
         self.start = a_month_ago.strftime('%Y%m%d') if start is None else str(start)
         self.end = today.strftime('%Y%m%d') if end is None else str(end)
         self.day = today.strftime('%Y%m%d') if day is None else str(day)
- 
+
         self.headers = {
             'User-Agent':
                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15'
@@ -33,7 +36,14 @@ class Info:
         modified_data = self.input_to_value(jsp_soup, data)
         r = requests.post(self.url, data=modified_data, headers=self.headers)
 
-        data = json.loads(r.content)
+        try:
+            data = json.loads(r.content)
+        except json.JSONDecodeError as e:
+            logger = logging.getLogger('log')
+            logger.info(f'\tdata:\t{data}\n'
+                        f'error:\t{e}\n'
+                        f'status code:\t{r.status_code}'
+                        f'response:\t{r}')
 
         return data, column_map
 

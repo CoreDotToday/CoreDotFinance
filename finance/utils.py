@@ -10,7 +10,10 @@ def classifier(param, item_type=None):
         return 'item name'
 
     if item_type == 'elw':
-        if re.match(r'[0-9]{2}..[0-9]{2}', param)[0] == param:
+        match = re.match(r'[0-9]{2}..[0-9]{2}', param)
+        if match is None:
+            return 'item name'
+        elif match[0] == param:
             return 'item code'
         else:
             return 'item name'
@@ -21,6 +24,13 @@ def classifier(param, item_type=None):
         return 'item code'
     else:
         return 'item name'
+
+
+def week_day(date):
+    y = int(date[:4])
+    m = int(date[4:6])
+    d = int(date[6:])
+    return datetime.weekday(datetime(y, m, d))
 
 
 def start_end_validation(start, end):
@@ -37,22 +47,19 @@ def start_end_validation(start, end):
 
     if len(start) != 8 or len(end) != 8:
         raise Exception('StartEndError("start and end have to be 8-digit")')
+    elif start > end:
+        raise Exception('StartEndError("start has to be earlier than end)')
     elif start < end:
         # from start to end
         return True
     elif start == end:
-        y = int(start[:4])
-        m = int(start[4:6])
-        d = int(start[6:])
-        weekday = datetime.weekday(datetime(y, m, d))
+        weekday = week_day(start)
         if weekday == 5:
             raise Exception('StartEndError("start and end are Saturday")')
         elif weekday == 6:
             raise Exception('StartEndError("start and end are Sunday")')
         else:
             return True
-    elif start > end:
-        raise Exception('StartEndError("start has to be earlier than end)')
     else:
         raise ValueError("start and end have to be 8-digit number ")
 

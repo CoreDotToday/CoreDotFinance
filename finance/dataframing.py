@@ -33,7 +33,7 @@ class Data_nm:
 
 def to_dataframe(data_json, column_map):
     data_validation(data_json)
-    data = apply_column_map(data_json, column_map)
+    data = apply_column_map(data_json, column_map, second_column_map)
     data = date_to_index(data)
     data = multi_columnize(data)
     data = string_to_float(data)
@@ -46,9 +46,8 @@ def data_validation(data_json):
         raise Exception("No data, Check parameters")
 
 
-def apply_column_map(data_json, column_map):
-    global second_column_map
-    column_map.update(second_column_map)
+def apply_column_map(data_json, column_map, second_column_map_):
+    column_map.update(second_column_map_)
     readable_column_list = []
     # ignored = set()  # delete later
     only_key = list(data_json.keys())[0]
@@ -60,12 +59,11 @@ def apply_column_map(data_json, column_map):
                 readable_column[column_map[column]] = data_value
             except:
                 if column in no_display_columns or 'TP_CD' in column:
-                    # ignored.add(column)
                     continue
                 readable_column[column] = data_value
         readable_column_list.append(readable_column)
-    # print(f'ignored{ignored}')
     return pd.json_normalize(readable_column_list)
+
 
 def multi_columnize(data):
     column_data = [column.split("//") for column in data.columns]

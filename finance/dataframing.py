@@ -33,9 +33,15 @@ class Data_nm:
 
 def to_dataframe(data_json, column_map):
     data_validation(data_json)
-    data = apply_column_map(data_json, column_map, second_column_map)
+    column_map.update(second_column_map)
+    data = apply_column_map(data_json, column_map)
     data = date_to_index(data)
-    data = multi_columnize(data)
+    column_data = [column.split("//") for column in data.columns]
+    columns_depth = max([len(c) for c in column_data])
+    if not single_column(columns_depth):
+        column_data = remove_same_named_column(column_data, columns_depth)
+        colums = multi_columnize(column_data, columns_depth)
+        data.columns = colums
     data = string_to_float(data)
     data = data_nm_column(data)
     return data
@@ -46,12 +52,10 @@ def data_validation(data_json):
         raise Exception("No data, Check parameters")
 
 
-def apply_column_map(data_json, column_map, second_column_map_):
-    column_map.update(second_column_map_)
+def apply_column_map(data_json, column_map):
     readable_column_list = []
-    # ignored = set()  # delete later
-    only_key = list(data_json.keys())[0]
-    data_list = data_json[only_key]
+    data_list = list(data_json.values())[0]
+
     for data in data_list:
         readable_column = {}
         for column, data_value in data.items():
@@ -60,33 +64,48 @@ def apply_column_map(data_json, column_map, second_column_map_):
             except:
                 if column in no_display_columns or 'TP_CD' in column:
                     continue
-                readable_column[column] = data_value
+                else:
+                    readable_column[column] = data_value
         readable_column_list.append(readable_column)
     return pd.json_normalize(readable_column_list)
 
 
-def multi_columnize(data):
-    column_data = [column.split("//") for column in data.columns]
-    columns_depth = max([len(c) for c in column_data])
+def date_to_index(data):
+    if '일자' not in data.columns:
+        # '일자' 열이 있는지 확인
+        return data
+    if len(data) != len(set(data['일자'].values)):
+        # '일자' 가 중복되는 데이터인지 확인
+        return data
+
+    date_list = [datetime.strptime(date, '%Y/%m/%d') for date in data['일자']]
+    data.index = date_list
+    return data.drop(['일자'], axis='columns')
+
+
+def single_column(columns_depth):
     # columns 가 single 인 경우
     if columns_depth == 1:
-        return data
-    columns = []
+        return True
+
+
+def remove_same_named_column(column_data, columns_depth):
     # 같은 이름으로 multi columnize 되는 것을 방지
     for i in column_data:
         for _ in range(columns_depth - len(i)):
             i.append('')
+    return column_data
+
+
+def multi_columnize(column_data, columns_depth):
+    columns = []
     # column 만들기
     for i in range(1, columns_depth + 1):
         layer = []
         for column in column_data:
             layer.append(column[:i][-1])
         columns.append(layer)
-    data.columns = columns
-    return data
-
-def remove_recursive_column_name(columns):
-    pass
+    return columns
 
 
 def string_to_float(data):
@@ -111,19 +130,6 @@ def string_to_float(data):
             new_values.append(series.array)
 
     return pd.DataFrame(np.array(new_values).T, columns=data.columns, index=data.index)
-
-
-def date_to_index(data):
-    if '일자' not in data.columns:
-        # '일자' 열이 있는지 확인
-        return data
-    if len(data) != len(set(data['일자'].values)):
-        # '일자' 가 중복되는 데이터인지 확인
-        return data
-
-    date_list = [datetime.strptime(date, '%Y/%m/%d') for date in data['일자']]
-    data.index = date_list
-    return data.drop(['일자'], axis='columns')
 
 
 def data_nm_column(data):

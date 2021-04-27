@@ -67,6 +67,7 @@ class Info:
         response = requests.get(url_dict[item_type].format(item=item))
         soup = bs(response.content, 'html.parser').li
 
+
         if soup is None:
             raise AttributeError(f'{item} is Wrong name as a stock name')
         code_lines = bs(response.content, 'html.parser')

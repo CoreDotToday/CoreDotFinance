@@ -2,6 +2,7 @@ import sys
 import pytest
 from datetime import datetime
 import pandas as pd
+import numpy as np
 
 finance_path = sys.path[0].replace('/test', '')
 sys.path.append(finance_path)
@@ -90,7 +91,21 @@ def test_date_to_index_wrong():
 
 
 def test_remove_same_named_column():
-    test_data_1 = [['종가'], ['대비'], ['등락률'], ['시가'], ['고가'], ['저가'], ['거래량'], ['거래대금'], ['시가총액'], ['상장주식수']]
-    test_data_2 = [['종가'], ['대비'], ['등락률'], ['시가'], ['고가'], ['저가'], ['거래량'], ['거래대금'], ['시가총액'], ['상장주식수']]
-    test_data_2[0].append('종가')
-    assert dataframing.remove_same_named_column(test_data_2, 2) == test_data_1
+    test_data_1 = [['종가'], ['대비'], ['등락률', '주가']]
+    test_data_2 = [['종가', ''], ['대비', ''], ['등락률', '주가']]
+    assert dataframing.remove_same_named_column(test_data_1, 2) == test_data_2
+
+
+def test_multi_columnize():
+    test_data_1 = [['종가', ''], ['대비', ''], ['등락률', '주가']]
+    test_data_2 = [['종가', '대비', '등락률'], ['', '', '주가']]
+    assert dataframing.multi_columnize(test_data_1, 2) == test_data_2
+
+
+def test_string_to_float():
+    test_data = pd.DataFrame([['100,000', '삼성', '-', '1000', '1000.33', 1, 1000.33]],
+                    columns=['주가', 'str', '-', 'int_str', 'float_str', 'int', 'float'])
+    assert list(dataframing.string_to_float(test_data).loc[0]) == \
+           [100000.0, '삼성', np.nan, 1000.0, 1000.33, 1, 1000.33]
+
+

@@ -31,6 +31,15 @@ class Data_nm:
         Data_nm._data_nm = item_name
 
 
+def data_nm_column(data):
+    item_name = Data_nm().data_nm
+    if item_name is None:
+        return data
+    data['종목명'] = [item_name for _ in range(len(data))]
+
+    return data
+
+
 def to_dataframe(data_json, column_map):
     data_validation(data_json)
     column_map.update(second_column_map)
@@ -40,8 +49,8 @@ def to_dataframe(data_json, column_map):
     columns_depth = max([len(c) for c in column_data])
     if not single_column(columns_depth):
         column_data = remove_same_named_column(column_data, columns_depth)
-        colums = multi_columnize(column_data, columns_depth)
-        data.columns = colums
+        columns = multi_columnize(column_data, columns_depth)
+        data.columns = columns
     data = string_to_float(data)
     data = data_nm_column(data)
     return data
@@ -98,6 +107,7 @@ def remove_same_named_column(column_data, columns_depth):
 
 
 def multi_columnize(column_data, columns_depth):
+
     columns = []
     # column 만들기
     for i in range(1, columns_depth + 1):
@@ -131,13 +141,5 @@ def string_to_float(data):
 
     return pd.DataFrame(np.array(new_values).T, columns=data.columns, index=data.index)
 
-
-def data_nm_column(data):
-    item_name = Data_nm().data_nm
-    if item_name is None:
-        return data
-    data['종목명'] = [item_name for _ in range(len(data))]
-
-    return data
 
 

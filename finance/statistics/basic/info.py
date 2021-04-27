@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup as bs
-from finance.dataframing import Data_nm
+from finance.dataframing import get_data_nm
 
 
 class Info:
@@ -67,7 +67,6 @@ class Info:
         response = requests.get(url_dict[item_type].format(item=item))
         soup = bs(response.content, 'html.parser').li
 
-
         if soup is None:
             raise AttributeError(f'{item} is Wrong name as a stock name')
         code_lines = bs(response.content, 'html.parser')
@@ -80,8 +79,24 @@ class Info:
             soup = soup_list[index]
         else:
             soup = soup_list[0]
-        Data_nm().data_nm = soup.attrs['data-nm']
+        get_data_nm().data_nm = soup.attrs['data-nm']
         return soup.attrs['data-nm'], soup.attrs['data-cd'], soup.attrs['data-tp']
+
+    def get_column_map(self, jsp_soup, mdcstat):
+        map_ = {}
+        jsGird_dict = self.get_jspGird_dict(jsp_soup)
+        jsGrid = jsGird_dict[mdcstat]
+
+        table_tag = jsp_soup.find('table', {'id': jsGrid})
+        div_tag = jsp_soup.find('div', {'id': jsGrid})
+
+        if table_tag:
+            table_map = self.get_table_map(table_tag)
+            map_.update(table_map)
+        if div_tag:
+            div_map = self.get_div_map(div_tag)
+            map_.update(div_map)
+        return map_
 
     def input_to_value(self, soup, data):
         answer_map = self.get_answer_map(soup)
@@ -125,22 +140,6 @@ class Info:
             lis = jsGrid_dict.setdefault(bld, [])
             lis.append(mdcstat)
         return jsGrid_dict
-
-    def get_column_map(self, jsp_soup, mdcstat):
-        map_ = {}
-        jsGird_dict = self.get_jspGird_dict(jsp_soup)
-        jsGrid = jsGird_dict[mdcstat]
-
-        table_tag = jsp_soup.find('table', {'id': jsGrid})
-        div_tag = jsp_soup.find('div', {'id': jsGrid})
-
-        if table_tag:
-            table_map = self.get_table_map(table_tag)
-            map_.update(table_map)
-        if div_tag:
-            div_map = self.get_div_map(div_tag)
-            map_.update(div_map)
-        return map_
 
     def get_div_map(self, div_tag):
         thead = div_tag.thead

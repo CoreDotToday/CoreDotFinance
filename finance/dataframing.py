@@ -15,24 +15,22 @@ no_display_columns = ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID',
                       'ISU_ABBRV', 'SUB_IDX_IND_NM', 'ISU_CD']
 
 
-class Data_nm:
+class get_data_nm:
     _data_nm = None
-    def __init__(self):
-        pass
 
     @property
     def data_nm(self):
-        item_name = Data_nm._data_nm
-        Data_nm._data_nm = None
+        item_name = get_data_nm._data_nm
+        get_data_nm._data_nm = None
         return item_name
 
     @data_nm.setter
     def data_nm(self, item_name):
-        Data_nm._data_nm = item_name
+        get_data_nm._data_nm = item_name
 
 
 def data_nm_column(data):
-    item_name = Data_nm().data_nm
+    item_name = get_data_nm().data_nm
     if item_name is None:
         return data
     data['종목명'] = [item_name for _ in range(len(data))]

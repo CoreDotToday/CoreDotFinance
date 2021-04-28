@@ -34,7 +34,7 @@ class Info:
         data['csvxls_isNo'] = 'false'
 
         jsp_soup, mdcstat = self.get_jsp_soup(data)
-        column_map = self.get_column_map(jsp_soup, mdcstat)
+        readable_columns = self.get_readable_columns(jsp_soup, mdcstat)
         modified_data = self.input_to_value(jsp_soup, data)
         r = requests.post(self.url, data=modified_data, headers=self.headers)
 
@@ -47,7 +47,7 @@ class Info:
                         f'status code:\t{r.status_code}'
                         f'response:\t{r}')
 
-        return data, column_map
+        return data, readable_columns
 
     def autocomplete(self, item_name, item_type):
         if item_name is None:
@@ -85,7 +85,7 @@ class Info:
         GettingDataNm().data_nm = item_script.attrs['data-nm']
         return item_script.attrs['data-nm'], item_script.attrs['data-cd'], item_script.attrs['data-tp']
 
-    def get_column_map(self, jsp_soup, mdcstat):
+    def get_readable_columns(self, jsp_soup, mdcstat):
         map_ = {}
         jsGird_dict = self.parse_jspGrid_dict(jsp_soup)
         jsGrid = jsGird_dict[mdcstat]
@@ -112,7 +112,7 @@ class Info:
         return data
 
     def get_jsp_soup(self, data):
-        # FiXME: you can split it as 2 functions. -> def parse_mdcstat/ def get_jsp_soup
+        # FIXME: you can split it as 2 functions. -> def parse_mdcstat/ def get_jsp_soup
         bld = data['bld']
         mdcstat = bld.split('/')[-1]
         jsp_filename = mdcstat[:-2]
@@ -124,7 +124,7 @@ class Info:
     def get_table_map(self, table_tag):
         print('in get_table_map\ntable_tag\n', table_tag)
         dic = {}
-        # FIXME : Change the dictionary name, dic.
+        # TODO : Change the dictionary name, dic.
         for tr in table_tag.find_all('tr'):
             th = tr.find_all('th')
             td = tr.find_all('td')
@@ -135,7 +135,8 @@ class Info:
     def parse_jspGrid_dict(self, jsp_soup):
         jscode_list = jsp_soup.find_all('script')
         for s in jscode_list:
-            # FIXME : change the variable, s. What is s?
+            # TODO : change the variable, s
+            #  What is s?
             if 'jsGrid' in str(s):
                 jscode = s
                 break

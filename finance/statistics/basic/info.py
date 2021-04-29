@@ -28,8 +28,6 @@ class Info:
         self.url = 'http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd'
 
     def requests_data(self, data):
-        print('in requests_data')
-        print('data\n\n', data, '\n')
         data['MIME Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
         data['csvxls_isNo'] = 'false'
 
@@ -68,12 +66,10 @@ class Info:
         }
         autocomplete_response = requests.get(autocomplete_urls[item_type].format(item_name=item_name))
         soup = bs(autocomplete_response.content, 'html.parser')
-        print("\nin autocomple\nsoup\n", soup) # Change the name soup to be more obvious
 
         if soup is None:
             raise AttributeError(f'{item_name} is Wrong name as a stock name')
         item_scripts = soup.find_all('li')
-        print('What is soup_list??\nsoup_list\n', item_scripts)
         # item 입력값이 autocomplete 에서 반환해주는 soup에서 첫번째에 위치하지 않는 경우가 있다. (예 "바이온")
         # 따라서 입력된 item이 autocomlete 내에 있으면 그 soup을 반환해주는 기능을 구현한다.
         item_names = [script.attrs['data-nm'] for script in item_scripts]
@@ -122,7 +118,6 @@ class Info:
         return jsp_soup, mdcstat
 
     def get_table_map(self, table_tag):
-        print('in get_table_map\ntable_tag\n', table_tag)
         dic = {}
         # FIXME : Change the dictionary name, dic.
         for tr in table_tag.find_all('tr'):

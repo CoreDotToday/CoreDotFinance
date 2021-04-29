@@ -30,7 +30,7 @@ class StockIndex(Index):
         }
 
         super().__init__(code, code_to_function, start, end, day)
-        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
+        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, 'index')
         self.division = 'KRX' if division is None else division.upper()
         self.search_type = kwargs.get('search_type', '전체지수')
 

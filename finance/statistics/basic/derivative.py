@@ -5,7 +5,7 @@ from finance.statistics.basic.info import Info
 class Derivative(Info):
     def __init__(self, code, start, end, day, item, code_to_function, kwargs):
         super().__init__(start, end, day)
-        self.function = code_to_function[code]
+        self.get_requested_data = code_to_function[code]
         if code in ['15002']:
             self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, 'derivative')
         self.item = item
@@ -35,7 +35,7 @@ class ItemPrice(Derivative):
             'prodId': self.item,
             'mktTpCd': self.market,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_item(self):
         """개별시세 추이[15002]"""
@@ -46,7 +46,7 @@ class ItemPrice(Derivative):
             'tboxisuCd_finder_drvprodisu0_1': f'{self.data_tp}/ {self.data_nm}',
             'isuCd': self.data_cd,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_futures(self):
         """최근월물 시세 추이(선물)[15003]"""
@@ -58,7 +58,7 @@ class ItemPrice(Derivative):
             'endDd': self.end,
             'mktTpCd': self.market,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class ItemInfo(Derivative):
@@ -75,7 +75,7 @@ class ItemInfo(Derivative):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT12801',
             'prodId': self.item
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_item(self):
         """개별종목 종합정보[15005]"""
@@ -98,7 +98,7 @@ class TradePerform(Derivative):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT13001',
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trade_perform_ber_invastor(self):
         """투자자별 거래실적[15007]"""
@@ -116,7 +116,7 @@ class TradePerform(Derivative):
             'prtCheck': self.trade_check,
             'juya': self.market
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_consulted_big_trade_performance(self):
         """협의대향거래실적 추이[15008]"""
@@ -126,7 +126,7 @@ class TradePerform(Derivative):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
     def trade_performance_of_basic_asset(self):
@@ -138,7 +138,7 @@ class TradePerform(Derivative):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class Detail(Derivative):
@@ -158,7 +158,7 @@ class Detail(Derivative):
         """베이시스 추이(선물)[15010]"""
         if self.search_type == '개별종목':
             bld = 'dbms/MDC/STAT/standard/MDCSTAT13402'
-            data_cd, data_nm, data_tp = self.autocomplete(self.item)
+            data_cd, data_nm, data_tp = self.autocomplete(self.item, 'derivative')
         else:
             bld = 'dbms/MDC/STAT/standard/MDCSTAT13401'
             data_cd, data_nm, data_tp = None, None, None
@@ -174,7 +174,7 @@ class Detail(Derivative):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_implied_volatility(self):
         """내재변동성 추이(옵션)[15011]"""
@@ -184,7 +184,7 @@ class Detail(Derivative):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_pc_ratio(self):
         """P/C Ratio 추이(옵션)[15012]"""
@@ -194,7 +194,7 @@ class Detail(Derivative):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_table_per_expiration_and_discount(self):
         """행사가격/만기별 가격표(옵션)[15013]"""
@@ -215,7 +215,7 @@ class Detail(Derivative):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def sudden_change_of_setting_price(self):
         """최종결제가격 급변[15015] (기간별조회)"""
@@ -229,7 +229,7 @@ class Detail(Derivative):
         }
         #  최종결제가격 급변은 표를 띄우는 것이 쉽지 않음..
         #  데이터가 jsp 파일 안에 있음
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def ratio_of_low_exercise_of_right(self):
         """낮은 권리행사 배율[15016] (기간별조회)"""
@@ -247,5 +247,5 @@ class Detail(Derivative):
         #  최종결제가격 급변은 표를 띄우는 것이 쉽지 않음..
         #  데이터가 jsp 파일 안에 있음
         #  데이터 단위가 %인데 표시되어 있지 않음
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 

@@ -4,7 +4,7 @@ from finance.statistics.basic.info import Info
 class Oversees(Info):
     def __init__(self, code, start, end, day, code_to_function):
         super().__init__(start, end, day)
-        self.function = code_to_function[code]
+        self.get_requested_data = code_to_function[code]
 
 class EUREX(Oversees):
     def __init__(self, code, start, end, day, **kwargs):
@@ -30,7 +30,7 @@ class EUREX(Oversees):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_trade_perform_per_right_type_monthly(self):
         """권리유형별 거래실적 추이(월)[17105]"""
@@ -42,7 +42,7 @@ class EUREX(Oversees):
             'endYy': self.end[:4],
             'endMm': self.end[4:6]
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_table_per_expire(self):
         """만기별 가격표(옵션)[17106]"""
@@ -55,7 +55,7 @@ class EUREX(Oversees):
             'bld': bld,
             'trdDd': self.day[:6]
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_EURO_STOXX(self):
         """EURO STOXX 50 시세 추이[17108]"""
@@ -64,7 +64,7 @@ class EUREX(Oversees):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class TokyoExchange(Oversees):

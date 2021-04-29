@@ -5,7 +5,7 @@ from finance.statistics.basic.info import Info
 
 class Index(Info):
     def __init__(self, code, code_to_function, start, end, day):
-        self.function = code_to_function[code]
+        self.get_requested_data = code_to_function[code]
         super(Index, self).__init__(start, end, day)
 
 
@@ -30,7 +30,7 @@ class StockIndex(Index):
         }
 
         super().__init__(code, code_to_function, start, end, day)
-        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
+        self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, 'index')
         self.division = 'KRX' if division is None else division.upper()
         self.search_type = kwargs.get('search_type', '전체지수')
 
@@ -42,7 +42,7 @@ class StockIndex(Index):
             'idxIndMidclssCd': self.division,
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def fluc_of_entire_index(self):
         """전체 지수 변동률 [11002]"""
@@ -52,7 +52,7 @@ class StockIndex(Index):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_index_price(self):
         """개별 지수 시세추이 [11003]"""
@@ -65,7 +65,7 @@ class StockIndex(Index):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_entire_index(self):
         """전체 지수 기본 정보 [11004]"""
@@ -73,7 +73,7 @@ class StockIndex(Index):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT00401',
             'idxIndMidclssCd': self.division
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_index(self):
         """개별 지수 종합 정보 [11005]"""
@@ -89,7 +89,7 @@ class StockIndex(Index):
             'codeNmindIdx_finder_equidx0_2': self.data_nm,
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def per_pbr_dividend_of_index(self):
         """개별지수 PER/PBR/배당수익률 [11007]"""
@@ -104,7 +104,7 @@ class StockIndex(Index):
             'idxIndMidclssCd': self.division,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class BondIndex(Index):
@@ -131,7 +131,7 @@ class BondIndex(Index):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT00801',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_index(self):
         """개별 지수 시세 추이 [11009]"""
@@ -141,7 +141,7 @@ class BondIndex(Index):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class DerivationIndex(Index):
@@ -157,7 +157,7 @@ class DerivationIndex(Index):
         if item:
             self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item)
         self.division = '선물지수' if division is None else division.upper()
-        self.function = code_to_function[code]
+        self.update_requested_data = code_to_function[code]
 
     def autocomplete(self, item):
         if item is None:
@@ -182,7 +182,7 @@ class DerivationIndex(Index):
             'clssCd': self.division,
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def fluc_of_entire_index(self):
         """전체 지수 등락률 [11011]"""
@@ -192,7 +192,7 @@ class DerivationIndex(Index):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_index(self):
         """ 개별 지수 시세 추이 [11012] """
@@ -207,7 +207,7 @@ class DerivationIndex(Index):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_entire_index(self):
         """ 전체 지수 기본 정보 [11013] """
@@ -215,7 +215,7 @@ class DerivationIndex(Index):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT01301',
             'idxTp': self.division,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 

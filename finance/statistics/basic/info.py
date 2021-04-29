@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup as bs
-from finance.dataframing import GettingDataNm
+from finance.to_DataFrame import GettingDataNm
 
 
 class Info:
@@ -19,12 +19,6 @@ class Info:
         self.start = a_month_ago.strftime('%Y%m%d') if start is None else str(start)
         self.end = today.strftime('%Y%m%d') if end is None else str(end)
         self.day = today.strftime('%Y%m%d') if day is None else str(day)
-        # TODO: I guess two variables below would no need.
-        self.headers = {
-            'User-Agent':
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15'
-        }
-        self.url = 'http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd'
 
     def update_requested_data(self, requested_data):
         requested_data['MIME Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'

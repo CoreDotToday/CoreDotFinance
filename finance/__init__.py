@@ -1,4 +1,4 @@
-from finance.data_reader import data_reader
+from finance.data_reader_ import data_reader
 from finance.tools import *
 
 __version__ = '0.1'

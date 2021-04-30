@@ -1,8 +1,8 @@
 import sys
 import pytest
 
-finance_path = sys.path[0].replace('/test', '')
-sys.path.append(finance_path)
+# finance_path = sys.path[0].replace('/test', '')
+# sys.path.append(finance_path)
 
 from finance.tools import get, per, etf, etn, elw
 

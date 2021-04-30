@@ -6,13 +6,12 @@ import logging
 from bs4 import BeautifulSoup as bs
 
 from finance.to_DataFrame import to_DataFrame
-from finance.get_data import get_requested_data
+from finance.get_requested_data import get_requested_data
 
 
 def data_reader(code, start=None, end=None, day=None, division=None,  item=None, **kwargs):
     requested_data = get_requested_data(code, start, end, day, division, item, **kwargs)
-
-    # jsp_soup는 MDCSTAT044.jsp 와 같은 소스 코드다.
+    # jsp_soup는 MDCSTAT044.jsp 의 소스 코드다.
     # readable_column, conveted_requested_data 를 얻기에 필요하다.
     mdcstat = parse_mdcstat(requested_data)
     jsp_soup = get_jsp_soup(mdcstat)
@@ -21,7 +20,8 @@ def data_reader(code, start=None, end=None, day=None, division=None,  item=None,
     valid_requested_data = convert_valid_requested_data(jsp_soup, requested_data)
 
     readable_columns = get_readable_columns(jsp_soup, mdcstat)
-    krx_data = get_krx_data(requested_data)
+    krx_data = get_krx_data(valid_requested_data)
+
     return to_DataFrame(krx_data, readable_columns)
 
 
@@ -34,6 +34,7 @@ def parse_mdcstat(requested_data):
 def get_jsp_soup(mdcstat):
     jsp_filename = mdcstat[:-2]
     url = f'http://data.krx.co.kr/contents/MDC/STAT/standard/{jsp_filename}.jsp'
+    # TODO: Consider whether it is needed that checking status_code is 200 or not.
     html = requests.get(url)
     jsp_soup = bs(html.content, 'html.parser')
     return jsp_soup
@@ -52,11 +53,11 @@ def convert_valid_requested_data(jsp_soup, requested_data):
     return requested_data
 
 
-def parse_converting_map(soup):
+def parse_converting_map(jsp_soup):
     # 총 3개의 tag(select, label, input)에서 필요한 정보를 추출한다.
-    select = soup.find_all('select')
-    label = soup.find_all('label')
-    input_ = soup.find_all('input')
+    select = jsp_soup.find_all('select')
+    label = jsp_soup.find_all('label')
+    input_ = jsp_soup.find_all('input')
     label_map = {}
     for i in label:
         label_map[i.attrs['for']] = i.text
@@ -123,13 +124,14 @@ def parse_efrb_url(select_tag):
 
 def get_readable_columns(jsp_soup, mdcstat):
     map_ = {}
-    jsGird_dict = parse_jspGrid_dict(jsp_soup)
-    jsGrid = jsGird_dict[mdcstat]
+    jsGrid_dict = parse_jsGrid_dict(jsp_soup)
+    jsGrid = jsGrid_dict[mdcstat]
 
     table_tag = jsp_soup.find('table', {'id': jsGrid})
     div_tag = jsp_soup.find('div', {'id': jsGrid})
 
     if table_tag:
+        print('*' * 100, '이 글을 보았다면 바로 개발자에게 알려주세요 ㅎㅎ')
         table_map = parse_table_map(table_tag)
         map_.update(table_map)
     if div_tag:
@@ -138,11 +140,11 @@ def get_readable_columns(jsp_soup, mdcstat):
     return map_
 
 
-def parse_jspGrid_dict(jsp_soup):
+def parse_jsGrid_dict(jsp_soup):
     jscode_list = jsp_soup.find_all('script')
     for s in jscode_list:
         # TODO : change the variable, s
-        #  What is s?
+        #  What does s mean?
         if 'jsGrid' in str(s):
             jscode = s
             break
@@ -157,15 +159,14 @@ def parse_jspGrid_dict(jsp_soup):
 
 
 def parse_table_map(table_tag):
-    print('in get_table_map\ntable_tag\n', table_tag)
-    dic = {}
-    # TODO : Change the dictionary name, dic.
+    table_map = {}
+    # TODO : Change the table_maptionary name, table_map.
     for tr in table_tag.find_all('tr'):
         th = tr.find_all('th')
         td = tr.find_all('td')
         for name, id in zip(th, td):
-            dic[id.attrs['data-bind']] = name.text
-    return dic
+            table_map[id.attrs['data-bind']] = name.text
+    return table_map
 
 
 def parse_div_map(div_tag):
@@ -176,27 +177,27 @@ def parse_div_map(div_tag):
     tag_list.extend(thead.find_all('th'))
     tag_list.extend(thead.find_all('td'))
 
-    dic = {}
+    div_map = {}
     for i in tag_list:
-        dic[i.attrs['name']] = {
+        div_map[i.attrs['name']] = {
             'text': i.text,
             'parent': i.attrs.get('parent', None)
         }
 
     p_list = set()
-    for key in dic:
-        p = dic[key]['parent']
+    for key in div_map:
+        p = div_map[key]['parent']
 
         if p is not None:
-            child_name = dic[key]['text']
-            parent_name = dic[p]['text']
-            dic[key]['text'] = f'{parent_name}//{child_name}'
+            child_name = div_map[key]['text']
+            parent_name = div_map[p]['text']
+            div_map[key]['text'] = f'{parent_name}//{child_name}'
 
             p_list.add(p)
-    [dic.pop(p) for p in p_list]
-    for d in dic:
-        dic[d] = dic[d]['text']
-    return dic
+    [div_map.pop(p) for p in p_list]
+    for d in div_map:
+        div_map[d] = div_map[d]['text']
+    return div_map
 
 
 def get_krx_data(requested_data):
@@ -209,11 +210,11 @@ def get_krx_data(requested_data):
     r = requests.post(url, data=requested_data, headers=headers)
 
     try:
-        data = json.loads(r.content)
+        krx_data = json.loads(r.content)
     except json.JSONDecodeError as e:
         logger = logging.getLogger('log')
         logger.info(f'\tdata:\t{requested_data}\n'
                     f'error:\t{e}\n'
                     f'status code:\t{r.status_code}'
                     f'response:\t{r}')
-    return data
+    return krx_data

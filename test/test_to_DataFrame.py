@@ -1,11 +1,7 @@
-import sys
 import pytest
 from datetime import datetime
 import pandas as pd
 import numpy as np
-
-finance_path = sys.path[0].replace('/test', '')
-sys.path.append(finance_path)
 
 from finance import to_DataFrame
 

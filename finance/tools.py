@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 
-from finance.data_reader import data_reader
+from finance.data_reader_ import data_reader
 from finance import utils
 from finance.log.log import Log
 

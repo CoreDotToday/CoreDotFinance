@@ -19,7 +19,7 @@ class Product(Info):
             item = self.convert_code_to_item(item_code, item_type)
 
         self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, item_type)
-        self.function = code_to_function[code]
+        self.get_requested_data = code_to_function[code]
         self.search_type = kwargs.get('search_type', None)
         self.trade_index = kwargs.get('trade_index', None)
         self.trade_check = kwargs.get('trade_check', None)
@@ -41,7 +41,7 @@ class Product(Info):
                 'trdDd': self.day
             }
 
-        data = self.requests_data(request_data)
+        data = self.update_requested_data(request_data)
         for i in data[0]['output']:
             if i['ISU_SRT_CD'] == str(item_code):
                 return i['ISU_ABBRV']
@@ -91,7 +91,7 @@ class ETF(Product):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT04301',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def fluc_of_entire_items(self):
         """
@@ -104,7 +104,7 @@ class ETF(Product):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_item(self):
         """
@@ -121,7 +121,7 @@ class ETF(Product):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_entire_items(self):
         """전종목 기본정보[13104]"""
@@ -129,7 +129,7 @@ class ETF(Product):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT04601',
             'share': 1
             }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_item(self):
         """개별종목 종합정보[13105]"""
@@ -154,7 +154,7 @@ class ETF(Product):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trade_performance_per_investor_item(self):
         """
@@ -178,7 +178,7 @@ class ETF(Product):
             'strtDd': self.start,
             'endDd': self.end,
             }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
     def portfolio_deposit_file(self):
@@ -195,7 +195,7 @@ class ETF(Product):
             'codeNmisuCd_finder_secuprodisu1_6': self.data_nm,
             'trdDd': self.day,
             }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def detail_of_ETF(self):
         """
@@ -216,7 +216,7 @@ class ETF(Product):
             'strtDd': self.start,
             'endDd': self.end
             }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def incorporated_asset_of_active_ETF(self):
         """
@@ -236,7 +236,7 @@ class ETF(Product):
             'startYear': year,
             'startMonth': month
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
     def trend_of_tracking_error(self):
@@ -251,7 +251,7 @@ class ETF(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_differential(self):
         """
@@ -265,7 +265,7 @@ class ETF(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_closing_differential(self):
         """
@@ -280,7 +280,7 @@ class ETF(Product):
             'endDd': self.end
         }
 
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
     def risk_of_multi_ETF_trader(self):
@@ -296,7 +296,7 @@ class ETF(Product):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
     def managing_index_and_security_of_multi_ETF(self):
@@ -306,7 +306,7 @@ class ETF(Product):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT06201'
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def assessment_of_LP_per_quarter(self):
         """분기별 LP 평가[]13117"""
@@ -316,7 +316,7 @@ class ETF(Product):
             'year': year,
             'quarter': self.quarter
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class ETN(Product):
@@ -350,7 +350,7 @@ class ETN(Product):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT06401',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def fluc_of_entire_items(self):
         """
@@ -361,7 +361,7 @@ class ETN(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_item(self):
         """
@@ -375,7 +375,7 @@ class ETN(Product):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_entire_items(self):
         """
@@ -384,7 +384,7 @@ class ETN(Product):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT06701'
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_item(self):
         """
@@ -411,7 +411,7 @@ class ETN(Product):
             'endDd': self.end
         }
 
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trade_performance_per_investor_item(self):
         """
@@ -433,7 +433,7 @@ class ETN(Product):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def detail_of_ETN(self):
         """
@@ -455,7 +455,7 @@ class ETN(Product):
             'codeNmisuCd_finder_secuprodisu2_2': self.data_nm,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def credit_and_NCR(self):
         """
@@ -467,7 +467,7 @@ class ETN(Product):
             'isuCd': self.data_cd,
             'codeNmisuCd_finder_secuprodisu2_3': self.data_nm
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def risk_of_credit(self):
         """
@@ -479,7 +479,7 @@ class ETN(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def condition_of_early_repayment_loss_limited_ETN(self):
         """
@@ -490,7 +490,7 @@ class ETN(Product):
             'isuCd': self.data_cd,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def consideration_of_range_accurual_of_loss_limited_ETN(self):
         """
@@ -509,7 +509,7 @@ class ETN(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_closing_differential(self):
         """
@@ -521,7 +521,7 @@ class ETN(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def assessment_of_LP_per_quarter(self):
         """분기별 LP 평가 [13216]"""
@@ -555,7 +555,7 @@ class ELW(Product):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT08301',
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_item(self):
         """개별종목 시세 추이[13302]"""
@@ -568,7 +568,7 @@ class ELW(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_entire_items(self):
         """전종목 기본정보[13303]
@@ -576,7 +576,7 @@ class ELW(Product):
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT08501'
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def entire_info_of_item(self):
         """개별종목 종합정보[13304]
@@ -600,7 +600,7 @@ class ELW(Product):
             'strtDd': self.start,
             'endDd': self.end
                 }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trade_performance_per_basic_asset(self):
         """기초자산별 거래실적[13306]"""
@@ -609,7 +609,7 @@ class ELW(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def item_of_residual_expiration_status(self):
         """개별종목 잔존만기현황[13307]"""
@@ -618,7 +618,7 @@ class ELW(Product):
             'elwEoTpCd': self.search_type,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def item_of_beneficial_expiration_status(self):
         """개별종목 만기손익현황[13308]"""
@@ -628,7 +628,7 @@ class ELW(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
     def approach_level_of_early_close(self):
@@ -637,7 +637,7 @@ class ELW(Product):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT09201',
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def log_of_early_close(self):
         """조기종료 발생내역[13310]"""
@@ -646,7 +646,7 @@ class ELW(Product):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def status_of_floating_per_basic_asset(self):
         """기초자산별 상장현황[13311]"""
@@ -656,7 +656,7 @@ class ELW(Product):
             'elwUlyTpCd': self.basic_asset,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def status_of_floating_per_issuing(self):
         """발행사별 상장현황[13312]"""
@@ -665,7 +665,7 @@ class ELW(Product):
             'elwEoTpCd': self.search_type,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def assessment_of_LP_per_quarter(self):
         """분기별 LP 평가 [13313]"""

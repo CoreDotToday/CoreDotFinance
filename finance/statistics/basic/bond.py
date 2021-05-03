@@ -5,7 +5,7 @@ from finance.statistics.basic.info import Info
 class Bond(Info):
     def __init__(self, code, start, end, day, item, code_to_function):
         super(Bond, self).__init__(start, end, day)
-        self.function = code_to_function[code]
+        self.get_requested_data = code_to_function[code]
         if code in ['14011', '14021', '14023']:
             self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, 'publish')
         else:
@@ -28,7 +28,7 @@ class ItemPrice(Bond):
             'mktId': self.market,
             'trdDd': self.day
             }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_item(self):
         """개별종목 시세 추이 [14002]"""
@@ -40,7 +40,7 @@ class ItemPrice(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class ItemInfo(Bond):
@@ -59,7 +59,7 @@ class ItemInfo(Bond):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT10001',
             'bndTpCd': self.bond_type
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def entire_info_of_itme(self):
         """'개별종목 종합정보 [14004]"""
@@ -87,7 +87,7 @@ class TradePerform(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trade_performance_per_investor(self):
         """투자자별 거래실적 [14006]"""
@@ -97,7 +97,7 @@ class TradePerform(Bond):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trade_performance_of_bond_index_item(self):
         """국채지표종목 거래실적 [14007]"""
@@ -106,7 +106,7 @@ class TradePerform(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 
@@ -117,7 +117,7 @@ class TradePerform(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class Detail(Bond):
@@ -161,7 +161,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def reported_price_trend_of_small_bond(self):
         """소액채권 신고가격 추이 [14010]"""
@@ -170,7 +170,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def search_of_public_bond(self):
         """상장채권 상세검색 [14011]"""
@@ -183,7 +183,7 @@ class Detail(Bond):
             'codeNmisurCd_finder_bndordisu0_2': self.data_nm,
             'bndTpCd': self.bond_type
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def issue_info_of_public_bond(self):
         """상장채권 발행정보 [14012]"""
@@ -194,7 +194,7 @@ class Detail(Bond):
             'isuCd2': self.data_cd,
             'codeNmisuCd_finder_bondisu0_2': self.data_nm
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def histoty_per_type_of_publication(self):
         """상장유형별 내역 [14013]"""
@@ -212,7 +212,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def history_of_publication_price_adjustment(self):
         """상장금액조정 내역 [14014]"""
@@ -221,7 +221,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def prepayment(self):
         """중도상환 [14015]"""
@@ -231,7 +231,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def delisting_bond(self):
         """채권상장폐지 [14016]"""
@@ -241,7 +241,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def rate_of_profit_of_bond_over_the_counter(self):
         """장외 채권수익률 [14017]"""
@@ -265,7 +265,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def rate_of_profit_of_index(self):
         """지표 수익률 [14018]"""
@@ -274,7 +274,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def strip_short_interest(self):
         """스트립 단기금리 [14019]"""
@@ -284,7 +284,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def substitution_price_of_bond(self):
         """채권 대용가 [14020]"""
@@ -302,7 +302,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def substitution_price_of_bond_per_issuer(self):
         """발행기관별 채권 대용가 [14021]"""
@@ -315,7 +315,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def substitution_price_of_bond_per_type(self):
         """유형별 채권 대용가 [14022]"""
@@ -326,7 +326,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def credit_per_issuer(self):
         """발행기관별 신용등급 [14023]"""
@@ -340,7 +340,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return  self.requests_data(data)
+        return  self.update_requested_data(data)
 
     def publication_situation_per_credit(self):
         """신용등급별 상장현황 [14024]"""
@@ -349,7 +349,7 @@ class Detail(Bond):
             'creditValuInstCd': self.inquiry,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def investment_index_of_convertible_bond(self):
         """전환사채 투자지표 [14025]"""
@@ -357,7 +357,7 @@ class Detail(Bond):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT12201',
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def exercise_of_right_of_bond_about_stock(self):
         """주식관련채권 권리행사 [14026]"""
@@ -371,7 +371,7 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def strike_price_of_bond_about_stock(self):
         """주식관련채권 행사가액 [14027]"""
@@ -380,6 +380,6 @@ class Detail(Bond):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 

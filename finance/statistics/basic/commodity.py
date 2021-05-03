@@ -5,7 +5,7 @@ from finance.statistics.basic.info import Info
 class Commodity(Info):  # 일반상품: 석유, 금, 배출
     def __init__(self, code, start, end, day, code_to_function, kwargs):
         super(Commodity, self).__init__(start, end, day)
-        self.function = code_to_function[code]
+        self.get_requested_data = code_to_function[code]
         self.trade_index = kwargs.get('trade_index', None)
         self.trade_check = kwargs.get('trade_check', None)
         self.inquiry = kwargs.get('inquiry', None)
@@ -29,7 +29,7 @@ class Oil(Commodity):  # 석유 [16101~16105]
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT14301',
             'secugrpId': self.oil,  # ALL(전체), GA(휘발유), DI(경유), KE(등유)
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_item(self):
         """유종별 시세 추이[16102]"""
@@ -39,7 +39,7 @@ class Oil(Commodity):  # 석유 [16101~16105]
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trade_performance_per_investor(self):
         """참가자별 거래실적[16103]"""
@@ -56,7 +56,7 @@ class Oil(Commodity):  # 석유 [16101~16105]
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_domestic_gasstation(self):
         """국내유가(주유소) 동향 [16104]"""
@@ -66,7 +66,7 @@ class Oil(Commodity):  # 석유 [16101~16105]
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_international(self):  # [16105] 국제유가 동향
         pass
@@ -92,7 +92,7 @@ class Gold(Commodity):  # 금 [16201~16207]
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT14901',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_item(self):  # [16202] 개별종목 시세 추이
         data = {
@@ -101,13 +101,13 @@ class Gold(Commodity):  # 금 [16201~16207]
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_entire_items(self):  # [16203] 전종목 기본정보
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT15101',
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_item(self):  # [16204] 개별종목 종합정보
         data = {
@@ -138,7 +138,7 @@ class Gold(Commodity):  # 금 [16201~16207]
             'trdVolVal': self.trade_index,  # 1(거래량), 2(거래대금)
             'bidAskNet': self.trade_check,  # 1(매도), 2(매수), 3(순매수)
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def block_trade(self):  # [16206] 협의대량거래실적 추이
         data = {
@@ -146,7 +146,7 @@ class Gold(Commodity):  # 금 [16201~16207]
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_international(self):  # [16207] 국제금시세 동향
         if self.inquiry == '현재가':
@@ -161,7 +161,7 @@ class Gold(Commodity):  # 금 [16201~16207]
                 'strtDd': self.start,
                 'endDd': self.end
             }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class CarbonEmission(Commodity):  # 배출권 [16301~16304]
@@ -185,7 +185,7 @@ class CarbonEmission(Commodity):  # 배출권 [16301~16304]
             #  'share': 1,  # 1~3(톤 / 천톤 / 백만톤)
             #  'money': 1,  # 1~4(원 / 천원 / 백만원 / 십억원)
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_trend_of_item(self):  # [16302] 개별종목 시세 추이
         data = {
@@ -196,13 +196,13 @@ class CarbonEmission(Commodity):  # 배출권 [16301~16304]
             #  'share': 1,  # 1~3(톤 / 천톤 / 백만톤)
             #  'money': 1,  # 1~4(원 / 천원 / 백만원 / 십억원)
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_entire_items(self):  # [16303] 전종목 기본정보
         data = {
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT15801',
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def info_of_item(self):  # [16304] 개별종목 종합정보
         data = {

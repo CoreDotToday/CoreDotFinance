@@ -38,10 +38,10 @@ def data_nm_column(data):
     return data
 
 
-def to_dataframe(data_json, column_map):
-    data_validation(data_json)
+def to_DataFrame(krx_data, column_map):
+    check_data_validation(krx_data)
     column_map.update(second_column_map)
-    data = apply_column_map(data_json, column_map)
+    data = apply_column_map(krx_data, column_map)
     data = date_to_index(data)
     column_data = [column.split("//") for column in data.columns]
     columns_depth = max([len(c) for c in column_data])
@@ -54,8 +54,8 @@ def to_dataframe(data_json, column_map):
     return data
 
 
-def data_validation(data_json):
-    if len(list(data_json.values())[0]) == 0:
+def check_data_validation(krx_data):
+    if len(list(krx_data.values())[0]) == 0:
         raise Exception("No data, Check parameters")
 
 
@@ -105,7 +105,6 @@ def remove_same_named_column(column_data, columns_depth):
 
 
 def multi_columnize(column_data, columns_depth):
-
     columns = []
     # column 만들기
     for i in range(1, columns_depth + 1):

@@ -8,7 +8,7 @@ class Stock(Info):
         주가
         :param code:
         :param start:
-        :param end:
+        :param end, 'index':
         :param day:
         :param division:
         :param item:
@@ -19,7 +19,7 @@ class Stock(Info):
             item = self.convert_code_to_name(item_code)
         self.data_nm, self.data_cd, self.data_tp = self.autocomplete(item, 'stock')
         self.division = '전체' if division is None else division.upper()
-        self.function = code_to_function[code]
+        self.get_requested_data = code_to_function[code]
         self.detail = kwargs.get('detail', None)
         self.trade_index = kwargs.get('trade_index', None)
         self.trade_check = kwargs.get('trade_check', None)
@@ -31,7 +31,7 @@ class Stock(Info):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
             'mktId': '전체'
         }
-        data = self.requests_data(request_data)
+        data = self.update_requested_data(request_data)
         for i in data[0]['OutBlock_1']:
             if i['ISU_SRT_CD'] == str(item_code):
                 return i['ISU_ABBRV']
@@ -63,7 +63,7 @@ class ItemPrice(Stock):
             'mktId': self.division,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def fluc_of_entire_item(self):
         """ 전종목 등락률 [12002] """
@@ -74,7 +74,7 @@ class ItemPrice(Stock):
             'endDd': self.end,
             'adjStkPrc_check': self.detail
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_item_price(self):
         """ 개별종목 시세 추이 [12003]"""
@@ -88,7 +88,7 @@ class ItemPrice(Stock):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trend_of_item_price_by_month(self):
         """ 개별종목 시세 추이 [12004]"""
@@ -106,7 +106,7 @@ class ItemPrice(Stock):
             'strtYymm': self.start[:6],
             'endYymm': self.end[:6]
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class ItemInfo(Stock):
@@ -133,7 +133,7 @@ class ItemInfo(Stock):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
             'mktId': self.division,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def option_list_of_entire(self):
         """전종목 지정 내역 [12006]"""
@@ -141,7 +141,7 @@ class ItemInfo(Stock):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02001',
             'mktId': self.division
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def total_info_of_stock(self):
         """ 개별종목 종합정보 [12007]"""
@@ -199,7 +199,7 @@ class TradePerform(Stock):
             'endDd': self.end,
             'detailView': self.detail,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def trade_perform_by_item(self):
         """투자자별 거래실적(개별종목) [12009]"""
@@ -222,7 +222,7 @@ class TradePerform(Stock):
             'endDd': self.end,
             'detailView': self.detail,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def top_item_per_investor(self):
         """투자자별 순매수상위종목 [12010]"""
@@ -233,7 +233,7 @@ class TradePerform(Stock):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def block_trading_last_day(self):
         """대량매매(전일) [12011]"""
@@ -241,7 +241,7 @@ class TradePerform(Stock):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02501',
             'mktId': self.division,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def program_traing(self):
         """프로그램 매매 [12012]"""
@@ -251,7 +251,7 @@ class TradePerform(Stock):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class OtherSecurity(Stock):
@@ -275,7 +275,7 @@ class OtherSecurity(Stock):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02701',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_of_mutual_fund(self):
         """뮤추얼펀드 시세 [12014]"""
@@ -283,7 +283,7 @@ class OtherSecurity(Stock):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02801',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_of_ship_investor(self):
         """선박투자회사 시세 [12015]"""
@@ -291,7 +291,7 @@ class OtherSecurity(Stock):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT02901',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_of_infra_investor(self):
         """인프라투융자회사 시세 [12016]"""
@@ -299,7 +299,7 @@ class OtherSecurity(Stock):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03001',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_of_certificate(self):
         """수익증권 시세 [12017]"""
@@ -307,7 +307,7 @@ class OtherSecurity(Stock):
             'bld': 'dbms/MDC/STAT/standard/MDCSTAT03101',
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_of_warranty(self):
         """신주인수권증권 시세 [12018]"""
@@ -316,7 +316,7 @@ class OtherSecurity(Stock):
             'mktId': self.division,
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def price_of_subscription_warranty(self):
         """신주인수권증서 시세 [12019]"""
@@ -325,7 +325,7 @@ class OtherSecurity(Stock):
             'mktId': self.division,
             'trdDd': self.day,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
 
 class Detail(Stock):
@@ -366,7 +366,7 @@ class Detail(Stock):
             'codeNmisuSrtCd_finder_listisu0_3': self.data_nm,
             'sortType': self.sort_type,
             }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def per_pbr_dividend_of_stock(self):
         """"PER/PBR/배당수익률(개별종목) [12021]"""
@@ -388,7 +388,7 @@ class Detail(Stock):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def holding_amount_of_foreigner(self):
         """외국인보유량 추이 [12022]"""
@@ -398,7 +398,7 @@ class Detail(Stock):
             'strtDd': self.start,
             'endDd': self.end,
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def holding_amount_of_foreigner_by_item(self):
         """외국인보유량(개별종목) [12023]"""
@@ -420,7 +420,7 @@ class Detail(Stock):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def distribution_per_business(self):
         """
@@ -446,7 +446,7 @@ class Detail(Stock):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def stock_and_business_table(self):
         """
@@ -460,7 +460,7 @@ class Detail(Stock):
             'mktId': self.division,
             'trdDd': self.day
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def substitution_price_of_stock(self):
         """
@@ -488,7 +488,7 @@ class Detail(Stock):
             'strtDd': self.start,
             'endDd': self.end
         }
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def substitution_price_of_beneficiary_certificate(self):
         """
@@ -521,7 +521,7 @@ class Detail(Stock):
             'endMm': endMm
         }
 
-        return self.requests_data(data)
+        return self.update_requested_data(data)
 
     def substitution_price_of_mutual_fund(self):
         """
@@ -554,4 +554,4 @@ class Detail(Stock):
             'endMm': endMm
         }
 
-        return self.requests_data(data)
+        return self.update_requested_data(data)

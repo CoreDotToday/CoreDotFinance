@@ -4,7 +4,7 @@ import sys
 finance_path = sys.path[0].replace('/test', '')
 sys.path.append(finance_path)
 
-from finance.utils import classifier, start_end_validation, week_day
+from coredotfinance.krx._utils import classifier, start_end_validation, week_day
 
 
 def test_classifier():

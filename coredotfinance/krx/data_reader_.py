@@ -5,8 +5,8 @@ import logging
 
 from bs4 import BeautifulSoup as bs
 
-from finance.to_DataFrame import to_DataFrame
-from finance.get_requested_data import get_requested_data
+from coredotfinance.krx._to_DataFrame import to_DataFrame
+from coredotfinance.krx._get_requested_data import get_requested_data
 
 
 def data_reader(code, start=None, end=None, day=None, division=None,  item=None, **kwargs):

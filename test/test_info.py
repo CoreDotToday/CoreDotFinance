@@ -1,4 +1,4 @@
-from finance.statistics.basic.info import Info
+from coredotfinance.krx.krx_website.info import Info
 
 
 # testing for checking '&' having word, kt&g

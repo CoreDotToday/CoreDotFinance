@@ -1,10 +1,7 @@
-import json
-import logging
-
 from datetime import datetime, timedelta
 import requests
 from bs4 import BeautifulSoup as bs
-from finance.to_DataFrame import GettingDataNm
+from coredotfinance.krx._to_DataFrame import GettingDataNm
 
 
 class Info:

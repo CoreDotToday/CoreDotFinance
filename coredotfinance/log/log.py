@@ -7,7 +7,7 @@ logger.setLevel(logging.DEBUG)
 # sh = logging.StreamHandler()
 # sh.setLevel(logging.INFO)
 
-fh = logging.FileHandler('finance/log/userlogfile.log')
+fh = logging.FileHandler('coredotfinance/log/userlogfile.log')
 fh.setLevel(logging.INFO)
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')

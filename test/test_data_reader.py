@@ -2,10 +2,10 @@ import pickle
 
 # test_is to avoid a conflict
 # btw same file name(.py) and function name(def .
-from finance.data_reader_ import *
+from coredotfinance.krx.data_reader_ import *
 
 """
-bundle_for_test 는 finance.'15001', item='코스피200 선물', market='전체') 20210430 에 만들었다.
+bundle_for_test 는 coredotcoredotfinance.krx.'15001', item='코스피200 선물', market='전체') 20210430 에 만들었다.
 """
 
 with open('test/test_data_reader.bin', 'rb') as f:

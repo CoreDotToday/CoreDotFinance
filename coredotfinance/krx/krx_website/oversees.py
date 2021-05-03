@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from finance.statistics.basic.info import Info
+from coredotfinance.krx.krx_website.info import Info
 
 class Oversees(Info):
     def __init__(self, code, start, end, day, code_to_function):

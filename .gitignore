@@ -1,10 +1,13 @@
+# folders
 .idea
 __pycache__
 .DS_Store
-*.ipynb
 .ipynb_checkpoints
-.pyc
+.vscode
+
+# files
+*.ipynb
 *.pyc
 test.py
-.log
 *.log
+**/key.cfg

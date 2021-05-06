@@ -1,10 +1,10 @@
 import sys
 import pytest
 
-# finance_path = sys.path[0].replace('/test', '')
-# sys.path.append(finance_path)
+# coredotfinance.krx_path = sys.path[0].replace('/test', '')
+# sys.path.append(coredotfinance.krx_path)
 
-from finance.tools import get, per, etf, etn, elw
+from coredotfinance.krx.tools import get, per, etf, etn, elw
 
 
 @pytest.mark.parametrize("stock", [

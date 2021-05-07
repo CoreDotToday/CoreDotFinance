@@ -1,20 +1,24 @@
+import os
 import logging
-
 
 logger = logging.getLogger('log')
 logger.setLevel(logging.DEBUG)
 
-# sh = logging.StreamHandler()
-# sh.setLevel(logging.INFO)
+# make log directory once.
+if os.path.isfile('coredotfinance/log'):
+    os.mkdir('coredotfinance/log')
 
-fh = logging.FileHandler('coredotfinance/log/userlogfile.log')
+log_file = 'coredotfinance/log/userlogfile.log'
+if not os.path.isfile(log_file):
+    with open(log_file, 'w') as f:
+        f.write('')
+
+fh = logging.FileHandler(log_file)
 fh.setLevel(logging.INFO)
 
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-# sh.setFormatter(formatter)
 fh.setFormatter(formatter)
 logger.addHandler(fh)
-# logger.addHandler(sh)
 
 
 class Log:

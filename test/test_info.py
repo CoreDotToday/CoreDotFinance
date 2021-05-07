@@ -24,8 +24,8 @@ def test_autocomplete_ETF():
 
 
 def test_autocomplete_ETN():
-    assert Info(None, None, None).autocomplete('qv rjstjf', 'ETN') \
-           == ('QV 건설 TOP5 ETN', 'KRG551100164', '550016')
+    assert Info(None, None, None).autocomplete('qv 미국', 'ETN') \
+           == ('QV 미국 IT TOP5 ETN(H)', 'KRG552100411',  '550041')
 
 
 def test_autocomplete_ELW():

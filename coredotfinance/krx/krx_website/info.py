@@ -42,7 +42,7 @@ class Info:
         autocomplete_response = requests.get(autocomplete_urls[item_type].format(item_name=item_name))
         soup = bs(autocomplete_response.content, 'html.parser')
 
-        if soup is None:
+        if soup is None or len(soup) == 0:
             raise AttributeError(f'{item_name} is Wrong name as a stock name')
         item_scripts = soup.find_all('li')
         # item 입력값이 autocomplete 에서 반환해주는 soup에서 첫번째에 위치하지 않는 경우가 있다. (예 "바이온")

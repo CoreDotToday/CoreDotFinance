@@ -33,7 +33,7 @@ def test_etf(ETF):
 
 @pytest.mark.parametrize("ETN",[
     (),
-    ('qv 건설', 20210428, 20210428)
+    ('qv 미국', 20210428, 20210428)
 ])
 def test_etn(ETN):
     assert etn(*ETN) is not None

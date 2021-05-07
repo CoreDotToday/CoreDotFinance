@@ -1,14 +1,15 @@
 import pandas as pd
 import numpy as np
-from coredotfinance.krx.data_reader_ import *
-from coredotfinance.krx.utils_moon import *
+from coredotfinance.krx.data_reader_ import data_reader
+from coredotfinance.krx.utils_moon import get_today, get_past_days_ago
 
 
 def convert_stock_ticker_name(stock: str) -> str:
     """
     '종목코드'(6자리)를 입력하면 '종목명' 반환, '종목명'을 입력하면 '종목코드'를 반환
     """
-    stock_list = get_stock_info().loc[:,['종목코드', '종목명']]
+    stock_list = get_stock_info().loc[:, ['종목코드', '종목명']]
+
     def convert_stock_ticker2name(stock_ticker: str) -> str:
         stock_name = stock_list[stock_list['종목코드'] == stock_ticker]['종목명'].array[0]
         return stock_name
@@ -32,7 +33,7 @@ def get_stock_info() -> pd.DataFrame:
     df_12025 = (
         pd
         .concat([df_12025_kospi, df_12025_kosdaq])
-        .astype({'시장구분':'category', '시가총액':'int64'})
+        .astype({'시장구분': 'category', '시가총액': 'int64'})
         .sort_values(by=['시가총액'], ascending=False)
         .reset_index(drop=True)
     )
@@ -74,6 +75,7 @@ def get_stock_pack(stock: str=None, start: str=get_past_days_ago(), end: str=get
     # [12023] 외국인보유량(개별종목)
     df_12023 = data_reader('12023', search_type='개별추이', item=item, start=start, end=end)
     # [12009] 투자자별 거래실적(개별종목)
+
     def get_df_12009(item=item, start=start, end=end):
         """
         거래량/거래대금 * 매도/매수/순매수 = 총 6개의 표의 상세보기 포함 정보를 하나의 DataFrame으로 합쳐서 반환

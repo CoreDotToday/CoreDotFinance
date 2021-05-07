@@ -1,15 +1,19 @@
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from coredotfinance.crypto.binance.binance import get_kline_candlestick_data, convert_candle_to_dataframe
+from coredotfinance.crypto.utils import date_to_timestamp
 
 
-def convert_candle_to_dataframe(candle: dict) -> pd.DataFrame:
-    # https://towardsdatascience.com/building-a-cryptocurrency-dashboard-using-plotly-and-binance-api-352e7f6f62c9
-    df = pd.DataFrame(candle, columns=['일자', '시가', '고가', '저가', '종가', '거래량', 'closeTime', 'quoteAssetVolume', 'numberOfTrades', 'takerBuyBaseVol', 'takerBuyQuoteVol', 'ignore'])
-    df.일자 = pd.to_datetime(df.일자, unit='ms')
-    df.거래량 = df.거래량.astype('float64')
-    df = df.set_index('일자').sort_index(ascending=False)
-    return df.iloc[:, :5]
+def get_crypto_ohlcv(ticker: str='BTCBUSD', interval='1d', start=None, end=None, limit=500) -> pd.DataFrame:
+    print(ticker.upper())
+    if start:
+        start = date_to_timestamp(start)
+    if end:
+        end = date_to_timestamp(end)
+    candle = get_kline_candlestick_data(ticker.upper(), interval, start, end, limit)
+    df = convert_candle_to_dataframe(candle)
+    return df
 
 
 def make_ohlcv_graph(df: pd.DataFrame, open='시가', high='고가', low='저가', close='종가', volume='거래량') -> None:

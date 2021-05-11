@@ -1,10 +1,16 @@
 CoreDotFinance
 ====================================
 
-`CoreDotFinance`는 주가, 지표, 파생상품, 비트코인 등 금융 데이터를 제공하는 라이브러리입니다.
+.. image:: https://img.shields.io/github/stars/CoreDotToday/CoreDotFinance
+    :target: https://github.com/CoreDotToday/CoreDotFinance
+    :alt: stars
 
+.. image:: https://img.shields.io/github/issues/CoreDotToday/CoreDotFinance
+    :target: https://github.com/CoreDotToday/CoreDotFinance/issues
+    :alt: issues
+
+`CoreDotFinance` 는 주가, 지표, 파생상품, 비트코인 등 금융 데이터를 제공하는 라이브러리입니다.
 현재 제공하고 있는 데이터는 data.krx.co.kr 에서 가져오고 있습니다.
-
 비트코인 데이터를 준비하고 있습니다.
 
 사용방법

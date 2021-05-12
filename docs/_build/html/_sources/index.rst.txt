@@ -7,20 +7,12 @@ CoreDotFinance
 ==========================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
-.. automodule:: coredotfinance
+.. automodule:: docs_test
    :members:
 
-.. automodule:: krx
-   :members:
-
-.. automodule:: test
-   :members:
-
-
-Indices and tables
 ==================
 
 * :ref:`genindex`

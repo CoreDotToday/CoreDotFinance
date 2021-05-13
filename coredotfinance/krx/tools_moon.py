@@ -42,8 +42,6 @@ def get_stock_pack(stock: str, start: str=get_past_days_ago(), end: str=get_toda
     """
     주어진 기간의 일자별 개별종목의 정보들을 합쳐 하나의 데이터프레임으로 가져온다.
     KRX 정보데이터시스템 통계 메뉴 중
-    - 합쳐진 개별종목 정보 -> [12003] 개별종목 시세 추이, [12021] PER/PBR/배당수익률(개별종목), [12023] 외국인보유량(개별종목), [12009] 투자자별 거래실적(개별종목)
-    - 향후 업데이트 예정 -> , [31001] 개별종목 공매도 종합정보
     Parameters
     ----------
     stock : str
@@ -57,6 +55,8 @@ def get_stock_pack(stock: str, start: str=get_past_days_ago(), end: str=get_toda
     pandas.dataframe
         KRX 정보데이터시스템의 개별종목 정보들을 합쳐놓은 DataFrame 반환
     """
+    # 합쳐진 개별종목 정보 -> [12003] 개별종목 시세 추이, [12021] PER/PBR/배당수익률(개별종목), [12023] 외국인보유량(개별종목), [12009] 투자자별 거래실적(개별종목)
+    # 향후 업데이트 예정 -> , [31001] 개별종목 공매도 종합정보
     stock_list = get_stock_info().loc[:,['종목코드', '종목명']]
     if stock in stock_list['종목코드'].array:
         item = convert_stock_ticker_name(stock)

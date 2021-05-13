@@ -3,24 +3,22 @@ import pandas as pd
 
 from coredotfinance.krx.data_reader_ import data_reader
 from coredotfinance.krx import _utils
-from coredotfinance.log.log import Log
 
 
-@Log.info
 def get(stock="all", start=None, end=None):
     """
-    코스피(KOSPI), 코스닥(KOSDAQ), 코넥스(KONEX)에 상장되어 있는 종목들에 대한 가격 데이터를 반환한다.
     Parameters
     ----------
-    stock : string
+    stock : str
         종목명 또는 종목코드를 입력. default 값은 "all"이며 전종목 시세를 반환한다.
-    start : int, string
+    start : int, str
         검색 시작일, default 값은 오늘로부터 60일 이전
-    end : int, string
+    end : int, str
         검색 종료일, default 값은 오늘
 
-    Returns : DataFrame
-    -------
+    Returns
+    --------
+    Stock prices data in Kospi, Kosdaq, Konex : DataFrame
     """
     _utils.start_end_validation(start, end)
     if stock == "all":
@@ -32,22 +30,21 @@ def get(stock="all", start=None, end=None):
             return data_reader("12003", start=start, end=end, item=stock)
 
 
-@Log.info
 def per(stock="all", start=None, end=None):
     """
-    코스피(KOSPI), 코스닥(KOSDAQ), 코넥스(KONEX)에 상장되어 있는 종목들에 대한
-    PER/EPS/PBS/BPS/주당배당금/배당수익률 데이터를 반환한다.
     Parameters
     ----------
-    stock : string
+    stock : str
         종목명 또는 종목코드를 입력. default 값은 "all"이며 전종목 시세를 반환한다.
-    start : int, string
+    start : int, str
         검색 시작일, default 값은 오늘로부터 60일 이전
-    end : int, string
+    end : int, str
         검색 종료일, default 값은 오늘
 
-    Returns : DataFrame
-    -------
+    Returns
+    --------
+    PER, EPS, PBS, BPS, 주당배당금, 배당수익률 data in Kospi, Kosdaq, Konex : DataFrame
+
     """
     _utils.start_end_validation(start, end)
     if stock == "all":
@@ -62,20 +59,20 @@ def per(stock="all", start=None, end=None):
             return data_reader("12021", search_type="개별추이", item=stock, start=start, end=end)
 
 
-@Log.info
 def etf(item="all", start=None, end=None):
     """
     Parameters
     ----------
-    item : string
+    item : str
         ETF 종목명 또는 ETF 종목코드를 입력. default 값은 "all"이며 전종목 시세를 반환한다.
-    start : int, string
+    start : int, str
         검색 시작일, default 값은 오늘로부터 60일 이전
-    end : int, string
+    end : int, str
         검색 종료일, default 값은 오늘
 
-    Returns : DataFrame
-    -------
+    Returns
+    --------
+    ETF data : DataFrame
     """
     _utils.start_end_validation(start, end)
     if item == "all":
@@ -87,20 +84,20 @@ def etf(item="all", start=None, end=None):
             return data_reader("13103", item=item, start=start, end=end)
 
 
-@Log.info
 def etn(item="all", start=None, end=None):
     """
     Parameters
     ----------
-    item : string
+    item : str
         ETN 종목명 또는 ETN 종목코드를 입력. default 값은 "all"이며 전종목 시세를 반환한다.
-    start : int, string
+    start : int, str
         검색 시작일, default 값은 오늘로부터 60일 이전
-    end : int, string
+    end : int, str
         검색 종료일, default 값은 오늘
 
-    Returns : DataFrame
-    -------
+    Returns
+    --------
+    ETN data : DataFrame
     """
     _utils.start_end_validation(start, end)
     if item == "all":
@@ -112,20 +109,20 @@ def etn(item="all", start=None, end=None):
             return data_reader("13203", item=item, start=start, end=end)
 
 
-@Log.info
 def elw(item="all", start=None, end=None):
     """
     Parameters
     ----------
-    item : string
+    item : str
         ELW 종목명 또는 ELW 종목코드를 입력. default 값은 "all"이며 전종목 시세를 반환한다.
-    start : int, string
+    start : int, str
         검색 시작일, default 값은 오늘로부터 60일 이전
-    end : int, string
+    end : int, str
         검색 종료일, default 값은 오늘
 
-    Returns : DataFrame
-    -------
+    Returns
+    --------
+    ELW data: DataFrame
     """
     _utils.start_end_validation(start, end)
     if item == "all":
@@ -137,20 +134,20 @@ def elw(item="all", start=None, end=None):
             return data_reader("13302", item=item, start=start, end=end)
 
 
-@Log.info
 def bond(item="all", start=None, end=None):
     """
     Parameters
     ----------
-    item : string
+    item : str
         채권 종목명 또는 채권 종목코드를 입력. default 값은 "all"이며 국채전문유통시장, 일반채권시장, 소액채권시장의 종목들을 모두 보여준다.
-    start : int, string
+    start : int, str
         검색 시작일, default 값은 오늘로부터 60일 이전
-    end : int, string
+    end : int, str
         검색 종료일, default 값은 오늘
 
-    Returns : DataFrame
+    Returns
     -------
+    DataFrame
     """
     _utils.start_end_validation(start, end)
     if item == "all":

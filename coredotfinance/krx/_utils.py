@@ -19,7 +19,7 @@ def classifier(param, item_type=None):
             return 'item name'
 
     # 주식의 종목 코드같은 경우 마지막 글자가 알파벳인 경우가 있다.
-    # 그래서 param[:-1]을 해준것. 같으면 종목 코드이고 아니면 종목명이다.
+    # 그래서 param[:-1]을 해준것.
     if re.match(r'[0-9]*', param[:-1])[0] == param[:-1]:
         return 'item code'
     else:

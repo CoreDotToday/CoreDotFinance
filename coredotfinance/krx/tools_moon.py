@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pandas as pd
 import numpy as np
 from coredotfinance.krx.data_reader_ import data_reader
@@ -8,20 +10,14 @@ def convert_stock_ticker_name(stock: str) -> str:
     """
     '종목코드'(6자리)를 입력하면 '종목명' 반환, '종목명'을 입력하면 '종목코드'를 반환
     """
+    # Todo : _utils.py 로 넣어줄 수 있지 않을까..
+    # Fixme : 더 나은 이름!
     stock_list = get_stock_info().loc[:, ['종목코드', '종목명']]
 
-    def convert_stock_ticker2name(stock_ticker: str) -> str:
-        stock_name = stock_list[stock_list['종목코드'] == stock_ticker]['종목명'].array[0]
-        return stock_name
-
-    def convert_stock_name2ticker(stock_name: str) -> str:
-        stock_ticker = stock_list[stock_list['종목명'] == stock_name]['종목코드'].array[0]
-        return stock_ticker
-
     if stock in stock_list['종목코드'].array:
-        return convert_stock_ticker2name(stock)
+        return stock_list[stock_list['종목코드'] == stock]['종목명'].array[0]
     elif stock in stock_list['종목명'].array:
-        return convert_stock_name2ticker(stock)
+        return stock_list[stock_list['종목명'] == stock]['종목코드'].array[0]
 
 
 def get_stock_info() -> pd.DataFrame:
@@ -37,16 +33,15 @@ def get_stock_info() -> pd.DataFrame:
         .sort_values(by=['시가총액'], ascending=False)
         .reset_index(drop=True)
     )
+    # index는 왜 1부터 시작하는 것일까요?
     df_12025.index = np.arange(1, len(df_12025) + 1)  # index 1부터 시작하도록 맞추기
     return df_12025
 
 
-def get_stock_pack(stock: str=None, start: str=get_past_days_ago(), end: str=get_today()) -> pd.DataFrame:
+def get_stock_pack(stock: str, start: str=get_past_days_ago(), end: str=get_today()) -> pd.DataFrame:
     """
     주어진 기간의 일자별 개별종목의 정보들을 합쳐 하나의 데이터프레임으로 가져온다.
     KRX 정보데이터시스템 통계 메뉴 중
-    - 합쳐진 개별종목 정보 -> [12003] 개별종목 시세 추이, [12021] PER/PBR/배당수익률(개별종목), [12023] 외국인보유량(개별종목), [12009] 투자자별 거래실적(개별종목)
-    - 향후 업데이트 예정 -> , [31001] 개별종목 공매도 종합정보
     Parameters
     ----------
     stock : str
@@ -60,6 +55,8 @@ def get_stock_pack(stock: str=None, start: str=get_past_days_ago(), end: str=get
     pandas.dataframe
         KRX 정보데이터시스템의 개별종목 정보들을 합쳐놓은 DataFrame 반환
     """
+    # 합쳐진 개별종목 정보 -> [12003] 개별종목 시세 추이, [12021] PER/PBR/배당수익률(개별종목), [12023] 외국인보유량(개별종목), [12009] 투자자별 거래실적(개별종목)
+    # 향후 업데이트 예정 -> , [31001] 개별종목 공매도 종합정보
     stock_list = get_stock_info().loc[:,['종목코드', '종목명']]
     if stock in stock_list['종목코드'].array:
         item = convert_stock_ticker_name(stock)
@@ -67,6 +64,8 @@ def get_stock_pack(stock: str=None, start: str=get_past_days_ago(), end: str=get
     elif stock in stock_list['종목명'].array:
         item = stock
         item_code = convert_stock_ticker_name(stock)
+    else:
+        raise Exception(f'Not in stock list : {stock}')
 
     # [12003] 개별종목 시세 추이
     df_12003 = data_reader('12003', item=item, start=start, end=end)
@@ -76,7 +75,8 @@ def get_stock_pack(stock: str=None, start: str=get_past_days_ago(), end: str=get
     df_12023 = data_reader('12023', search_type='개별추이', item=item, start=start, end=end)
     # [12009] 투자자별 거래실적(개별종목)
 
-    def get_df_12009(item=item, start=start, end=end):
+    # Fixme : Item, start, end are from out scope
+    def get_df_12009(item=item, start=start, end=end) -> pd.DataFrame:
         """
         거래량/거래대금 * 매도/매수/순매수 = 총 6개의 표의 상세보기 포함 정보를 하나의 DataFrame으로 합쳐서 반환
         Parameters
@@ -119,7 +119,7 @@ def get_stock_pack(stock: str=None, start: str=get_past_days_ago(), end: str=get
     return df
 
 
-def get_adjusted_price(df: pd.DataFrame, col: str, *, inplace: bool=False) -> pd.Series:
+def get_adjusted_price(df: pd.DataFrame, col: str, inplace: bool=False) -> pd.Series:
     """
     DataFrame의 최근 일자의 상장주식수와 동일하도록 다른 날짜의 상장주식수를 수정하여 각 날짜별 수정 가격 Column을 반환
     Parameters

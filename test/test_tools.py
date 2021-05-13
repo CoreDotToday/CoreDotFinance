@@ -1,8 +1,4 @@
-import sys
 import pytest
-
-# coredotfinance.krx_path = sys.path[0].replace('/test', '')
-# sys.path.append(coredotfinance.krx_path)
 
 from coredotfinance.krx.tools import get, per, etf, etn, elw
 

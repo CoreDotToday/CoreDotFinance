@@ -11,7 +11,6 @@ def get_tickers() -> list:
     ticker_list = [
         response["symbols"][i]["symbol"] for i in range(len(response["symbols"]))
     ]
-    print(ticker_list)
     return ticker_list
 
 
@@ -43,7 +42,9 @@ def get_market_detail(ticker=None) -> dict:
 def get_24hrs() -> pd.DataFrame:
     response = api_24hr()
     df = pd.DataFrame(response)
-    df["tPrice"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(float)
+    df["tradingValue"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(
+        float
+    )
     isUSDT = df.symbol.str.contains(".USDT", regex=True)
     cols = {
         "symbol": "종목코드",
@@ -54,13 +55,14 @@ def get_24hrs() -> pd.DataFrame:
         "highPrice": "고가",
         "lowPrice": "저가",
         "volume": "거래량",
+        "tradingValue": "거래대금",
     }
     df = (
         df.loc[isUSDT]
-        .sort_values(by=["tPrice"], ascending=False)
-        .reset_index(drop=True)
         .loc[:, cols.keys()]
         .rename(columns=cols)
+        .sort_values(by=["거래대금"], ascending=False)
+        .reset_index(drop=True)
     )
     return df
 
@@ -105,9 +107,9 @@ def make_ohlcv_graph(
     volume_bar_hovertext = []
     for i in range(len(df[open])):
         ohlc_candle_hovertext.append(
-            f"날짜: {df.index[i].date()}<br>시가: {df[open][i]}<br>고가: {df[high][i]}<br>저가: {df[low][i]}<br>종가: {df[close][i]}"
+            f"일자: {df.index[i].date()}<br>시가: {df[open][i]}<br>고가: {df[high][i]}<br>저가: {df[low][i]}<br>종가: {df[close][i]}"
         )
-        volume_bar_hovertext.append(f"날짜: {df.index[i].date()}<br>거래량: {df[volume][i]}")
+        volume_bar_hovertext.append(f"일자: {df.index[i].date()}<br>거래량: {df[volume][i]}")
     # OHLC 캔들 차트 생성
     ohlc_candle = go.Candlestick(
         x=df.index,

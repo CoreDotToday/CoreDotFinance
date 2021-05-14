@@ -36,7 +36,7 @@ def get_jsp_soup(mdcstat):
     url = f'http://data.krx.co.kr/contents/MDC/STAT/standard/{jsp_filename}.jsp'
     # TODO: Consider whether it is needed that checking status_code is 200 or not.
     html = requests.get(url)
-    if html.status_code != '200':
+    if html.status_code != 200:
         raise requests.ConnectionError(html)
     jsp_soup = bs(html.content, 'html.parser')
     return jsp_soup
@@ -103,7 +103,7 @@ def remove_len_zero(converting_map):
 # in order to make readable map
 def get_resource_bundle(efrb_url):
     html = requests.get(efrb_url)
-    if html.status_code != '200':
+    if html.status_code != 200:
         raise requests.ConnectionError(html)
     soup = bs(html.content, 'html.parser')
     the = json.loads(str(soup))

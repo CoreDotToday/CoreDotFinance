@@ -1,4 +1,5 @@
 import os
+import datetime
 import time
 import pandas as pd
 import numpy as np
@@ -98,9 +99,9 @@ def get_ohlcv(ticker: str = "BTCUSDT", interval="1d", start=None, end=None, limi
 def get_hourly_ohlcv_to_pickle(ticker_list, start_day):
     date_list = get_date_list(start_day)
     for ticker in ticker_list:
-        outdir = f"./pickles_{ticker}"  # Ticker 별로 폴더 분류
+        outdir = f"./data/binance/pickles_{ticker}"  # Ticker 별로 폴더 분류
         if not os.path.exists(outdir):  # 폴더가 존재하지 않을경우 폴더 생성
-            os.mkdir(outdir)
+            os.makedirs(outdir)
         for idx, date in enumerate(date_list):
             if not idx == 0:  # idx==0이면, idx-1==-1이 되므로 제외
                 start, end = date_list[idx], date_list[idx - 1]
@@ -110,3 +111,15 @@ def get_hourly_ohlcv_to_pickle(ticker_list, start_day):
                     break
                 df.to_pickle(f"{outdir}/{ticker}_{date[:-2]}.pickle")
                 time.sleep(1)  # API에서 IP Ban 방지하기 위하여 1초 Delay
+
+
+def get_recent_ohlcv_to_pickle(ticker_list):
+    yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+    first_day = datetime.datetime(yesterday.year, yesterday.month, 1).strftime("%Y%m%d")
+    for ticker in ticker_list:
+        outdir = f"./data/binance/pickles_{ticker}"  # Ticker 별로 폴더 분류
+        if not os.path.exists(outdir):  # 폴더가 존재하지 않을경우 폴더 생성
+            os.makedirs(outdir)
+        df = get_ohlcv(ticker, interval="1h", start=first_day)
+        df.to_pickle(f"{outdir}/{ticker}_{first_day[:-2]}.pickle")
+        time.sleep(1)  # API에서 IP Ban 방지하기 위하여 1초 Delay

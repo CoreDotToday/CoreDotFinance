@@ -23,6 +23,13 @@ def get_data_from_api(api: str, payload: dict = None) -> dict:
     return response.json()
 
 
+def api_check_server_time() -> dict:
+    """Check Server Time"""
+    api = "/api/v3/time"
+    response = get_data_from_api(api)
+    return response
+
+
 def api_exchange_info() -> dict:
     """Exchange Information"""
     api = "/api/v3/exchangeInfo"
@@ -63,6 +70,8 @@ def api_24hr(ticker=None) -> dict:
 
 def api_klines(ticker, interval, startTime, endTime, limit) -> dict:
     """Kline/Candlestick Data
+    Kline/candlestick bars for a symbol.
+    Klines are uniquely identified by their open time.
     Return Examples
     1499040000000,      // Open time  -> GMT 기준 long type timestamp
     "0.01634790",       // Open

@@ -44,9 +44,9 @@ PACKAGES = [
     'coredotfinance',
     'coredotfinance.log',
     'coredotfinance.krx',
-    'coredotfinance.krx.krx_website'
+    'coredotfinance.krx.krx_website',
     'coredotfinance.crypto',
-    'coredotfinance.crypto.binance'
+    'coredotfinance.crypto.binance',
 ]
 
 INSTALL_REQUIRES = [
@@ -81,6 +81,6 @@ setup(
     description='Financial data on web',
     keywords=KEYWORDS,
     long_description=LONG_DESCRIPTION,
-    install_requires=INSTALL_REQUIRES
+    install_requires=INSTALL_REQUIRES,
 )
 

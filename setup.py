@@ -54,6 +54,7 @@ INSTALL_REQUIRES = [
     'numpy >= 1.8',
     'requests >= 2.7.0',
     'beautifulsoup4 >= 4.9.3'
+    'plotly >= 4.14.3'
 ]
 
 with open('README.rst') as f:

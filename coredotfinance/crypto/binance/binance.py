@@ -96,10 +96,10 @@ def get_ohlcv(ticker: str = "BTCUSDT", interval="1d", start=None, end=None, limi
     return df
 
 
-def get_hourly_ohlcv_to_pickle(ticker_list, start_day):
+def get_hourly_ohlcv_to_pickle(ticker_list, start_day, dir):
     date_list = get_date_list(start_day)
     for ticker in ticker_list:
-        outdir = f"./data/binance/pickles_{ticker}"  # Ticker 별로 폴더 분류
+        outdir = f"{dir}/binance/pickles_{ticker}"  # Ticker 별로 폴더 분류
         if not os.path.exists(outdir):  # 폴더가 존재하지 않을경우 폴더 생성
             os.makedirs(outdir)
         for idx, date in enumerate(date_list):
@@ -113,11 +113,11 @@ def get_hourly_ohlcv_to_pickle(ticker_list, start_day):
                 time.sleep(1)  # API에서 IP Ban 방지하기 위하여 1초 Delay
 
 
-def get_recent_ohlcv_to_pickle(ticker_list):
+def get_recent_ohlcv_to_pickle(ticker_list, dir):
     yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
     first_day = datetime.datetime(yesterday.year, yesterday.month, 1).strftime("%Y%m%d")
     for ticker in ticker_list:
-        outdir = f"./data/binance/pickles_{ticker}"  # Ticker 별로 폴더 분류
+        outdir = f"{dir}/binance/pickles_{ticker}"  # Ticker 별로 폴더 분류
         if not os.path.exists(outdir):  # 폴더가 존재하지 않을경우 폴더 생성
             os.makedirs(outdir)
         df = get_ohlcv(ticker, interval="1h", start=first_day)

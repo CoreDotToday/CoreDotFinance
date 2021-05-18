@@ -45,6 +45,8 @@ PACKAGES = [
     'coredotfinance.log',
     'coredotfinance.krx',
     'coredotfinance.krx.krx_website'
+    'coredotfinance.crypto',
+    'coredotfinance.crypto.binance'
 ]
 
 INSTALL_REQUIRES = [

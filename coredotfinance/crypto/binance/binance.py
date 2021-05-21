@@ -8,38 +8,32 @@ from coredotfinance.crypto.utils import date_to_timestamp, get_date_list
 
 
 def get_tickers() -> list:
+    """Binance의 Ticker List 리턴"""
     response = api_exchange_info()
     ticker_list = [response["symbols"][i]["symbol"] for i in range(len(response["symbols"]))]
     return ticker_list
 
 
 def get_current_price(ticker) -> float:
+    """대상 Ticker의 현재 가격 리턴"""
     print(ticker.upper())
     response = api_avg_price(ticker.upper())
     return float(response.get("price"))
 
 
 def get_orderbook(ticker, limit=None) -> pd.DataFrame:
+    """대상 Ticker의 호가창(DataFrame) 리턴"""
     print(ticker.upper())
     response = api_depth(ticker.upper(), limit=limit)
     bids = np.array(response["bids"])
     asks = np.array(response["asks"])
     concat = np.concatenate((bids, asks), axis=1)
     df = pd.DataFrame(concat, columns=["매수가격", "매수수량", "매도가격", "매도수량"])
-    df.index = df.index.tz_localize("UTC").tz_convert("Asia/Seoul")
     return df
 
 
-def get_market_detail(ticker=None) -> dict:
-    if ticker is None:
-        response = api_24hr()
-    else:
-        print(ticker.upper())
-        response = api_24hr(ticker.upper())
-    return response
-
-
-def get_24hrs() -> pd.DataFrame:
+def get_24hr_all_price() -> pd.DataFrame:
+    """모든 Ticker의 24시간 동안의 가격 정보(DataFrame) 리턴 (거래대금순 내림차순 정렬)"""
     response = api_24hr()
     df = pd.DataFrame(response)
     df["tradingValue"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(float)
@@ -56,8 +50,7 @@ def get_24hrs() -> pd.DataFrame:
         "tradingValue": "거래대금",
     }
     df = (
-        df.loc[isUSDT]
-        .loc[:, cols.keys()]
+        df.loc[isUSDT, cols.keys()]
         .rename(columns=cols)
         .sort_values(by=["거래대금"], ascending=False)
         .reset_index(drop=True)
@@ -66,37 +59,44 @@ def get_24hrs() -> pd.DataFrame:
 
 
 def get_ohlcv(ticker: str = "BTCUSDT", interval="1d", start=None, end=None, limit=None) -> pd.DataFrame:
+    """대상 Ticker의 가격 정보(DataFrame) 리턴
+
+    Parameters
+    ----------
+    ticker : str, optional
+        Binance Ticker, by default "BTCUSDT"
+    interval : str, optional
+        조회 간격 설정, by default "1d"
+        (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)
+    start : str, optional
+        조회 시작 날짜(YYYYMMDD), by default 최근 날짜
+    end : str, optional
+        조회 끝 날짜(YYYYMMDD), by default 최근 날짜
+    limit : int, optional
+        조회 개수, by default 500
+
+    Returns
+    -------
+    pd.DataFrame
+        대상 Ticker의 조회 조건에 맞는 일시별 시가/고가/저가/종가/거래량 DataFrame
+    """
     print(ticker.upper())
     if start:
         start = date_to_timestamp(start)
     if end:
         end = date_to_timestamp(end)
     ohlcv = api_klines(ticker.upper(), interval, start, end, limit)
-    df = pd.DataFrame(
-        ohlcv,
-        columns=[
-            "일자",
-            "시가",
-            "고가",
-            "저가",
-            "종가",
-            "거래량",
-            "closeTime",
-            "quoteAssetVolume",
-            "numberOfTrades",
-            "takerBuyBaseVol",
-            "takerBuyQuoteVol",
-            "ignore",
-        ],
-    )
-    df.일자 = pd.to_datetime(df.일자, unit="ms")
+    df = pd.DataFrame(ohlcv).iloc[:, :6]
+    df.columns = ["일시", "시가", "고가", "저가", "종가", "거래량"]
+    df.일시 = pd.to_datetime(df.일시, unit="ms")
     df.거래량 = df.거래량.astype("float64")
-    df = df.set_index("일자").sort_index(ascending=False).iloc[:, :5]
+    df = df.set_index("일시").sort_index(ascending=False)
     df.index = df.index.tz_localize("UTC").tz_convert("Asia/Seoul")
     return df
 
 
 def get_hourly_ohlcv_to_pickle(ticker_list, start_day, dir):
+    """Ticker List에 대해 지정된 시작날짜부터의 1시간 간격 가격정보(OHLCV)를 지정된 폴더에 pickle 파일로 저장"""
     date_list = get_date_list(start_day)
     for ticker in ticker_list:
         outdir = f"{dir}/binance/pickles_{ticker}"  # Ticker 별로 폴더 분류
@@ -114,6 +114,7 @@ def get_hourly_ohlcv_to_pickle(ticker_list, start_day, dir):
 
 
 def get_recent_ohlcv_to_pickle(ticker_list, dir):
+    """Ticker List에 대해 전일 기준 해당월의 1시간 간격 가격정보(OHLCV)를 지정된 폴더에 pickle 파일로 저장"""
     yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
     first_day = datetime.datetime(yesterday.year, yesterday.month, 1).strftime("%Y%m%d")
     for ticker in ticker_list:

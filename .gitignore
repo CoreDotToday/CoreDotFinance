@@ -4,6 +4,9 @@ __pycache__
 .DS_Store
 .ipynb_checkpoints
 .vscode
+build/
+coredotfinance.egg-info/
+dist/
 
 # files
 *.ipynb
@@ -11,3 +14,5 @@ __pycache__
 test.py
 *.log
 **/key.cfg
+
+

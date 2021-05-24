@@ -6,11 +6,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-def date_to_timestamp(date) -> str:
-    timestamp = time.mktime(datetime.datetime.strptime(date, "%Y%m%d").timetuple())
-    return f"{timestamp * 1000:.0f}"
-
-
 def get_date_list(start_day) -> list:
     """시작일부터 오늘까지를 1달 간격으로 나눈 것을 리스트로 만듦"""
     date_list = []
@@ -27,7 +22,9 @@ def get_date_list(start_day) -> list:
     return date_list
 
 
-def make_ohlcv_graph(df: pd.DataFrame, open="시가", high="고가", low="저가", close="종가", volume="거래량") -> None:
+def make_ohlcv_graph(
+    df: pd.DataFrame, open="시가", high="고가", low="저가", close="종가", volume="거래량"
+) -> None:
     # hovertext 생성
     ohlc_candle_hovertext = []
     volume_bar_hovertext = []

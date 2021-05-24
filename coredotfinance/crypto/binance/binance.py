@@ -3,8 +3,15 @@ import datetime
 import time
 import pandas as pd
 import numpy as np
-from coredotfinance.crypto.binance.api import api_exchange_info, api_avg_price, api_depth, api_24hr, api_klines
-from coredotfinance.crypto.utils import date_to_timestamp, get_date_list
+from coredotfinance.crypto.binance.api import (
+    api_exchange_info,
+    api_avg_price,
+    api_depth,
+    api_24hr,
+    api_klines,
+)
+from coredotfinance.crypto.utils import get_date_list
+from coredotfinance._utils import _convert_date2timestamp
 
 
 def get_tickers() -> list:
@@ -58,7 +65,9 @@ def get_24hr_all_price() -> pd.DataFrame:
     return df
 
 
-def get_ohlcv(ticker: str = "BTCUSDT", interval="1d", start=None, end=None, limit=None) -> pd.DataFrame:
+def get_ohlcv(
+    ticker: str = "BTCUSDT", interval="1d", start=None, end=None, limit=None
+) -> pd.DataFrame:
     """대상 Ticker의 가격 정보(DataFrame) 리턴
 
     Parameters
@@ -82,16 +91,15 @@ def get_ohlcv(ticker: str = "BTCUSDT", interval="1d", start=None, end=None, limi
     """
     print(ticker.upper())
     if start:
-        start = date_to_timestamp(start)
+        start = _convert_date2timestamp(start) * 1000  # s -> ms
     if end:
-        end = date_to_timestamp(end)
+        end = _convert_date2timestamp(end) * 1000  # s -> ms
     ohlcv = api_klines(ticker.upper(), interval, start, end, limit)
     df = pd.DataFrame(ohlcv).iloc[:, :6]
     df.columns = ["일시", "시가", "고가", "저가", "종가", "거래량"]
     df.일시 = pd.to_datetime(df.일시, unit="ms")
     df.거래량 = df.거래량.astype("float64")
     df = df.set_index("일시").sort_index(ascending=False)
-    df.index = df.index.tz_localize("UTC").tz_convert("Asia/Seoul")
     return df
 
 

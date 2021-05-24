@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from freezegun import freeze_time
 from coredotfinance.crypto.binance.api import api_check_server_time
 from coredotfinance.crypto.binance.binance import (
     get_tickers,
@@ -7,6 +8,7 @@ from coredotfinance.crypto.binance.binance import (
     get_24hr_all_price,
     get_ohlcv,
 )
+from coredotfinance.crypto.utils import get_date_list
 
 
 # crypto.binance.api.py
@@ -39,3 +41,8 @@ def test_get_ohlcv_klines():
     df = get_ohlcv("BTCUSDT")
     assert len(df) > 0
     assert df.columns.tolist() == ["시가", "고가", "저가", "종가", "거래량"]
+
+
+@freeze_time("20210420")
+def test_get_date_list():
+    assert get_date_list("20210103") == ["20210420", "20210401", "20210301", "20210201", "20210103"]

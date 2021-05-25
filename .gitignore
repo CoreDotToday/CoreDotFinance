@@ -1,10 +1,18 @@
+# folders
 .idea
 __pycache__
 .DS_Store
-*.ipynb
 .ipynb_checkpoints
-.pyc
+.vscode
+build/
+coredotfinance.egg-info/
+dist/
+
+# files
+*.ipynb
 *.pyc
 test.py
-.log
 *.log
+**/key.cfg
+
+

@@ -50,13 +50,19 @@ def per(stock="all", start=None, end=None):
     if stock == "all":
         data = data_reader("12021", search_type="전종목", market="전체", day=start)
         #  12021 종목명 데이터에 아래와 같은 문자열이 함께 출력됨.
-        data["종목명"] = [name.replace("<em class =\"up\"></em>", "") for name in data["종목명"]]
+        data["종목명"] = [
+            name.replace('<em class ="up"></em>', "") for name in data["종목명"]
+        ]
         return data
     else:
         if _utils.classifier(stock) == "item code":
-            return data_reader("12021", search_type="개별추이", item_code=stock, start=start, end=end)
+            return data_reader(
+                "12021", search_type="개별추이", item_code=stock, start=start, end=end
+            )
         else:
-            return data_reader("12021", search_type="개별추이", item=stock, start=start, end=end)
+            return data_reader(
+                "12021", search_type="개별추이", item=stock, start=start, end=end
+            )
 
 
 def etf(item="all", start=None, end=None):
@@ -151,10 +157,9 @@ def bond(item="all", start=None, end=None):
     """
     _utils.start_end_validation(start, end)
     if item == "all":
-        data1 = data_reader('14001', market='국채전문유통시장')
-        data2 = data_reader('14001', market='일반채권시장')
-        data3 = data_reader('14001', market='소액채권시장')
+        data1 = data_reader("14001", market="국채전문유통시장")
+        data2 = data_reader("14001", market="일반채권시장")
+        data3 = data_reader("14001", market="소액채권시장")
         return pd.concat([data1, data2, data3], ignore_index=True)
     else:
         pass
-

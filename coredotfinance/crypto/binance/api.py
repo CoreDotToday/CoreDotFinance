@@ -1,7 +1,6 @@
 import os
 import configparser
 import requests
-import pandas as pd
 
 
 def load_api_key() -> str:

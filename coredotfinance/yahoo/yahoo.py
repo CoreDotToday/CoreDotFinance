@@ -8,6 +8,7 @@ from coredotfinance._utils import (
 
 
 def request_get_data(ticker, start_timestamp, end_timestamp):
+    """Yahoo Finance의 Ticker의 History 조회"""
     url = f"https://query2.finance.yahoo.com/v8/finance/chart/{ticker}"
     headers = {
         "Content-Type": "application/json",
@@ -24,7 +25,8 @@ def request_get_data(ticker, start_timestamp, end_timestamp):
     return response.json()
 
 
-def get_ohlcv(ticker, *, start=None, end=None, adjust_price=True, real_price=False):
+def get_ohlcv(ticker, *, start=None, end=None, adjust_price=True, real_price=False) -> pd.DataFrame:
+    """Yahoo Finance의 Ticker를 활용하여 가격정보(OHLCV) 조회"""
     if start is None:
         start = "19000101"
     if end is None:
@@ -67,6 +69,7 @@ def get_ohlcv(ticker, *, start=None, end=None, adjust_price=True, real_price=Fal
 
 
 def apply_adjust_price(data: pd.DataFrame) -> pd.DataFrame:
+    """Yahoo Finance의 수정종가를 활용하여 다른 수정 가격"""
     df = data.copy()
     ratio = df["종가"] / df["수정종가"]
     df["수정시가"] = df["시가"] / ratio

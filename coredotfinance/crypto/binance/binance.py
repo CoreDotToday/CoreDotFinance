@@ -3,14 +3,22 @@ import datetime
 import time
 import pandas as pd
 import numpy as np
-from coredotfinance.crypto.binance.api import api_exchange_info, api_avg_price, api_depth, api_24hr, api_klines
+from coredotfinance.crypto.binance.api import (
+    api_exchange_info,
+    api_avg_price,
+    api_depth,
+    api_24hr,
+    api_klines,
+)
 from coredotfinance.crypto.utils import date_to_timestamp, get_date_list
 
 
 def get_tickers() -> list:
     """Binance의 Ticker List 리턴"""
     response = api_exchange_info()
-    ticker_list = [response["symbols"][i]["symbol"] for i in range(len(response["symbols"]))]
+    ticker_list = [
+        response["symbols"][i]["symbol"] for i in range(len(response["symbols"]))
+    ]
     return ticker_list
 
 
@@ -36,7 +44,9 @@ def get_24hr_all_price() -> pd.DataFrame:
     """모든 Ticker의 24시간 동안의 가격 정보(DataFrame) 리턴 (거래대금순 내림차순 정렬)"""
     response = api_24hr()
     df = pd.DataFrame(response)
-    df["tradingValue"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(float)
+    df["tradingValue"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(
+        float
+    )
     isUSDT = df.symbol.str.contains(".USDT", regex=True)
     cols = {
         "symbol": "종목코드",
@@ -58,7 +68,9 @@ def get_24hr_all_price() -> pd.DataFrame:
     return df
 
 
-def get_ohlcv(ticker: str = "BTCUSDT", interval="1d", start=None, end=None, limit=None) -> pd.DataFrame:
+def get_ohlcv(
+    ticker: str = "BTCUSDT", interval="1d", start=None, end=None, limit=None
+) -> pd.DataFrame:
     """대상 Ticker의 가격 정보(DataFrame) 리턴
 
     Parameters

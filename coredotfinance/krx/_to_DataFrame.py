@@ -4,15 +4,26 @@ import numpy as np
 from datetime import datetime
 
 second_column_map = {
-    'BND_CLSS_NM1': '구분1',  # <- row map
-    'BND_CLSS_NM2': '구분2',  # <- row map
+    "BND_CLSS_NM1": "구분1",  # <- row map
+    "BND_CLSS_NM2": "구분2",  # <- row map
 }
 
-no_display_columns = ['IND_TP_CD', 'IDX_IND_CD', 'MKT_ID',
-                      'CONV_OBJ_TP_CD', 'ISU_ABBRV_STR', 'ETF_ISU_CD',
-                      'BND_CLSS_CD', 'NUSUAL_ISU_COND_CONTN',
-                      'KRW_FLUC_TP_CD', 'OZ_FLUC_TP_CD', 'FLUC_TP',
-                      'ISU_ABBRV', 'SUB_IDX_IND_NM', 'ISU_CD']
+no_display_columns = [
+    "IND_TP_CD",
+    "IDX_IND_CD",
+    "MKT_ID",
+    "CONV_OBJ_TP_CD",
+    "ISU_ABBRV_STR",
+    "ETF_ISU_CD",
+    "BND_CLSS_CD",
+    "NUSUAL_ISU_COND_CONTN",
+    "KRW_FLUC_TP_CD",
+    "OZ_FLUC_TP_CD",
+    "FLUC_TP",
+    "ISU_ABBRV",
+    "SUB_IDX_IND_NM",
+    "ISU_CD",
+]
 
 
 class GettingDataNm:
@@ -33,7 +44,7 @@ def data_nm_column(data):
     item_name = GettingDataNm().data_nm
     if item_name is None:
         return data
-    data['종목명'] = [item_name for _ in range(len(data))]
+    data["종목명"] = [item_name for _ in range(len(data))]
 
     return data
 
@@ -69,7 +80,7 @@ def apply_column_map(data_json, column_map):
             try:
                 readable_column[column_map[column]] = data_value
             except:
-                if column in no_display_columns or 'TP_CD' in column:
+                if column in no_display_columns or "TP_CD" in column:
                     continue
                 else:
                     readable_column[column] = data_value
@@ -78,16 +89,16 @@ def apply_column_map(data_json, column_map):
 
 
 def date_to_index(data):
-    if '일자' not in data.columns:
+    if "일자" not in data.columns:
         # '일자' 열이 있는지 확인
         return data
-    if len(data) != len(set(data['일자'].values)):
+    if len(data) != len(set(data["일자"].values)):
         # '일자' 가 중복되는 데이터인지 확인
         return data
 
-    date_list = [datetime.strptime(date, '%Y/%m/%d') for date in data['일자']]
+    date_list = [datetime.strptime(date, "%Y/%m/%d") for date in data["일자"]]
     data.index = date_list
-    return data.drop(['일자'], axis='columns')
+    return data.drop(["일자"], axis="columns")
 
 
 def single_column(columns_depth):
@@ -100,7 +111,7 @@ def remove_same_named_column(column_data, columns_depth):
     # 같은 이름으로 multi columnize 되는 것을 방지
     for i in column_data:
         for _ in range(columns_depth - len(i)):
-            i.append('')
+            i.append("")
     return column_data
 
 
@@ -123,9 +134,9 @@ def string_to_float(data):
         number_data = True
         for i in series:
             try:
-                value = float(i.replace(',', ''))
+                value = float(i.replace(",", ""))
             except:
-                if i != '-':
+                if i != "-":
                     number_data = False
                     break
                 else:
@@ -137,6 +148,3 @@ def string_to_float(data):
             new_values.append(series.array)
 
     return pd.DataFrame(np.array(new_values).T, columns=data.columns, index=data.index)
-
-
-

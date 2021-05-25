@@ -27,7 +27,9 @@ def get_date_list(start_day) -> list:
     return date_list
 
 
-def make_ohlcv_graph(df: pd.DataFrame, open="시가", high="고가", low="저가", close="종가", volume="거래량") -> None:
+def make_ohlcv_graph(
+    df: pd.DataFrame, open="시가", high="고가", low="저가", close="종가", volume="거래량"
+) -> None:
     # hovertext 생성
     ohlc_candle_hovertext = []
     volume_bar_hovertext = []

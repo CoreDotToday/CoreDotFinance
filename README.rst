@@ -30,7 +30,7 @@ get
 krx 주식 데이터
 ::
 
-    import coredotfinance as cdf
+    import coredotfinance.krx as krx
 
     # 전종목 시세 검색
     data = cdf.get()
@@ -47,7 +47,7 @@ per
 --------
 krx per 데이터
 ::
-    import coredotfinance as cdf
+    import coredotfinance.krx as krx
 
     # 전종목 per/ pbr/ 배당수익 검색
     data = cdf.per()
@@ -64,7 +64,7 @@ etf
 --------
 krx etf 데이터
 ::
-    import coredotfinance as cdf
+    import coredotfinance.krx as krx
 
     # 전종목 etf 검색
     data = cdf.etf()
@@ -83,7 +83,7 @@ etn
 --------
 krx etn 데이터
 ::
-    import coredotfinance as cdf
+    import coredotfinance.krx as krx
 
     # 전종목 etn 검색
     data = cdf.etn()
@@ -102,7 +102,7 @@ elw
 --------
 krx elw 데이터
 ::
-    import coredotfinance as cdf
+    import coredotfinance.krx as krx
 
     # 전종목 elw 검색
     data = cdf.elw()

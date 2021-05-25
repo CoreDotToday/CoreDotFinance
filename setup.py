@@ -44,14 +44,17 @@ PACKAGES = [
     'coredotfinance',
     'coredotfinance.log',
     'coredotfinance.krx',
-    'coredotfinance.krx.krx_website'
+    'coredotfinance.krx.krx_website',
+    'coredotfinance.crypto',
+    'coredotfinance.crypto.binance',
 ]
 
 INSTALL_REQUIRES = [
     'pandas >= 0.14',
     'numpy >= 1.8',
     'requests >= 2.7.0',
-    'beautifulsoup4 >= 4.9.3'
+    'beautifulsoup4 >= 4.9.3',
+    'plotly >= 4.14.3',
 ]
 
 with open('README.rst') as f:
@@ -78,6 +81,6 @@ setup(
     description='Financial data on web',
     keywords=KEYWORDS,
     long_description=LONG_DESCRIPTION,
-    install_requires=INSTALL_REQUIRES
+    install_requires=INSTALL_REQUIRES,
 )
 

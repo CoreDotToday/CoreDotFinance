@@ -33,13 +33,13 @@ krx 주식 데이터
     import coredotfinance.krx as krx
 
     # 전종목 시세 검색
-    data = cdf.get()
+    data = krx.get()
 
     # 종목명 시세 검색
-    data  = cdf.get('삼성전자', 202100101, 20210401)
+    data  = krx.get('삼성전자', 202100101, 20210401)
 
     # 종목코드 시세 검색
-    data = cdf.get('001120', 202100101, 20210401)
+    data = krx.get('001120', 202100101, 20210401)
 
 .. code-block:: python
 
@@ -50,13 +50,13 @@ krx per 데이터
     import coredotfinance.krx as krx
 
     # 전종목 per/ pbr/ 배당수익 검색
-    data = cdf.per()
+    data = krx.per()
 
     # 종목명 per/ pbr/ 배당수익 검색
-    data = cdf.per('삼성전자', 202100101, 20210401)
+    data = krx.per('삼성전자', 202100101, 20210401)
 
     # 종목코드 per/ pbr/ 배당수익 검색
-    data = cdf.per('001120', 202100101, 20210401)
+    data = krx.per('001120', 202100101, 20210401)
 
 .. code-block:: python
 
@@ -67,13 +67,13 @@ krx etf 데이터
     import coredotfinance.krx as krx
 
     # 전종목 etf 검색
-    data = cdf.etf()
+    data = krx.etf()
 
     # 종목명 etf 검색
-    data = cdf.etf('arirang 200', 202100101, 20210401)
+    data = krx.etf('arirang 200', 202100101, 20210401)
 
     # 종목코드 etf 검색
-    data = cdf.etf('152100', 202100101, 20210401)
+    data = krx.etf('152100', 202100101, 20210401)
 
 .. code-block:: python
 
@@ -86,13 +86,13 @@ krx etn 데이터
     import coredotfinance.krx as krx
 
     # 전종목 etn 검색
-    data = cdf.etn()
+    data = krx.etn()
 
     # 종목명 etn 검색
-    data = cdf.etn('KB KRX300 ETN', 202100101, 20210401)
+    data = krx.etn('KB KRX300 ETN', 202100101, 20210401)
 
     # 종목코드 etn 검색
-    data = cdf.etn('550060', 202100101, 20210401)
+    data = krx.etn('550060', 202100101, 20210401)
 
 .. code-block:: python
 
@@ -105,13 +105,13 @@ krx elw 데이터
     import coredotfinance.krx as krx
 
     # 전종목 elw 검색
-    data = cdf.elw()
+    data = krx.elw()
 
     # 종목명 elw 검색
-    data = cdf.elw('KBF937삼성전자콜', 202100101, 20210401)
+    data = krx.elw('KBF937삼성전자콜', 202100101, 20210401)
 
     # 종목코드 elw 검색
-    data = cdf.elw('58F937', 202100101, 20210401)
+    data = krx.elw('58F937', 202100101, 20210401)
 
 .. code-block:: python
 

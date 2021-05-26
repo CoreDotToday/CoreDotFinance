@@ -1,23 +1,26 @@
-import os
 import datetime
+import os
 import time
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+from coredotfinance._utils import _convert_date2timestamp
 from coredotfinance.crypto.binance.api import (
-    api_exchange_info,
+    api_24hr,
     api_avg_price,
     api_depth,
-    api_24hr,
+    api_exchange_info,
     api_klines,
 )
 from coredotfinance.crypto.utils import get_date_list
-from coredotfinance._utils import _convert_date2timestamp
 
 
 def get_tickers() -> list:
     """Binance의 Ticker List 리턴"""
     response = api_exchange_info()
-    ticker_list = [response["symbols"][i]["symbol"] for i in range(len(response["symbols"]))]
+    ticker_list = [
+        response["symbols"][i]["symbol"] for i in range(len(response["symbols"]))
+    ]
     return ticker_list
 
 
@@ -43,7 +46,9 @@ def get_24hr_all_price() -> pd.DataFrame:
     """모든 Ticker의 24시간 동안의 가격 정보(DataFrame) 리턴 (거래대금순 내림차순 정렬)"""
     response = api_24hr()
     df = pd.DataFrame(response)
-    df["tradingValue"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(float)
+    df["tradingValue"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(
+        float
+    )
     isUSDT = df.symbol.str.contains(".USDT", regex=True)
     cols = {
         "symbol": "종목코드",

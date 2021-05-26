@@ -1,11 +1,12 @@
 from datetime import datetime, timezone
-from freezegun import freeze_time
+
 from coredotfinance._utils import (
     _convert_date2timestamp,
     _convert_timestamp2datetime_list,
-    _get_today,
     _get_past_days_ago,
+    _get_today,
 )
+from freezegun import freeze_time
 
 
 @freeze_time("20210420")

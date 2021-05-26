@@ -25,7 +25,9 @@ def request_get_data(ticker, start_timestamp, end_timestamp):
     return response.json()
 
 
-def get_ohlcv(ticker, *, start=None, end=None, adjust_price=True, real_price=False) -> pd.DataFrame:
+def get_ohlcv(
+    ticker, *, start=None, end=None, adjust_price=True, real_price=False
+) -> pd.DataFrame:
     """Yahoo Finance의 Ticker를 활용하여 가격정보(OHLCV) 조회"""
     if start is None:
         start = "19000101"
@@ -80,7 +82,13 @@ def apply_adjust_price(data: pd.DataFrame) -> pd.DataFrame:
     df = df.drop(["시가", "고가", "저가", "종가", "거래량"], axis=1)
 
     df.rename(
-        columns={"수정시가": "시가", "수정고가": "고가", "수정저가": "저가", "수정종가": "종가", "수정거래량": "거래량"},
+        columns={
+            "수정시가": "시가",
+            "수정고가": "고가",
+            "수정저가": "저가",
+            "수정종가": "종가",
+            "수정거래량": "거래량",
+        },
         inplace=True,
     )
 

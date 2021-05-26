@@ -16,11 +16,11 @@ def _convert_timestamp2datetime_list(timestamp_list: list()) -> list():
 def _get_today() -> str:
     """Get date of today(YYYYMMDD)"""
     today = date.today()
-    return today.strftime('%Y%m%d')
+    return today.strftime("%Y%m%d")
 
 
 def _get_past_days_ago(days: int = 365) -> str:
     """Get date of past days ago"""
     today = date.today()
     past_days_ago = today - timedelta(days)
-    return past_days_ago.strftime('%Y%m%d')
+    return past_days_ago.strftime("%Y%m%d")

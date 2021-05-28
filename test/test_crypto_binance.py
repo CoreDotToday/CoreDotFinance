@@ -41,7 +41,7 @@ def test_24hr_all_price():
 def test_get_ohlcv_klines():
     df = get_ohlcv("BTCUSDT")
     assert len(df) > 0
-    assert df.columns.tolist() == ["open", "high", "low", "close", "volume"]
+    assert df.columns.tolist() == ["시가", "고가", "저가", "종가", "거래량"]
 
 
 @freeze_time("20210420")

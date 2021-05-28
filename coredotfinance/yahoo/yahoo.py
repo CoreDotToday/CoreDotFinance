@@ -3,14 +3,15 @@ import requests
 from coredotfinance._utils import (
     _convert_date2timestamp_sec,
     _convert_timestamp2datetime_list,
-    _get_today,
+    _get_date_today,
+    _rename_cols2kor,
+    _set_index_datetime,
 )
-from coredotfinance.language_kor import _cols_kor
 
 
-def request_get_data(ticker, start_timestamp, end_timestamp):
-    """Yahoo Finance의 Ticker의 History 조회"""
-    url = f"https://query2.finance.yahoo.com/v8/finance/chart/{ticker}"
+def request_get_data(symbol, start_timestamp, end_timestamp):
+    """Yahoo Finance의 symbol의 History 조회"""
+    url = f"https://query2.finance.yahoo.com/v8/finance/chart/{symbol}"
     headers = {
         "Content-Type": "application/json",
         "User-Agent": "Mozilla/5.0",
@@ -27,17 +28,17 @@ def request_get_data(ticker, start_timestamp, end_timestamp):
 
 
 def get_ohlcv(
-    ticker, *, start=None, end=None, adjust_price=True, real_price=False
+    symbol, *, start=None, end=None, adjust_price=True, real_price=False
 ) -> pd.DataFrame:
-    """Yahoo Finance의 Ticker를 활용하여 가격정보(OHLCV) 조회"""
+    """Yahoo Finance의 symbol를 활용하여 가격정보(OHLCV) 조회"""
     if start is None:
         start = "19000101"
     if end is None:
-        end = _get_today()
+        end = _get_date_today()
 
-    start_stamp = _convert_date2timestamp_sec(start)
-    end_stamp = _convert_date2timestamp_sec(end)
-    response = request_get_data(ticker, start_stamp, end_stamp)
+    start_timestamp = _convert_date2timestamp_sec(start)
+    end_timestamp = _convert_date2timestamp_sec(end)
+    response = request_get_data(symbol, start_timestamp, end_timestamp)
 
     timestamp = response["chart"]["result"][0]["timestamp"]
     datetime = _convert_timestamp2datetime_list(timestamp)
@@ -47,20 +48,16 @@ def get_ohlcv(
     close = response["chart"]["result"][0]["indicators"]["quote"][0]["close"]
     adjclose = response["chart"]["result"][0]["indicators"]["adjclose"][0]["adjclose"]
     volume = response["chart"]["result"][0]["indicators"]["quote"][0]["volume"]
-    df = (
-        pd.DataFrame(
-            {
-                "datetime": datetime,
-                "open": open,
-                "high": high,
-                "low": low,
-                "close": close,
-                "adj_close": adjclose,
-                "volume": volume,
-            },
-        )
-        .set_index("datetime")
-        .sort_index(ascending=False)
+    df = pd.DataFrame(
+        {
+            "datetime": datetime,
+            "open": open,
+            "high": high,
+            "low": low,
+            "close": close,
+            "adj_close": adjclose,
+            "volume": volume,
+        },
     )
 
     if adjust_price:
@@ -68,7 +65,8 @@ def get_ohlcv(
     elif real_price:
         df = apply_real_price(df)
 
-    df = df.rename(columns=_cols_kor)
+    df = _rename_cols2kor(df)
+    df = _set_index_datetime(df)
     return df
 
 
@@ -83,7 +81,7 @@ def apply_adjust_price(data: pd.DataFrame) -> pd.DataFrame:
 
     df = df.drop(["open", "high", "low", "close", "volume"], axis=1)
 
-    df.rename(
+    df = df.rename(
         columns={
             "adj_open": "open",
             "adj_high": "high",
@@ -91,7 +89,6 @@ def apply_adjust_price(data: pd.DataFrame) -> pd.DataFrame:
             "adj_close": "close",
             "ajd_volume": "volume",
         },
-        inplace=True,
     )
 
     df = df[["open", "high", "low", "close", "volume"]]

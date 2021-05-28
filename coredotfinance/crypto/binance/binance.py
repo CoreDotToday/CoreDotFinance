@@ -4,7 +4,11 @@ import time
 
 import numpy as np
 import pandas as pd
-from coredotfinance._utils import _convert_date2timestamp_sec
+from coredotfinance._utils import (
+    _convert_date2timestamp_sec,
+    _rename_cols2kor,
+    _set_index_datetime,
+)
 from coredotfinance.crypto.binance.api import (
     api_24hr,
     api_avg_price,
@@ -13,7 +17,6 @@ from coredotfinance.crypto.binance.api import (
     api_klines,
 )
 from coredotfinance.crypto.utils import get_date_list
-from coredotfinance.language_kor import _cols_kor
 
 
 def get_symbols() -> list:
@@ -42,7 +45,7 @@ def get_orderbook(symbol, limit=None) -> pd.DataFrame:
     df = pd.DataFrame(
         concat, columns=["bid_price", "bid_volume", "ask_price", "ask_volume"]
     )
-    df = df.rename(columns=_cols_kor)
+    df = _rename_cols2kor(df)
     return df
 
 
@@ -70,12 +73,12 @@ def get_24hr_all_price() -> pd.DataFrame:
         .sort_values(by=["tradingValue"], ascending=False)
         .reset_index(drop=True)
     )
-    df = df.rename(columns=_cols_kor)
+    df = _rename_cols2kor(df)
     return df
 
 
 def get_ohlcv(
-    symbol: str = "BTCUSDT", interval="1d", start=None, end=None, limit=None
+    symbol: str = "BTCUSDT", interval="1d", start=None, end=None, limit=1000
 ) -> pd.DataFrame:
     """대상 symbol의 가격 정보(DataFrame) 리턴
 
@@ -91,25 +94,31 @@ def get_ohlcv(
     end : str, optional
         조회 끝 날짜(YYYYMMDD), by default 최근 날짜
     limit : int, optional
-        조회 개수, by default 500
+        조회 개수, by default 1000
 
     Returns
     -------
     pd.DataFrame
         대상 symbol의 조회 조건에 맞는 일시별 시가/고가/저가/종가/거래량 DataFrame
     """
-    print(symbol.upper())
     if start:
         start = _convert_date2timestamp_sec(start) * 1000  # s -> ms
     if end:
         end = _convert_date2timestamp_sec(end) * 1000  # s -> ms
+
     ohlcv = api_klines(symbol.upper(), interval, start, end, limit)
+
     df = pd.DataFrame(ohlcv).iloc[:, :6]
     df.columns = ["datetime", "open", "high", "low", "close", "volume"]
     df["datetime"] = pd.to_datetime(df["datetime"], unit="ms")
-    df["volume"] = df["volume"].astype("float64")
-    df = df.set_index("datetime").sort_index(ascending=False)
-    df = df.rename(columns=_cols_kor)
+
+    df = _rename_cols2kor(df)
+    df = _set_index_datetime(df)
+
+    if "d" in interval or "h" in interval:
+        df.tz_localize("UTC")
+
+    print(symbol.upper())
     return df
 
 

@@ -20,7 +20,7 @@ def test_get_past_days_ago():
 
 
 def test_convert_date2timestamp():
-    assert _convert_date2timestamp_sec("20200420") == 1587308400
+    assert _convert_date2timestamp_sec("20200420") == 1587340800
 
 
 def test_convert_timestamp2datetime_list():

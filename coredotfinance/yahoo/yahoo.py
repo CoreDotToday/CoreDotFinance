@@ -1,10 +1,11 @@
 import pandas as pd
 import requests
 from coredotfinance._utils import (
-    _convert_date2timestamp,
+    _convert_date2timestamp_sec,
     _convert_timestamp2datetime_list,
     _get_today,
 )
+from coredotfinance.language_kor import _cols_kor
 
 
 def request_get_data(ticker, start_timestamp, end_timestamp):
@@ -34,8 +35,8 @@ def get_ohlcv(
     if end is None:
         end = _get_today()
 
-    start_stamp = _convert_date2timestamp(start)
-    end_stamp = _convert_date2timestamp(end)
+    start_stamp = _convert_date2timestamp_sec(start)
+    end_stamp = _convert_date2timestamp_sec(end)
     response = request_get_data(ticker, start_stamp, end_stamp)
 
     timestamp = response["chart"]["result"][0]["timestamp"]
@@ -49,16 +50,16 @@ def get_ohlcv(
     df = (
         pd.DataFrame(
             {
-                "일자": datetime,
-                "시가": open,
-                "고가": high,
-                "저가": low,
-                "종가": close,
-                "수정종가": adjclose,
-                "거래량": volume,
+                "datetime": datetime,
+                "open": open,
+                "high": high,
+                "low": low,
+                "close": close,
+                "adj_close": adjclose,
+                "volume": volume,
             },
         )
-        .set_index("일자")
+        .set_index("datetime")
         .sort_index(ascending=False)
     )
 
@@ -67,38 +68,39 @@ def get_ohlcv(
     elif real_price:
         df = apply_real_price(df)
 
+    df = df.rename(columns=_cols_kor)
     return df
 
 
 def apply_adjust_price(data: pd.DataFrame) -> pd.DataFrame:
     """Yahoo Finance의 수정종가를 활용하여 다른 수정 가격"""
     df = data.copy()
-    ratio = df["종가"] / df["수정종가"]
-    df["수정시가"] = df["시가"] / ratio
-    df["수정고가"] = df["고가"] / ratio
-    df["수정저가"] = df["저가"] / ratio
-    df["수정거래량"] = df["거래량"] * ratio
+    ratio = df["close"] / df["adj_close"]
+    df["adj_open"] = df["open"] / ratio
+    df["adj_high"] = df["high"] / ratio
+    df["ajd_low"] = df["low"] / ratio
+    df["ajd_volume"] = df["volume"] * ratio
 
-    df = df.drop(["시가", "고가", "저가", "종가", "거래량"], axis=1)
+    df = df.drop(["open", "high", "low", "close", "volume"], axis=1)
 
     df.rename(
         columns={
-            "수정시가": "시가",
-            "수정고가": "고가",
-            "수정저가": "저가",
-            "수정종가": "종가",
-            "수정거래량": "거래량",
+            "adj_open": "open",
+            "adj_high": "high",
+            "ajd_low": "low",
+            "adj_close": "close",
+            "ajd_volume": "volume",
         },
         inplace=True,
     )
 
-    df = df[["시가", "고가", "저가", "종가", "거래량"]]
-    return df[["시가", "고가", "저가", "종가", "거래량"]]
+    df = df[["open", "high", "low", "close", "volume"]]
+    return df[["open", "high", "low", "close", "volume"]]
 
 
 def apply_real_price(data: pd.DataFrame) -> pd.DataFrame:
     df = data.copy()
-    df = df.drop(["수정종가"], axis=1)
+    df = df.drop(["adj_close"], axis=1)
 
-    df = df[["시가", "고가", "저가", "종가", "거래량"]]
-    return df[["시가", "고가", "저가", "종가", "거래량"]]
+    df = df[["open", "high", "low", "close", "volume"]]
+    return df[["open", "high", "low", "close", "volume"]]

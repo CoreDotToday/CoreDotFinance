@@ -6,7 +6,7 @@ from coredotfinance.crypto.binance.binance import (
     get_current_price,
     get_ohlcv,
     get_orderbook,
-    get_tickers,
+    get_symbols,
 )
 from coredotfinance.crypto.utils import get_date_list
 from freezegun import freeze_time
@@ -20,8 +20,8 @@ def test_api_check_server_time():
 
 
 # crypto.binance.binance.py
-def test_get_tickers():
-    assert len(get_tickers()) > 0
+def test_get_symbols():
+    assert len(get_symbols()) > 0
 
 
 def test_get_current_price():
@@ -35,13 +35,13 @@ def test_get_orderbook():
 def test_24hr_all_price():
     df = get_24hr_all_price()
     assert len(df) > 0
-    assert df.거래대금.max() == df.거래대금[0]
+    assert df["거래대금"].max() == df["거래대금"][0]
 
 
 def test_get_ohlcv_klines():
     df = get_ohlcv("BTCUSDT")
     assert len(df) > 0
-    assert df.columns.tolist() == ["시가", "고가", "저가", "종가", "거래량"]
+    assert df.columns.tolist() == ["open", "high", "low", "close", "volume"]
 
 
 @freeze_time("20210420")

@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 from coredotfinance.krx.data_reader_ import data_reader
-from coredotfinance.krx.utils_moon import get_today, get_past_days_ago
+from coredotfinance._utils import _get_today, _get_past_days_ago
 
 
 def convert_stock_ticker2name(stock: str) -> str:
@@ -13,7 +13,7 @@ def convert_stock_ticker2name(stock: str) -> str:
 
 
 def convert_stock_name2ticker(stock: str) -> str:
-    """'종목명'을 입력하면 '종목코드' 반환"""
+    """종목명'을 입력하면 '종목코드' 반환"""
     stock_list = get_stock_info().loc[:, ["종목코드", "종목명"]]
     return stock_list[stock_list["종목명"] == stock]["종목코드"].array[0]
 
@@ -36,7 +36,7 @@ def get_stock_info() -> pd.DataFrame:
 
 
 def get_stock_pack(
-    stock: str, start: str = get_past_days_ago(), end: str = get_today()
+    stock: str, start: str = _get_past_days_ago(), end: str = _get_today()
 ) -> pd.DataFrame:
     """주어진 기간의 일자별 개별종목의 정보들을 합쳐 하나의 데이터프레임으로 가져온다.
     Parameters
@@ -73,18 +73,14 @@ def get_stock_pack(
 
     print("< 일자별 개별종목 종합정보 조회 >")
     print(f"종목명: {item} // 종목코드: {item_code} // 조회기간: {start}~{end}")
-    df = pd.concat(
-        [df_12003, df_12021, df_12023, df_12009], axis="columns"
-    )  # DataFrame을 Columns 기준으로 합침
+    df = pd.concat([df_12003, df_12021, df_12023, df_12009], axis="columns")
     df = df.loc[:, ~df.columns.duplicated()].sort_index(  # 중복되는 Columns 제외
         ascending=False
     )  # 최신 날짜가 위로 올라오도록 정렬
     return df
 
 
-def get_df_12009(
-    item, start: str = get_past_days_ago(), end: str = get_today()
-) -> pd.DataFrame:
+def get_df_12009(item, start: str = _get_past_days_ago(), end: str = _get_today()) -> pd.DataFrame:
     """[12009] 투자자별 거래실적(개별종목) 조회 기능에서 2개 표(거래량-순매수, 거래대금-순매수)를 하나의 DataFrame으로 합쳐서 반환
     Parameters
     ----------
@@ -115,9 +111,7 @@ def get_df_12009(
                 trade_index=trdvolval,
                 trade_check=askbid,
             )
-            df_temp = df_temp.drop(
-                ["종목명"], axis="columns"
-            ).add_prefix(  # 매 번 반복되는 종목명 column 제거
+            df_temp = df_temp.drop(["종목명"], axis="columns").add_prefix(  # 매 번 반복되는 종목명 column 제거
                 f"{trdvolval}_"
             )
             df_temp.columns = df_temp.columns.str.replace(" 합계", "")
@@ -149,16 +143,10 @@ def get_adjusted_price(df: pd.DataFrame, col: str, inplace: bool = False) -> pd.
     df
     """
     if col in ["종가", "시가", "고가", "저가", "거래량"]:
-        latest_stocks = df["상장주식수"][df.index == df.index.max()].array[
-            0
-        ]  # DataFrame의 최근 일자의 상장주식수
-        adjusted_price = (df[col] * (df["상장주식수"] / latest_stocks)).astype(
-            np.int32
-        )  # 수정 가격
+        latest_stocks = df["상장주식수"][df.index == df.index.max()].array[0]  # DataFrame의 최근 일자의 상장주식수
+        adjusted_price = (df[col] * (df["상장주식수"] / latest_stocks)).astype(np.int32)  # 수정 가격
         if col in ["거래량"]:
-            adjusted_price = (df[col] / (df["상장주식수"] / latest_stocks)).astype(
-                np.int32
-            )  # 수정 거래량
+            adjusted_price = (df[col] / (df["상장주식수"] / latest_stocks)).astype(np.int32)  # 수정 거래량
         if inplace:
             df[
                 f"수정{col}"

@@ -10,15 +10,14 @@ from coredotfinance.crypto.binance.api import (
     api_24hr,
     api_klines,
 )
-from coredotfinance.crypto.utils import date_to_timestamp, get_date_list
+from coredotfinance.crypto.utils import get_date_list
+from coredotfinance._utils import _convert_date2timestamp
 
 
 def get_tickers() -> list:
     """Binance의 Ticker List 리턴"""
     response = api_exchange_info()
-    ticker_list = [
-        response["symbols"][i]["symbol"] for i in range(len(response["symbols"]))
-    ]
+    ticker_list = [response["symbols"][i]["symbol"] for i in range(len(response["symbols"]))]
     return ticker_list
 
 
@@ -44,9 +43,7 @@ def get_24hr_all_price() -> pd.DataFrame:
     """모든 Ticker의 24시간 동안의 가격 정보(DataFrame) 리턴 (거래대금순 내림차순 정렬)"""
     response = api_24hr()
     df = pd.DataFrame(response)
-    df["tradingValue"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(
-        float
-    )
+    df["tradingValue"] = df["volume"].astype(float) * df["weightedAvgPrice"].astype(float)
     isUSDT = df.symbol.str.contains(".USDT", regex=True)
     cols = {
         "symbol": "종목코드",
@@ -94,16 +91,15 @@ def get_ohlcv(
     """
     print(ticker.upper())
     if start:
-        start = date_to_timestamp(start)
+        start = _convert_date2timestamp(start) * 1000  # s -> ms
     if end:
-        end = date_to_timestamp(end)
+        end = _convert_date2timestamp(end) * 1000  # s -> ms
     ohlcv = api_klines(ticker.upper(), interval, start, end, limit)
     df = pd.DataFrame(ohlcv).iloc[:, :6]
     df.columns = ["일시", "시가", "고가", "저가", "종가", "거래량"]
     df.일시 = pd.to_datetime(df.일시, unit="ms")
     df.거래량 = df.거래량.astype("float64")
     df = df.set_index("일시").sort_index(ascending=False)
-    df.index = df.index.tz_localize("UTC").tz_convert("Asia/Seoul")
     return df
 
 

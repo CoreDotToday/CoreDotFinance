@@ -38,7 +38,11 @@ def get_jsp_soup(mdcstat):
     url = f"http://data.krx.co.kr/contents/MDC/STAT/standard/{jsp_filename}.jsp"
     # TODO: Consider whether it is needed that checking status_code is 200 or not.
     html = requests.get(url)
-    if html.status_code != 200:
+    response = html.status_code
+    if response == 403:
+        print('Ip may be blocked from [http://data.krx.co.kr/]')
+        raise requests.ConnectionError(html)
+    elif response != 200:
         raise requests.ConnectionError(html)
     jsp_soup = bs(html.content, "html.parser")
     return jsp_soup

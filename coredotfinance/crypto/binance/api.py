@@ -1,7 +1,7 @@
-import os
 import configparser
+import os
+
 import requests
-import pandas as pd
 
 
 def load_api_key() -> str:
@@ -39,38 +39,38 @@ def api_exchange_info() -> dict:
     return response
 
 
-def api_depth(ticker, limit=None) -> dict:
+def api_depth(symbol, limit=None) -> dict:
     """Binance API 요청(Order Book)"""
     api = "/api/v3/depth"
     payload = {
-        "symbol": ticker,
+        "symbol": symbol,
         "limit": limit,
     }
     response = get_data_from_api(api, payload)
     return response
 
 
-def api_avg_price(ticker) -> dict:
+def api_avg_price(symbol) -> dict:
     """Binance API 요청(Current Average Price)"""
     api = "/api/v3/avgPrice"
     payload = {
-        "symbol": ticker,
+        "symbol": symbol,
     }
     response = get_data_from_api(api, payload)
     return response
 
 
-def api_24hr(ticker=None) -> dict:
-    """Binance API 요청(24hr Ticker Price Change Statistics)"""
+def api_24hr(symbol=None) -> dict:
+    """Binance API 요청(24hr symbol Price Change Statistics)"""
     api = "/api/v3/ticker/24hr"
     payload = {
-        "symbol": ticker,
+        "symbol": symbol,
     }
     response = get_data_from_api(api, payload)
     return response
 
 
-def api_klines(ticker, interval, startTime, endTime, limit) -> dict:
+def api_klines(symbol, interval, startTime, endTime, limit) -> dict:
     """Binance API 요청(Kline/Candlestick Data)
     Klines are uniquely identified by their open time.
     Return Examples
@@ -89,7 +89,7 @@ def api_klines(ticker, interval, startTime, endTime, limit) -> dict:
     """
     api = "/api/v3/klines"
     payload = {
-        "symbol": ticker,
+        "symbol": symbol,
         "interval": interval,
         "limit": limit,
         "startTime": startTime,

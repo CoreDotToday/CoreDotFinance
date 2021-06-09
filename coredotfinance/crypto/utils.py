@@ -1,14 +1,9 @@
-import time
 import datetime
-from dateutil.relativedelta import relativedelta
+
 import pandas as pd
 import plotly.graph_objects as go
+from dateutil.relativedelta import relativedelta
 from plotly.subplots import make_subplots
-
-
-def date_to_timestamp(date) -> str:
-    timestamp = time.mktime(datetime.datetime.strptime(date, "%Y%m%d").timetuple())
-    return f"{timestamp * 1000:.0f}"
 
 
 def get_date_list(start_day) -> list:

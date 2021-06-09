@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import json
+
+import requests
+
 from coredotfinance.krx.krx_website.info import Info
 
 
@@ -28,9 +32,16 @@ class Stock(Info):
 
     def convert_code_to_name(self, item_code):
         # 전종목 기본정보 [12005] 데이터
-        request_data = {"bld": "dbms/MDC/STAT/standard/MDCSTAT01901", "mktId": "전체"}
+        request_data = {"bld": "dbms/MDC/STAT/standard/MDCSTAT01901", "mktId": "ALL"}
         data = self.update_requested_data(request_data)
-        for i in data[0]["OutBlock_1"]:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/"
+                          "605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15"
+        }
+        url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
+        r = requests.post(url, data=data, headers=headers)
+        krx_data = json.loads(r.content)
+        for i in krx_data["OutBlock_1"]:
             if i["ISU_SRT_CD"] == str(item_code):
                 return i["ISU_ABBRV"]
 

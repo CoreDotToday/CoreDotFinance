@@ -63,7 +63,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 html_theme = 'pydata_sphinx_theme'
 html_theme_path = ['_theme']
 html_theme_options = {
-    'github_url': 'https://github.com/DavidKimDY/finance'
+    'github_url': 'https://github.com/CoreDotToday/CoreDotFinance'
 }
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

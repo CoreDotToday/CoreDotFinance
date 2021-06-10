@@ -2,7 +2,7 @@
 KRX
 ****
 
-.. module:: coredotfinance
+.. module:: coredotfinance.krx
 
 .. autofunction:: get
 

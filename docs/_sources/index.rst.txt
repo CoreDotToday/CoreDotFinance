@@ -9,20 +9,19 @@ CoreDotFinance
 
 **Binance** `https://binanne.cc/ko/ <https://binanne.cc/ko/>`__
 
-:mod:`CoreDotFinance` is financial data library, easy-to-get financail data from
-stock price data in Kospi, Kosdaq to Cryptocurrency for the `Python  <https://www.python.org/>`__
-programming language.
+:mod:`CoreDotFinance` is financial data library, easy-to-get financial data from
+**KRX** for Korean Stock price data  and **Binance** for Cryptocurrency.
 
 .. panels::
    :card: + intro-card text-center
 
    ---
-   :img-top: _static/stock.jpg
+   :img-top: _static/krx.png
 
    **KRX**
 
    Do you want to get financial data from *KRX*? Check out the *KRX* guides.
-   They give you a lot of easy-to-use financial data
+   It will allow you to have  a lot of easy-to-use financial data.
    coming from `data.krx.co.kr <https://data.krx.co.kr>`__
 
    +++
@@ -33,7 +32,7 @@ programming language.
             :classes: bot-block btn-outline-primary
 
    ---
-   :img-top: _static/bitcoin.png
+   :img-top: _static/binance.svg
 
    **Crypto Currency**
 

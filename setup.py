@@ -57,7 +57,7 @@ INSTALL_REQUIRES = [
     'plotly >= 4.14.3',
 ]
 
-with open('README.rst') as f:
+with open('README.md') as f:
     LONG_DESCRIPTION = f.read()
 
 KEYWORDS = [
@@ -80,6 +80,7 @@ setup(
     author_email='help@core.today',
     description='Financial data on web',
     keywords=KEYWORDS,
+    long_description_content_type = 'text/markdown',
     long_description=LONG_DESCRIPTION,
     install_requires=INSTALL_REQUIRES,
 )

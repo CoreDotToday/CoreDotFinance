@@ -1,4 +1,5 @@
-# CoreDotFinance: Powerful Python financail data library
+# CoreDotFinance
+### Powerful Python financial data library
 [![GitHup issues](https://img.shields.io/github/issues/CoreDotToday/CoreDotFinance)](https://github.com/CoreDotToday/CoreDotFinance/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/CoreDotToday/CoreDotFinance)](https://github.com/CoreDotToday/CoreDotFinance/pulls)
 [![GitHub Top language](https://img.shields.io/github/languages/top/CoreDotToday/CoreDotFinance)](https://github.com/CoreDotToday/CoreDotFinance/search?l=python)

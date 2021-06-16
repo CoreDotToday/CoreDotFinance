@@ -38,7 +38,7 @@ CoreDotFinance
 
 
    Crypto Currency! The rising star in financial market.
-   Comming soon
+   CoreDotFinance brings price data of cypto currency from `binance.com <https://www.binance.com>`__
 
    +++
 

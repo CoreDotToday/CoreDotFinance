@@ -1,5 +1,9 @@
+.. _crypto:
+
+.. currentmodule:: coredotfinance
+
 ****************
-Crypto Currency
+Crypto
 ****************
 
 .. module:: coredotfinance.crypto

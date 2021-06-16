@@ -36,6 +36,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -69,7 +70,24 @@
       
       <div class="navbar-center-item">
         <ul id="navbar-main-elements" class="navbar-nav">
-    
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="examples.html">
+  Examples
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="krx.html">
+  KRX
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="crypto.html">
+  Crypto
+ </a>
+</li>
+
     
 </ul>
       </div>
@@ -115,6 +133,50 @@
           
           <div class="d-none d-xl-block col-xl-2 bd-toc">
             
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#quick-start">
+   Quick Start
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#contents">
+   Contents
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#recent-developments">
+   Recent developments
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#examples">
+   Examples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#indices-and-tables">
+   Indices and tables
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
           </div>
           
 
@@ -128,11 +190,34 @@
                 
   <div class="section" id="coredotfinance">
 <h1>CoreDotFinance<a class="headerlink" href="#coredotfinance" title="Permalink to this headline">¶</a></h1>
-<p><strong>Core.Today</strong>: <a class="reference external" href="https://core.today">https://core.today</a></p>
-<p><strong>KRX</strong>: <a class="reference external" href="https://data.krx.co.kr">https://data.krx.co.kr</a></p>
-<p><strong>Binance</strong> <a class="reference external" href="https://binanne.cc/ko/">https://binanne.cc/ko/</a></p>
+<p>Version : 0.0.1</p>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">CoreDotFinance</span></code> is financial data library, easy-to-get financial data from
 <strong>KRX</strong> for Korean Stock price data  and <strong>Binance</strong> for Cryptocurrency.</p>
+<p><strong>Core.Today</strong>: <a class="reference external" href="https://core.today">https://core.today</a></p>
+<p><strong>KRX</strong>: <a class="reference external" href="https://data.krx.co.kr">https://data.krx.co.kr</a></p>
+<p><strong>Binance</strong> <a class="reference external" href="https://binance.com">https://binance.com</a></p>
+<div class="section" id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<p>Install using <code class="docutils literal notranslate"><span class="pre">pip</span></code></p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install coredotfinance
+</pre></div>
+</div>
+<p>and then import and use one of data-getting function.
+This example reads two months of price data on Samsung.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">coredotfinance.krx</span> <span class="k">as</span> <span class="nn">krx</span>
+<span class="c1"># code number &#39;005930&#39; stands for Samsung</span>
+<span class="n">krx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;005930&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This example reads 500 rows of Bitcoin price data</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">coredotfinance.crypto</span> <span class="k">as</span> <span class="nn">coin</span>
+<span class="c1"># ticker &#39;BTCUSDT&#39; stands for Bitcoin</span>
+<span class="n">coin</span><span class="o">.</span><span class="n">get_ohlcv</span><span class="p">(</span><span class="s1">&#39;BTCUSDT&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="sphinx-bs container pb-4 docutils">
 <div class="row docutils">
 <div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 p-2 docutils">
@@ -163,12 +248,45 @@ CoreDotFinance brings price data of cypto currency from <a class="reference exte
 </div>
 </div>
 </div>
-<hr class="docutils" />
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="recent-developments">
+<h2>Recent developments<a class="headerlink" href="#recent-developments" title="Permalink to this headline">¶</a></h2>
+<p>You can install the latest development version using</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install git+https://github.com/CoreDotToday/CoreDotFinance.git
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/CoreDotToday/CoreDotFinance.git
+<span class="nb">cd</span> CoreDotToday
+python setup.py install
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>refer to Examples</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="krx.html">KRX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crypto.html">Crypto</a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
@@ -177,6 +295,7 @@ CoreDotFinance brings price data of cypto currency from <a class="reference exte
               
               <div class='prev-next-bottom'>
                 
+    <a class='right-next' id="next-link" href="examples.html" title="next page">Examples</a>
 
               </div>
               

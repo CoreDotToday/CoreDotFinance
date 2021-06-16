@@ -1,3 +1,7 @@
+.. _krx:
+
+.. currentmodule:: coredotfinance
+
 ****
 KRX
 ****

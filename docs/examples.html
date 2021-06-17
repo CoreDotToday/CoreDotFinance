@@ -253,7 +253,7 @@ extract data from various Internet sources into a pandas DataFrame.</p>
 </div>
 <div class="section" id="crypto">
 <span id="examples-crypto"></span><h2>crypto<a class="headerlink" href="#crypto" title="Permalink to this headline">¶</a></h2>
-<p>This function without any arguments returns price data of crypto currency listed on Binance.</p>
+<p>This function without any arguments returns price data of Bitcoin as a default.</p>
 <div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">coredotfinance.crypto</span> <span class="k">as</span> <span class="nn">crypto</span>
 
 <span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">df</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">get_ohlcv</span><span class="p">()</span>
@@ -266,6 +266,21 @@ extract data from various Internet sources into a pandas DataFrame.</p>
 <span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">14</span>  <span class="mf">39020.56000000</span>  <span class="mf">41064.05000000</span>  <span class="mf">38730.00000000</span>  <span class="mf">40516.29000000</span>  <span class="mf">108522.391949</span>
 <span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">13</span>  <span class="mf">35546.12000000</span>  <span class="mf">39380.00000000</span>  <span class="mf">34757.00000000</span>  <span class="mf">39020.57000000</span>   <span class="mf">86921.025555</span>
 <span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">12</span>  <span class="mf">37331.98000000</span>  <span class="mf">37463.63000000</span>  <span class="mf">34600.36000000</span>  <span class="mf">35546.11000000</span>   <span class="mf">87717.549990</span>
+</pre></div>
+</div>
+<p>With argument of sympol which stands for specific crypto currency, this function returns price data of the crypto currency.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">coredotfinance.crypto</span> <span class="k">as</span> <span class="nn">crypto</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">df</span> <span class="o">=</span> <span class="n">crypto</span><span class="o">.</span><span class="n">get_olhcv</span><span class="p">(</span><span class="s1">&#39;ETHBTC&#39;</span><span class="p">)</span>
+<span class="n">ETHBTC</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+               <span class="n">시가</span>          <span class="n">고가</span>          <span class="n">저가</span>          <span class="n">종가</span>         <span class="n">거래량</span>
+<span class="n">일시</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">17</span>  <span class="mf">0.06175600</span>  <span class="mf">0.06241600</span>  <span class="mf">0.06163200</span>  <span class="mf">0.06210300</span>    <span class="mf">3322.111</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">16</span>  <span class="mf">0.06335500</span>  <span class="mf">0.06339700</span>  <span class="mf">0.06142500</span>  <span class="mf">0.06176100</span>  <span class="mf">120161.524</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">15</span>  <span class="mf">0.06370400</span>  <span class="mf">0.06520000</span>  <span class="mf">0.06296700</span>  <span class="mf">0.06334900</span>  <span class="mf">149346.695</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">14</span>  <span class="mf">0.06430600</span>  <span class="mf">0.06464600</span>  <span class="mf">0.06238900</span>  <span class="mf">0.06369900</span>  <span class="mf">163306.557</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">13</span>  <span class="mf">0.06669200</span>  <span class="mf">0.06759900</span>  <span class="mf">0.06354000</span>  <span class="mf">0.06430600</span>  <span class="mf">142796.288</span>
 </pre></div>
 </div>
 <p>Documentation :</p>

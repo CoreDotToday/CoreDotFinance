@@ -3,6 +3,7 @@
 .. currentmodule:: coredotfinance
 
 .. ipython:: python
+
    :suppress:
 
    import pandas as pd
@@ -90,7 +91,7 @@ This function also understands stock name as well.
 crypto
 =======
 
-This function without any arguments returns price data of crypto currency listed on Binance.
+This function without any arguments returns price data of Bitcoin as a default.
 
 .. code-block:: ipython
 
@@ -106,6 +107,23 @@ This function without any arguments returns price data of crypto currency listed
    2021-06-14  39020.56000000  41064.05000000  38730.00000000  40516.29000000  108522.391949
    2021-06-13  35546.12000000  39380.00000000  34757.00000000  39020.57000000   86921.025555
    2021-06-12  37331.98000000  37463.63000000  34600.36000000  35546.11000000   87717.549990
+
+With argument of sympol which stands for specific crypto currency, this function returns price data of the crypto currency.
+
+.. code-block:: ipython
+
+   In [1]: import coredotfinance.crypto as crypto
+
+   In [2]: df = crypto.get_olhcv('ETHBTC')
+   ETHBTC
+   In [3]: df.head()
+                  시가          고가          저가          종가         거래량
+   일시
+   2021-06-17  0.06175600  0.06241600  0.06163200  0.06210300    3322.111
+   2021-06-16  0.06335500  0.06339700  0.06142500  0.06176100  120161.524
+   2021-06-15  0.06370400  0.06520000  0.06296700  0.06334900  149346.695
+   2021-06-14  0.06430600  0.06464600  0.06238900  0.06369900  163306.557
+   2021-06-13  0.06669200  0.06759900  0.06354000  0.06430600  142796.288
 
 Documentation :
 

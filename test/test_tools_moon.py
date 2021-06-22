@@ -1,5 +1,5 @@
 import pandas as pd
-from coredotfinance.krx.data_reader_ import data_reader
+from coredotfinance.krx.data_reader import data_reader
 from coredotfinance.krx.tools_moon import (
     convert_stock_name2ticker,
     convert_stock_ticker2name,

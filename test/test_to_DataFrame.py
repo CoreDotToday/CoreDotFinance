@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 
-from coredotfinance.krx import _to_DataFrame
+from coredotfinance.krx import process
 
 
 @pytest.fixture
@@ -50,7 +50,7 @@ def example_column_map():
 
 def test_check_data_validation(example_data_json):
     try:
-        _to_DataFrame.check_data_validation(example_data_json)
+        process.check_data_validation(example_data_json)
         test = True
     except Exception:
         test = False
@@ -60,7 +60,7 @@ def test_check_data_validation(example_data_json):
 def test_check_data_validation_wrong():
     no_data = {"output": [], "CURRENT_DATETIME": "2021.04.26 AM 10:57:43"}
     try:
-        _to_DataFrame.check_data_validation(no_data)
+        process.check_data_validation(no_data)
         test = False
     except Exception:
         test = True
@@ -68,33 +68,33 @@ def test_check_data_validation_wrong():
 
 
 def test_apply_column_map(example_data_json, example_column_map):
-    test = list(_to_DataFrame.apply_column_map(example_data_json, example_column_map))
+    test = list(process.apply_column_map(example_data_json, example_column_map))
     answer = ["일자", "종가", "대비", "등락률", "시가", "고가", "저가", "거래량", "거래대금", "시가총액", "상장주식수"]
     assert test == answer
 
 
 def test_date_to_index():
     test_data = pd.DataFrame([["2021/04/21", "100"]], columns=["일자", "주가"])
-    assert _to_DataFrame.date_to_index(test_data).index[0] == datetime(2021, 4, 21)
+    assert process.date_to_index(test_data).index[0] == datetime(2021, 4, 21)
 
 
 def test_date_to_index_wrong():
     test_data = pd.DataFrame(
         [["2021/04/21", "100"], ["2021/04/21", "120"]], columns=["일자", "주가"]
     )
-    assert _to_DataFrame.date_to_index(test_data).index[0] == 0
+    assert process.date_to_index(test_data).index[0] == 0
 
 
 def test_remove_same_named_column():
     test_data_1 = [["종가"], ["대비"], ["등락률", "주가"]]
     test_data_2 = [["종가", ""], ["대비", ""], ["등락률", "주가"]]
-    assert _to_DataFrame.remove_same_named_column(test_data_1, 2) == test_data_2
+    assert process.remove_same_named_column(test_data_1, 2) == test_data_2
 
 
 def test_multi_columnize():
     test_data_1 = [["종가", ""], ["대비", ""], ["등락률", "주가"]]
     test_data_2 = [["종가", "대비", "등락률"], ["", "", "주가"]]
-    assert _to_DataFrame.multi_columnize(test_data_1, 2) == test_data_2
+    assert process.multi_columnize(test_data_1, 2) == test_data_2
 
 
 def test_string_to_float():
@@ -102,7 +102,7 @@ def test_string_to_float():
         [["100,000", "삼성", "-", "1000", "1000.33", 1, 1000.33]],
         columns=["주가", "str", "-", "int_str", "float_str", "int", "float"],
     )
-    assert list(_to_DataFrame.string_to_float(test_data).loc[0]) == [
+    assert list(process.string_to_float(test_data).loc[0]) == [
         100000.0,
         "삼성",
         np.nan,

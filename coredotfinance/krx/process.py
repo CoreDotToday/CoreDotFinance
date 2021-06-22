@@ -49,7 +49,7 @@ def data_nm_column(data):
     return data
 
 
-def to_DataFrame(krx_data, column_map):
+def get_dataframe(krx_data, column_map):
     check_data_validation(krx_data)
     column_map.update(second_column_map)
     data = apply_column_map(krx_data, column_map)
@@ -123,6 +123,7 @@ def multi_columnize(column_data, columns_depth):
         for column in column_data:
             layer.append(column[:i][-1])
         columns.append(layer)
+
     return columns
 
 

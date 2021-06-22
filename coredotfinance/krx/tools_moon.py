@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 from coredotfinance._utils import _get_date_past_days_ago, _get_date_today
-from coredotfinance.krx.data_reader_ import data_reader
+from coredotfinance.krx.data_reader import data_reader
 
 
 def convert_stock_ticker2name(stock: str) -> str:

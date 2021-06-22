@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 
-from coredotfinance._krx.data_reader_ import data_reader
+from coredotfinance.krx.data_reader import data_reader
 
 
-def stock(symbol="all", start=None, end=None):
+def stock(symbol="all", start=None, end=None, **kwargs):
     """
     Returns DataFrame of stock data in korean stock market from data.krx.co.kr.
 
@@ -24,10 +24,13 @@ def stock(symbol="all", start=None, end=None):
     --------
     Stock prices data in Kospi, Kosdaq, Konex : DataFrame
     """
-    return data_reader("12003", symbol=symbol, start=start, end=end)
+    if stock == 'all':
+        return data_reader("12001", market="전체", date=kwargs['date'])
+    else:
+        return data_reader("12003", symbol=symbol, start=start, end=end, **kwargs)
 
 
-def per(symbol="all", start=None, end=None):
+def per(symbol="all", start=None, end=None, **kwargs):
     """
     Returns DataFrame of price info data in korean stock market from data.krx.co.kr.
 
@@ -50,7 +53,7 @@ def per(symbol="all", start=None, end=None):
     return data_reader("12021", symbol=symbol, start=start, end=end, search_type="개별추이")
 
 
-def etf(symbol="all", start=None, end=None):
+def etf(symbol="all", start=None, end=None, **kwargs):
     """
     Returns DataFrame of ETF data in korean stock market from data.krx.co.kr.
 
@@ -70,10 +73,10 @@ def etf(symbol="all", start=None, end=None):
     --------
     Stock prices data in Kospi, Kosdaq, Konex : DataFrame
     """
-    return data_reader("13103", symbol=symbol, start=start, end=end)
+    return data_reader("13103", symbol=symbol, start=start, end=end, **kwargs)
 
 
-def etn(symbol="all", start=None, end=None):
+def etn(symbol="all", start=None, end=None, **kwargs):
     """
     Returns DataFrame of ETN data in korean stock market from data.krx.co.kr.
 
@@ -93,10 +96,10 @@ def etn(symbol="all", start=None, end=None):
     --------
     Stock prices data in Kospi, Kosdaq, Konex : DataFrame
     """
-    return data_reader("13203",  symbol=symbol, start=start, end=end)
+    return data_reader("13203",  symbol=symbol, start=start, end=end, **kwargs)
 
 
-def elw(symbol="all", start=None, end=None):
+def elw(symbol="all", start=None, end=None, **kwargs):
     """
     Returns DataFrame of ELW data in korean stock market from data.krx.co.kr.
 
@@ -116,10 +119,10 @@ def elw(symbol="all", start=None, end=None):
     --------
     Stock prices data in Kospi, Kosdaq, Konex : DataFrame
     """
-    return data_reader('13302', symbol=symbol, start=start, end=end)
+    return data_reader('13302', symbol=symbol, start=start, end=end, **kwargs)
 
 
-def bond(symbol="all", start=None, end=None):
+def bond(symbol="all", start=None, end=None, **kwargs):
     """
     Returns DataFrame of bond data in korean stock market from data.krx.co.kr.
 

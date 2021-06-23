@@ -144,8 +144,7 @@ class KrxReader:
         elif kind == "per":
             # 12021 기능 호출시 종목명 error -> <em class ="up"></em> 가 붙어서 나오는 error
             df = data_reader("12021", search_type="전종목", market='전체', date=date)
-            for index in range(len(df)):
-                df['종목명'][index] = df['종목명'][index].replace(' <em class ="up"></em>', '')
+            df.replace(' <em class ="up"></em>', '', regex=True, inplace=True)
             return df
         elif kind == "etf":
             return data_reader("13101", date=date, kind=kind)

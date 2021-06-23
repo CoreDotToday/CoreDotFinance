@@ -18,12 +18,12 @@ def convert_stock_name2ticker(stock: str) -> str:
     return stock_list[stock_list["종목명"] == stock]["종목코드"].array[0]
 
 
-def get_stock_info() -> pd.DataFrame:
+def get_stock_info(date: str = _get_date_today()) -> pd.DataFrame:
     """KRX(KOSPI ,KOSDAQ) 종목 정보(종목코드, 종목명, 시장구분, 업종명, 시가총액) 반환"""
-    df_12025_kospi = data_reader("12025", division="KOSPI").loc[
+    df_12025_kospi = data_reader("12025", division="KOSPI", date=date).loc[
         :, ["종목코드", "종목명", "시장구분", "업종명", "시가총액"]
     ]
-    df_12025_kosdaq = data_reader("12025", division="KOSDAQ").loc[
+    df_12025_kosdaq = data_reader("12025", division="KOSDAQ", date=date).loc[
         :, ["종목코드", "종목명", "시장구분", "업종명", "시가총액"]
     ]
     df_12025 = (
@@ -63,11 +63,11 @@ def get_stock_pack(
         raise Exception(f"Not in stock list : {stock}")
 
     # [12003] 개별종목 시세 추이
-    df_12003 = data_reader("12003", item=item, start=start, end=end)
+    df_12003 = data_reader("12003", symbol=item, start=start, end=end)
     # [12021] PER/PBR/배당수익률(개별종목)
-    df_12021 = data_reader("12021", search_type="개별추이", item=item, start=start, end=end)
+    df_12021 = data_reader("12021", search_type="개별추이", symbol=item, start=start, end=end)
     # [12023] 외국인보유량(개별종목)
-    df_12023 = data_reader("12023", search_type="개별추이", item=item, start=start, end=end)
+    df_12023 = data_reader("12023", search_type="개별추이", symbol=item, start=start, end=end)
     # [12009] 투자자별 거래실적(개별종목)
     df_12009 = get_df_12009(item=item, start=start, end=end)
 
@@ -106,16 +106,14 @@ def get_df_12009(
         for askbid in askbid_list:
             df_temp = data_reader(
                 "12009",
-                item=item,
+                symbol=item,
                 start=start,
                 end=end,
                 search_type="일별추이",
                 trade_index=trdvolval,
                 trade_check=askbid,
             )
-            df_temp = df_temp.drop(
-                ["종목명"], axis="columns"
-            ).add_prefix(  # 매 번 반복되는 종목명 column 제거
+            df_temp = df_temp.add_prefix(  # 매 번 반복되는 종목명 column 제거
                 f"{trdvolval}_"
             )
             df_temp.columns = df_temp.columns.str.replace(" 합계", "")

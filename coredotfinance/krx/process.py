@@ -60,8 +60,10 @@ def get_dataframe(krx_data, column_map):
         column_data = remove_same_named_column(column_data, columns_depth)
         columns = multi_columnize(column_data, columns_depth)
         data.columns = columns
-    data = string_to_float(data)
-    data = data_nm_column(data)
+    # 00data = string_to_float(data)
+    data = dataframe_astype(data)
+
+    # data = data_nm_column(data)
     return data
 
 
@@ -127,7 +129,7 @@ def multi_columnize(column_data, columns_depth):
     return columns
 
 
-def string_to_float(data):
+def string_to_float(data: pd.DataFrame):
     new_values = []
     for column in data.columns:
         series = data[column]
@@ -135,13 +137,19 @@ def string_to_float(data):
         number_data = True
         for i in series:
             try:
-                value = float(i.replace(",", ""))
+                value = i.replace(",", "")
+                float(value)
             except:
+                # 값이 비어있는 경우
                 if i != "-":
                     number_data = False
                     break
                 else:
-                    value = np.nan
+                    value = 0
+            if '.' in value:
+                value = np.float32(value)
+            else:
+                value = np.int64(value)
             edited_values.append(value)
         if number_data:
             new_values.append(edited_values)
@@ -149,3 +157,44 @@ def string_to_float(data):
             new_values.append(series.array)
 
     return pd.DataFrame(np.array(new_values).T, columns=data.columns, index=data.index)
+
+
+def dataframe_astype(dataframe: pd.DataFrame):
+    dataframe = remove_punctuation(dataframe)
+    column_data_type = get_column_data_type(dataframe)
+    return data_type_as(dataframe, column_data_type)
+
+
+def remove_punctuation(dataframe: pd.DataFrame):
+    dataframe.replace(',', '', regex=True, inplace=True)
+    dataframe.replace('\-$', '0', regex=True, inplace=True)
+    return dataframe
+
+
+def get_column_data_type(dataframe: pd.DataFrame):
+    column_data_type = {}
+
+    for column in dataframe.columns:
+        if column in ['종목코드', ('종목코드', '')]:
+            continue
+        for data in dataframe[column]:
+            if data == 0 or data == '':
+                continue
+            try:
+                data = eval(data)
+            except:
+                pass
+            data_type = type(data)
+            if data_type is str:
+                break
+            elif data_type is int:
+                column_data_type[column] = 'np.int64'
+            elif data_type is float:
+                column_data_type[column] = 'float'
+    return column_data_type
+
+
+def data_type_as(dataframe: pd.DataFrame, column_data_type: dict):
+    for column_name in column_data_type:
+        dataframe = dataframe.astype({column_name: eval(column_data_type[column_name])})
+    return dataframe

@@ -6,7 +6,6 @@ from coredotfinance.krx import webio
 from coredotfinance.krx import fetch
 from coredotfinance.krx import column
 
-FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def data_reader(
@@ -103,6 +102,9 @@ def get_jsp_soup(mdcstat):
         jsp_soup = webio.get(url)
         save_jsp(jsp_filename, jsp_soup)
     return jsp_soup
+
+
+FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def is_file(jsp_filename):

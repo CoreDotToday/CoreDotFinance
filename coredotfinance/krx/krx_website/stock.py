@@ -300,6 +300,7 @@ class Stock(Info):
         if self.search_type == "개별추이":
             bld = "dbms/MDC/STAT/standard/MDCSTAT03502"
         else:
+            self.data_nm, self.data_cd, self.data_tp = None, None, None
             bld = "dbms/MDC/STAT/standard/MDCSTAT03501"
 
         data = {

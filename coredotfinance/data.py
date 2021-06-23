@@ -1,5 +1,6 @@
 import re
 import datetime
+import warnings
 
 from coredotfinance.krx import read
 from coredotfinance.krx.data_reader import data_reader
@@ -49,6 +50,7 @@ class KrxReader:
     def read(
             self,
             symbol,
+            *,
             start=None,
             end=None,
             kind="stock",
@@ -79,6 +81,12 @@ class KrxReader:
         DataFrame
         """
 
+        if start is None or end is None:
+            warnings.warn("start or end is None. "
+                          "It would lead an error because datetime.datetime.now() is default "
+                          "and it could be holiday when stock marker was not held "
+                          "or before stock marker is opened")
+
         self._date_check(start)
         self._date_check(end)
         start = self._date_convert(start)
@@ -102,7 +110,7 @@ class KrxReader:
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
-    def read_all(self, date=None, kind='stock', api=False):
+    def read_all(self, date=None, *, kind='stock', api=False):
         """
         Parameters
         ----------
@@ -119,6 +127,13 @@ class KrxReader:
         -------
         DataFrame
         """
+
+        if date is None:
+            warnings.warn("date is None. "
+                          "It would lead an error because datetime.datetime.now() is default"
+                          "and it could be holiday when stock marker was not held "
+                          "or before stock marker is opened")
+
         self._date_check(date)
         date = self._date_convert(date)
         self._kind_check(kind)
@@ -127,7 +142,11 @@ class KrxReader:
         if kind == "stock":
             return data_reader("12001", date=date)
         elif kind == "per":
-            return data_reader("12021", search_type="전종목", market='전체', data=date)
+            # 12021 기능 호출시 종목명 error -> <em class ="up"></em> 가 붙어서 나오는 error
+            df = data_reader("12021", search_type="전종목", market='전체', date=date)
+            for index in range(len(df)):
+                df['종목명'][index] = df['종목명'][index].replace(' <em class ="up"></em>', '')
+            return df
         elif kind == "etf":
             return data_reader("13101", date=date, kind=kind)
         elif kind == "etn":
@@ -136,6 +155,7 @@ class KrxReader:
             return data_reader('13301', date=date, kind=kind)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
+
 
 class BinanceReader:
     """

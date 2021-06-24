@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup as bs
-from coredotfinance.krx.krx_website.info import Info
+from coredotfinance.krx.core.krx_website.info import Info
 
 
 class Index(Info):

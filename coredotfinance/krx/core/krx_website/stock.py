@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from coredotfinance.krx.krx_website.info import Info
+from coredotfinance.krx.core.krx_website.info import Info
 
 
 class Stock(Info):

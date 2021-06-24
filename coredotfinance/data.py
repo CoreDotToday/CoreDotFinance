@@ -32,12 +32,18 @@ class KrxReader:
         self.api_key = api_key
 
     def _date_check(self, date):
+        """
+        date 가 None 이면 return 한다. None date 는 today 로 convert 되기 때문이다.
+        """
         if date is None:
             return
         if re.match(r'[0-9]{4}-[0-1][0-9]-([0-2][0-9]|3[0-1])', date) is None:
             raise ValueError(f"date is supposed to be 'YYYY-MM-DD and proper date, but {date}")
 
     def _date_convert(self, date):
+        """
+        date 가 None 이면 today 를 return 한다.
+        """
         today = str(datetime.datetime.now().date())
         if date is None:
             date = today

@@ -34,22 +34,22 @@ def get_korean_columns(jsp_soup, mdcstat):
     }
     """
     map_ = {}
-    jsGrid_dict = parse_jsGrid_dict(jsp_soup)
+    jsGrid_dict = _parse_jsGrid_dict(jsp_soup)
     jsGrid = jsGrid_dict[mdcstat]
 
     table_tag = jsp_soup.find("table", {"id": jsGrid})
     div_tag = jsp_soup.find("div", {"id": jsGrid})
 
     if table_tag:
-        table_map = parse_table_map(table_tag)
+        table_map = _parse_table_map(table_tag)
         map_.update(table_map)
     if div_tag:
-        div_map = parse_div_map(div_tag)
+        div_map = _parse_div_map(div_tag)
         map_.update(div_map)
     return map_
 
 
-def parse_jsGrid_dict(jsp_soup):
+def _parse_jsGrid_dict(jsp_soup):
     """
     Parameters
     ----------
@@ -82,7 +82,7 @@ def parse_jsGrid_dict(jsp_soup):
     return jsGrid_dict
 
 
-def parse_table_map(table_tag):
+def _parse_table_map(table_tag):
     table_map = {}
     for tr in table_tag.find_all("tr"):
         th = tr.find_all("th")
@@ -92,7 +92,7 @@ def parse_table_map(table_tag):
     return table_map
 
 
-def parse_div_map(div_tag):
+def _parse_div_map(div_tag):
     """
     Parameters
     ----------
@@ -181,4 +181,3 @@ def parse_div_map(div_tag):
     for d in div_map:
         div_map[d] = div_map[d]["text"]
     return div_map
-

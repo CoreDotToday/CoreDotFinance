@@ -1,14 +1,11 @@
-from coredotfinance.krx.krx_website.index import StockIndex, BondIndex, DerivationIndex
 from coredotfinance.krx.krx_website import stock
 from coredotfinance.krx.krx_website import products
-from coredotfinance.krx.krx_website.commodity import Oil, Gold, CarbonEmission
-from coredotfinance.krx.krx_website import bond, derivative, oversees
-from coredotfinance.krx.function_code_list import *
+from coredotfinance.krx.core.function_code_list import *
 
 
 def get_krx_instance(code, symbol, start, end, date, **kwargs):
-    # Fixme : day, division 모두 kwargs 안으로 들어갈 것.
-    #   두 파라미터 뿐만 아니라 다른 파라미터들도  kwargs 안에 넣을 것.
+    # Fixme : 지금은 stock, product만 추가되어 있다.
+    #   index, commodity, bond, derivatice, oversees 등도 추가해주자.
 
     day = kwargs.get('day')
     division = kwargs.get('division')

@@ -23,3 +23,16 @@ _cols_kor = {
     "adjclose": "수정종가",
     "adjvolume": "수정거래량",
 }
+
+
+def rename_cols2kor(df):
+    df = df.rename(columns=_cols_kor)
+    return df
+
+
+def set_index_datetime(df):
+    if "datetime" in df:
+        df = df.set_index("datetime").sort_index(ascending=False)
+    elif "일시" in df:
+        df = df.set_index("일시").sort_index(ascending=False)
+    return df

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import numpy as np
 from datetime import datetime
 
 second_column_map = {
@@ -26,29 +25,6 @@ no_display_columns = [
 ]
 
 
-class GettingDataNm:
-    _data_nm = None
-
-    @property
-    def data_nm(self):
-        item_name = GettingDataNm._data_nm
-        GettingDataNm._data_nm = None
-        return item_name
-
-    @data_nm.setter
-    def data_nm(self, item_name):
-        GettingDataNm._data_nm = item_name
-
-
-def data_nm_column(data):
-    item_name = GettingDataNm().data_nm
-    if item_name is None:
-        return data
-    data["종목명"] = [item_name for _ in range(len(data))]
-
-    return data
-
-
 def get_dataframe(krx_data, column_map):
     check_data_validation(krx_data)
     column_map.update(second_column_map)
@@ -60,10 +36,8 @@ def get_dataframe(krx_data, column_map):
         column_data = remove_same_named_column(column_data, columns_depth)
         columns = multi_columnize(column_data, columns_depth)
         data.columns = columns
-    # 00data = string_to_float(data)
     data = dataframe_astype(data)
 
-    # data = data_nm_column(data)
     return data
 
 
@@ -127,36 +101,6 @@ def multi_columnize(column_data, columns_depth):
         columns.append(layer)
 
     return columns
-
-
-def string_to_float(data: pd.DataFrame):
-    new_values = []
-    for column in data.columns:
-        series = data[column]
-        edited_values = []
-        number_data = True
-        for i in series:
-            try:
-                value = i.replace(",", "")
-                float(value)
-            except:
-                # 값이 비어있는 경우
-                if i != "-":
-                    number_data = False
-                    break
-                else:
-                    value = 0
-            if '.' in value:
-                value = np.float32(value)
-            else:
-                value = np.int64(value)
-            edited_values.append(value)
-        if number_data:
-            new_values.append(edited_values)
-        else:
-            new_values.append(series.array)
-
-    return pd.DataFrame(np.array(new_values).T, columns=data.columns, index=data.index)
 
 
 def dataframe_astype(dataframe: pd.DataFrame):

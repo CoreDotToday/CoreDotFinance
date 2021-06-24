@@ -4,11 +4,10 @@ import time
 
 import numpy as np
 import pandas as pd
-from coredotfinance._utils import (
-    _convert_date2timestamp_sec,
-    _rename_cols2kor,
-    _set_index_datetime,
-)
+
+from coredotfinance.util import datetime_util
+from coredotfinance.util import dataframe_util
+
 from coredotfinance.crypto.binance.api import (
     api_24hr,
     api_avg_price,
@@ -45,7 +44,7 @@ def get_orderbook(symbol, limit=None) -> pd.DataFrame:
     df = pd.DataFrame(
         concat, columns=["bid_price", "bid_volume", "ask_price", "ask_volume"]
     )
-    df = _rename_cols2kor(df)
+    df = dataframe_util.rename_cols2kor(df)
     return df
 
 
@@ -73,7 +72,7 @@ def get_24hr_all_price() -> pd.DataFrame:
         .sort_values(by=["tradingValue"], ascending=False)
         .reset_index(drop=True)
     )
-    df = _rename_cols2kor(df)
+    df = dataframe_util.rename_cols2kor(df)
     return df
 
 
@@ -102,9 +101,9 @@ def get_ohlcv(
         대상 symbol의 조회 조건에 맞는 일시별 시가/고가/저가/종가/거래량 DataFrame
     """
     if start:
-        start = _convert_date2timestamp_sec(start) * 1000  # s -> ms
+        start = datetime_util.convert_date2timestamp_sec(start) * 1000  # s -> ms
     if end:
-        end = _convert_date2timestamp_sec(end) * 1000  # s -> ms
+        end = datetime_util.convert_date2timestamp_sec(end) * 1000  # s -> ms
 
     ohlcv = api_klines(symbol.upper(), interval, start, end, limit)
 
@@ -112,8 +111,8 @@ def get_ohlcv(
     df.columns = ["datetime", "open", "high", "low", "close", "volume"]
     df["datetime"] = pd.to_datetime(df["datetime"], unit="ms")
 
-    df = _rename_cols2kor(df)
-    df = _set_index_datetime(df)
+    df = dataframe_util.rename_cols2kor(df)
+    df = datetime_util.set_index_datetime(df)
 
     if "d" in interval or "h" in interval:
         df.tz_localize("UTC")

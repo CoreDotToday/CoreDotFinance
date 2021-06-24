@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import numpy as np
 from datetime import datetime
 
 second_column_map = {
@@ -26,30 +25,7 @@ no_display_columns = [
 ]
 
 
-class GettingDataNm:
-    _data_nm = None
-
-    @property
-    def data_nm(self):
-        item_name = GettingDataNm._data_nm
-        GettingDataNm._data_nm = None
-        return item_name
-
-    @data_nm.setter
-    def data_nm(self, item_name):
-        GettingDataNm._data_nm = item_name
-
-
-def data_nm_column(data):
-    item_name = GettingDataNm().data_nm
-    if item_name is None:
-        return data
-    data["종목명"] = [item_name for _ in range(len(data))]
-
-    return data
-
-
-def to_DataFrame(krx_data, column_map):
+def get_dataframe(krx_data, column_map):
     check_data_validation(krx_data)
     column_map.update(second_column_map)
     data = apply_column_map(krx_data, column_map)
@@ -60,8 +36,8 @@ def to_DataFrame(krx_data, column_map):
         column_data = remove_same_named_column(column_data, columns_depth)
         columns = multi_columnize(column_data, columns_depth)
         data.columns = columns
-    data = string_to_float(data)
-    data = data_nm_column(data)
+    data = dataframe_astype(data)
+
     return data
 
 
@@ -123,28 +99,46 @@ def multi_columnize(column_data, columns_depth):
         for column in column_data:
             layer.append(column[:i][-1])
         columns.append(layer)
+
     return columns
 
 
-def string_to_float(data):
-    new_values = []
-    for column in data.columns:
-        series = data[column]
-        edited_values = []
-        number_data = True
-        for i in series:
-            try:
-                value = float(i.replace(",", ""))
-            except:
-                if i != "-":
-                    number_data = False
-                    break
-                else:
-                    value = np.nan
-            edited_values.append(value)
-        if number_data:
-            new_values.append(edited_values)
-        else:
-            new_values.append(series.array)
+def dataframe_astype(dataframe: pd.DataFrame):
+    dataframe = remove_punctuation(dataframe)
+    column_data_type = get_column_data_type(dataframe)
+    return data_type_as(dataframe, column_data_type)
 
-    return pd.DataFrame(np.array(new_values).T, columns=data.columns, index=data.index)
+
+def remove_punctuation(dataframe: pd.DataFrame):
+    dataframe.replace(',', '', regex=True, inplace=True)
+    dataframe.replace('\-$', '0', regex=True, inplace=True)
+    return dataframe
+
+
+def get_column_data_type(dataframe: pd.DataFrame):
+    column_data_type = {}
+
+    for column in dataframe.columns:
+        if column in ['종목코드', ('종목코드', '')]:
+            continue
+        for data in dataframe[column]:
+            if data == 0 or data == '':
+                continue
+            try:
+                data = eval(data)
+            except:
+                pass
+            data_type = type(data)
+            if data_type is str:
+                break
+            elif data_type is int:
+                column_data_type[column] = 'np.int64'
+            elif data_type is float:
+                column_data_type[column] = 'float'
+    return column_data_type
+
+
+def data_type_as(dataframe: pd.DataFrame, column_data_type: dict):
+    for column_name in column_data_type:
+        dataframe = dataframe.astype({column_name: eval(column_data_type[column_name])})
+    return dataframe

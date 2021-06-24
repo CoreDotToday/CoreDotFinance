@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 
-from coredotfinance.krx import process
+from coredotfinance.krx.core import process
 
 
 @pytest.fixture

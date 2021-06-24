@@ -1,7 +1,7 @@
 import json
 import os
 
-from coredotfinance.krx import webio
+from coredotfinance.krx.core import webio
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 

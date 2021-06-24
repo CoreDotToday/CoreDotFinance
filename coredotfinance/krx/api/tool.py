@@ -2,8 +2,9 @@
 
 import numpy as np
 import pandas as pd
-from coredotfinance._utils import _get_date_past_days_ago, _get_date_today
-from coredotfinance.krx.data_reader import data_reader
+
+from coredotfinance.util import datetime_util
+from coredotfinance.krx.api.data_reader import data_reader
 
 
 def convert_stock_ticker2name(stock: str) -> str:
@@ -18,7 +19,7 @@ def convert_stock_name2ticker(stock: str) -> str:
     return stock_list[stock_list["종목명"] == stock]["종목코드"].array[0]
 
 
-def get_stock_info(date: str = _get_date_today()) -> pd.DataFrame:
+def get_stock_info(date: str = datetime_util.get_date_today()) -> pd.DataFrame:
     """KRX(KOSPI ,KOSDAQ) 종목 정보(종목코드, 종목명, 시장구분, 업종명, 시가총액) 반환"""
     df_12025_kospi = data_reader("12025", division="KOSPI", date=date).loc[
         :, ["종목코드", "종목명", "시장구분", "업종명", "시가총액"]
@@ -36,7 +37,7 @@ def get_stock_info(date: str = _get_date_today()) -> pd.DataFrame:
 
 
 def get_stock_pack(
-    stock: str, start: str = _get_date_past_days_ago(), end: str = _get_date_today()
+    stock: str, start: str = datetime_util.get_date_past_days_ago(), end: str = datetime_util.get_date_today()
 ) -> pd.DataFrame:
     """주어진 기간의 일자별 개별종목의 정보들을 합쳐 하나의 데이터프레임으로 가져온다.
     Parameters

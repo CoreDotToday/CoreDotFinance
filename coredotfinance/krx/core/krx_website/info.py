@@ -1,7 +1,4 @@
-from datetime import datetime, timedelta
-import requests
-
-from coredotfinance.krx import webio
+from coredotfinance.krx.core import webio
 
 
 class Info:

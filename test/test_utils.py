@@ -1,6 +1,6 @@
 import pytest
 
-from coredotfinance.krx._utils import classifier, start_end_validation, week_day
+from coredotfinance.krx.utils import classifier, start_end_validation, week_day
 
 
 def test_classifier():

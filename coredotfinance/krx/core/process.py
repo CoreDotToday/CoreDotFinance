@@ -26,27 +26,27 @@ no_display_columns = [
 
 
 def get_dataframe(krx_data, column_map):
-    check_data_validation(krx_data)
+    _check_data_validation(krx_data)
     column_map.update(second_column_map)
-    data = apply_column_map(krx_data, column_map)
-    data = date_to_index(data)
+    data = _apply_column_map(krx_data, column_map)
+    data = _date_to_index(data)
     column_data = [column.split("//") for column in data.columns]
     columns_depth = max([len(c) for c in column_data])
-    if not single_column(columns_depth):
-        column_data = remove_same_named_column(column_data, columns_depth)
-        columns = multi_columnize(column_data, columns_depth)
+    if not _single_column(columns_depth):
+        column_data = _remove_same_named_column(column_data, columns_depth)
+        columns = _multi_columnize(column_data, columns_depth)
         data.columns = columns
-    data = dataframe_astype(data)
+    data = _dataframe_astype(data)
 
     return data
 
 
-def check_data_validation(krx_data):
+def _check_data_validation(krx_data):
     if len(list(krx_data.values())[0]) == 0:
         raise Exception("No data, Check parameters")
 
 
-def apply_column_map(data_json, column_map):
+def _apply_column_map(data_json, column_map):
     readable_column_list = []
     data_list = list(data_json.values())[0]
 
@@ -64,7 +64,7 @@ def apply_column_map(data_json, column_map):
     return pd.json_normalize(readable_column_list)
 
 
-def date_to_index(data):
+def _date_to_index(data):
     if "일자" not in data.columns:
         # '일자' 열이 있는지 확인
         return data
@@ -77,13 +77,13 @@ def date_to_index(data):
     return data.drop(["일자"], axis="columns")
 
 
-def single_column(columns_depth):
+def _single_column(columns_depth):
     # columns 가 single 인 경우
     if columns_depth == 1:
         return True
 
 
-def remove_same_named_column(column_data, columns_depth):
+def _remove_same_named_column(column_data, columns_depth):
     # 같은 이름으로 multi columnize 되는 것을 방지
     for i in column_data:
         for _ in range(columns_depth - len(i)):
@@ -91,7 +91,7 @@ def remove_same_named_column(column_data, columns_depth):
     return column_data
 
 
-def multi_columnize(column_data, columns_depth):
+def _multi_columnize(column_data, columns_depth):
     columns = []
     # column 만들기
     for i in range(1, columns_depth + 1):
@@ -103,19 +103,19 @@ def multi_columnize(column_data, columns_depth):
     return columns
 
 
-def dataframe_astype(dataframe: pd.DataFrame):
-    dataframe = remove_punctuation(dataframe)
-    column_data_type = get_column_data_type(dataframe)
-    return data_type_as(dataframe, column_data_type)
+def _dataframe_astype(dataframe: pd.DataFrame):
+    dataframe = _remove_punctuation(dataframe)
+    column_data_type = _get_column_data_type(dataframe)
+    return _data_type_as(dataframe, column_data_type)
 
 
-def remove_punctuation(dataframe: pd.DataFrame):
+def _remove_punctuation(dataframe: pd.DataFrame):
     dataframe.replace(',', '', regex=True, inplace=True)
     dataframe.replace('\-$', '0', regex=True, inplace=True)
     return dataframe
 
 
-def get_column_data_type(dataframe: pd.DataFrame):
+def _get_column_data_type(dataframe: pd.DataFrame):
     column_data_type = {}
 
     for column in dataframe.columns:
@@ -138,7 +138,7 @@ def get_column_data_type(dataframe: pd.DataFrame):
     return column_data_type
 
 
-def data_type_as(dataframe: pd.DataFrame, column_data_type: dict):
+def _data_type_as(dataframe: pd.DataFrame, column_data_type: dict):
     for column_name in column_data_type:
         dataframe = dataframe.astype({column_name: eval(column_data_type[column_name])})
     return dataframe

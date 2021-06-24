@@ -1,19 +1,13 @@
-.. _krx:
+Krx
+------------
 
-.. currentmodule:: coredotfinance
+.. py:module:: coredotfinance.data
 
-****
-KRX
-****
+.. autoclass:: KrxReader
+    :members:
+    :inherited-members:
 
-.. module:: coredotfinance.krx
+.. py:module:: coredotfinance.krx
 
-.. autofunction:: get
+.. autofunction:: data_reader
 
-.. autofunction:: per
-
-.. autofunction:: etf
-
-.. autofunction:: elw
-
-.. autofunction:: etn

@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+
+<html lang="kr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto &#8212; CoreDotFinance 0.0.1 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="KRX" href="krx.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="index.html">
+  <img src="_static/coredottoday.png" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="examples.html">
+  Examples
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="krx.html">
+  KRX
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Crypto
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/CoreDotToday/CoreDotFinance" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="section" id="crypto">
+<span id="id1"></span><h1>Crypto<a class="headerlink" href="#crypto" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-coredotfinance.crypto"></span><dl class="py function">
+<dt id="coredotfinance.crypto.get_tickers">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_tickers</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">list</span><a class="headerlink" href="#coredotfinance.crypto.get_tickers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binance의 Ticker List 리턴</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="coredotfinance.crypto.get_current_price">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_current_price</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#coredotfinance.crypto.get_current_price" title="Permalink to this definition">¶</a></dt>
+<dd><p>대상 Ticker의 현재 가격 리턴</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="coredotfinance.crypto.get_orderbook">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_orderbook</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#coredotfinance.crypto.get_orderbook" title="Permalink to this definition">¶</a></dt>
+<dd><p>대상 Ticker의 호가창(DataFrame) 리턴</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="coredotfinance.crypto.get_24hr_all_price">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_24hr_all_price</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#coredotfinance.crypto.get_24hr_all_price" title="Permalink to this definition">¶</a></dt>
+<dd><p>모든 Ticker의 24시간 동안의 가격 정보(DataFrame) 리턴 (거래대금순 내림차순 정렬)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="coredotfinance.crypto.get_ohlcv">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_ohlcv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'BTCUSDT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1d'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#coredotfinance.crypto.get_ohlcv" title="Permalink to this definition">¶</a></dt>
+<dd><p>대상 Ticker의 가격 정보(DataFrame) 리턴</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ticker</strong> (<em>str</em><em>, </em><em>optional</em>) -- Binance Ticker, by default &quot;BTCUSDT&quot;</p></li>
+<li><p><strong>interval</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 간격 설정, by default &quot;1d&quot;
+(1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)</p></li>
+<li><p><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 시작 날짜(YYYYMMDD), by default 최근 날짜</p></li>
+<li><p><strong>end</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 끝 날짜(YYYYMMDD), by default 최근 날짜</p></li>
+<li><p><strong>limit</strong> (<em>int</em><em>, </em><em>optional</em>) -- 조회 개수, by default 500</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>대상 Ticker의 조회 조건에 맞는 일시별 시가/고가/저가/종가/거래량 DataFrame</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="coredotfinance.crypto.get_hourly_ohlcv_to_pickle">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_hourly_ohlcv_to_pickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.crypto.get_hourly_ohlcv_to_pickle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ticker List에 대해 지정된 시작날짜부터의 1시간 간격 가격정보(OHLCV)를 지정된 폴더에 pickle 파일로 저장</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="coredotfinance.crypto.get_date_list">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_date_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_day</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">list</span><a class="headerlink" href="#coredotfinance.crypto.get_date_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>시작일부터 오늘까지를 1달 간격으로 나눈 것을 리스트로 만듦</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="coredotfinance.crypto.make_ohlcv_graph">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">make_ohlcv_graph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">open</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'시가'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'고가'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'저가'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'종가'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'거래량'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#coredotfinance.crypto.make_ohlcv_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="krx.html" title="previous page">KRX</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2021, Core.Today.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

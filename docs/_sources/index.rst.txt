@@ -120,3 +120,4 @@ Indices and tables
    :maxdepth: 1
 
    krx.rst
+   crypto.rst

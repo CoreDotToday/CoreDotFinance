@@ -36,6 +36,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="CoreDotFinance" href="index.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -69,7 +70,12 @@
       
       <div class="navbar-center-item">
         <ul id="navbar-main-elements" class="navbar-nav">
-    
+    <li class="toctree-l1 current active nav-item">
+ <a class="current reference internal nav-link" href="#">
+  Documentation
+ </a>
+</li>
+
     
 </ul>
       </div>
@@ -148,55 +154,28 @@
 <dd><p>krx data를 읽어오는 인스턴스를 생성한다. 많은 양의 데이터를 짧은 시간안에
 불러오게 하면 krx에서 IP를 차단하기 때문에 많은 양의 데이터 읽어오기는
 api 기능을 사용하는 것을 권장한다.</p>
-<p>Returns DataFrame of korean financial data from data.krx.co.kr.
-Trying to get bulky data through many times of iteration leads IP blocking.
-So using api to get bulky data is highly recommended</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>api_key</strong> (<em>str</em>) -- <p>coredotfinance의 데이터베이스에서 데이터를 받아오기 위해서는
+<dd class="field-odd"><p><strong>api_key</strong> (<em>str</em>) -- coredotfinance의 데이터베이스에서 데이터를 받아오기 위해서는
 api_key 설정이 필요하다. api 기능을 사용해서 IP 차단을 피할 수 있다.</p>
-<p>to fetch data from database on coredotfinance.
-For avoiding IP blocking from web site.</p>
-</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt id="coredotfinance.data.KrxReader.read">
 <code class="sig-name descname"><span class="pre">read</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stock'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.data.KrxReader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>data.krx로 부터 금융 데이터를 읽어온다.</p>
-<p>reads financial data from data.krx</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>symbol</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종목코드
-형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'</p>
-<p>stands for stock symbol which is used to called in Korean stock market.
-Proper symbol is needed for each source. For example, Samsung electronics : '005930', ARIRANG 200 : '152100'</p>
-</p></li>
-<li><p><strong>start</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 시작일
-형태는 YYYYMMDD가 되어야 한다. 예) 20210601</p>
-<p>stands for start date DataReader fetches data from.
-Form has to be &quot;YYYY-MM-DD&quot;. For example, &quot;2021-06-17&quot;</p>
-</p></li>
-<li><p><strong>end</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종료일
-형태는 YYYYMMDD가 되어야 한다. 예) 20210601</p>
-<p>stands for end date DataReader fetches data until.
-Form has to be &quot;YYYY-MM-DD&quot;. For example, &quot;2021-06-17&quot;</p>
-</p></li>
-<li><p><strong>kind</strong> (<em>str</em><em>, </em><em>default &quot;stock&quot;</em>) -- <p>조회하고자 하는 데이터의 종류
-데이터의 종류:</p>
-<blockquote>
-<div><p>krx : [&quot;stock&quot;, &quot;etf&quot;, &quot;etn&quot;, &quot;elw&quot;, &quot;per&quot;]</p>
-</div></blockquote>
-<p>Some sources need to specify this parameter.
-list of kind:</p>
-<blockquote>
-<div><p>krx : [&quot;stock&quot;, &quot;etf&quot;, &quot;etn&quot;, &quot;elw&quot;, &quot;per&quot;]</p>
-</div></blockquote>
-</p></li>
-<li><p><strong>api</strong> (<em>bool</em><em>, </em><em>default False</em>) -- <p>만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.</p>
-<p>If api is True but api_key is not set, It will raise error</p>
-</p></li>
+<li><p><strong>symbol</strong> (<em>str</em>) -- 조회하고자 하는 데이터의 종목코드
+형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'</p></li>
+<li><p><strong>start</strong> (<em>str</em>) -- 조회하고자 하는 데이터의 시작일
+형태는 YYYYMMDD가 되어야 한다. 예) 20210601</p></li>
+<li><p><strong>end</strong> (<em>str</em>) -- 조회하고자 하는 데이터의 종료일
+형태는 YYYYMMDD가 되어야 한다. 예) 20210601</p></li>
+<li><p><strong>kind</strong> (<em>str</em><em>, </em><em>default &quot;stock&quot;</em>) -- 조회하고자 하는 데이터의 종류
+데이터의 종류 - krx : [&quot;stock&quot;, &quot;etf&quot;, &quot;etn&quot;, &quot;elw&quot;, &quot;per&quot;]</p></li>
+<li><p><strong>api</strong> (<em>bool</em><em>, </em><em>default False</em>) -- 만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -214,27 +193,11 @@ list of kind:</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 조회일
-형태는 YYYYMMDD가 되어야 한다. 예) 20210601</p>
-<p>stands for the date DataReader fetches for.
-Form has to be &quot;YYYY-MM-DD&quot;. For example, &quot;2021-06-17&quot;</p>
-</p></li>
-<li><p><strong>kind</strong> (<em>str</em><em>, </em><em>default &quot;stock&quot;</em>) -- <p>조회하고자 하는 데이터의 종류
-데이터의 종류:</p>
-<blockquote>
-<div><p>krx : [&quot;stock&quot;, &quot;etf&quot;, &quot;etn&quot;, &quot;elw&quot;, &quot;per&quot;]</p>
-</div></blockquote>
-<p>Some sources need to specify this parameter.
-list of kind:</p>
-<blockquote>
-<div><p>krx : [&quot;stock&quot;, &quot;etf&quot;, &quot;etn&quot;, &quot;elw&quot;, &quot;per&quot;]</p>
-</div></blockquote>
-</p></li>
-<li><p><strong>api</strong> (<em>bool</em><em>, </em><em>default False</em>) -- <p>만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.</p>
-<blockquote>
-<div><p>If api is True but api_key is not set, It will raise error</p>
-</div></blockquote>
-</p></li>
+<li><p><strong>date</strong> (<em>str</em>) -- 조회하고자 하는 데이터의 조회일
+형태는 YYYYMMDD가 되어야 한다. 예) 20210601</p></li>
+<li><p><strong>kind</strong> (<em>str</em><em>, </em><em>default &quot;stock&quot;</em>) -- 조회하고자 하는 데이터의 종류
+데이터의 종류 - krx : [&quot;stock&quot;, &quot;etf&quot;, &quot;etn&quot;, &quot;elw&quot;, &quot;per&quot;]</p></li>
+<li><p><strong>api</strong> (<em>bool</em><em>, </em><em>default False</em>) -- 만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -283,6 +246,7 @@ list of kind:</p>
               
               <div class='prev-next-bottom'>
                 
+    <a class='left-prev' id="prev-link" href="index.html" title="previous page">CoreDotFinance</a>
 
               </div>
               

@@ -1,5 +1,7 @@
-Krx
-------------
+.. _krx_documentation
+
+Documentation
+--------------
 
 .. py:module:: coredotfinance.data
 

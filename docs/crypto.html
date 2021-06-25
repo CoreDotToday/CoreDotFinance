@@ -160,72 +160,7 @@
                 
   <div class="section" id="crypto">
 <span id="id1"></span><h1>Crypto<a class="headerlink" href="#crypto" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-coredotfinance.crypto"></span><dl class="py function">
-<dt id="coredotfinance.crypto.get_tickers">
-<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_tickers</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">list</span><a class="headerlink" href="#coredotfinance.crypto.get_tickers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Binance의 Ticker List 리턴</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="coredotfinance.crypto.get_current_price">
-<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_current_price</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#coredotfinance.crypto.get_current_price" title="Permalink to this definition">¶</a></dt>
-<dd><p>대상 Ticker의 현재 가격 리턴</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="coredotfinance.crypto.get_orderbook">
-<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_orderbook</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#coredotfinance.crypto.get_orderbook" title="Permalink to this definition">¶</a></dt>
-<dd><p>대상 Ticker의 호가창(DataFrame) 리턴</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="coredotfinance.crypto.get_24hr_all_price">
-<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_24hr_all_price</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#coredotfinance.crypto.get_24hr_all_price" title="Permalink to this definition">¶</a></dt>
-<dd><p>모든 Ticker의 24시간 동안의 가격 정보(DataFrame) 리턴 (거래대금순 내림차순 정렬)</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="coredotfinance.crypto.get_ohlcv">
-<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_ohlcv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'BTCUSDT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1d'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#coredotfinance.crypto.get_ohlcv" title="Permalink to this definition">¶</a></dt>
-<dd><p>대상 Ticker의 가격 정보(DataFrame) 리턴</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ticker</strong> (<em>str</em><em>, </em><em>optional</em>) -- Binance Ticker, by default &quot;BTCUSDT&quot;</p></li>
-<li><p><strong>interval</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 간격 설정, by default &quot;1d&quot;
-(1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)</p></li>
-<li><p><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 시작 날짜(YYYYMMDD), by default 최근 날짜</p></li>
-<li><p><strong>end</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 끝 날짜(YYYYMMDD), by default 최근 날짜</p></li>
-<li><p><strong>limit</strong> (<em>int</em><em>, </em><em>optional</em>) -- 조회 개수, by default 500</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>대상 Ticker의 조회 조건에 맞는 일시별 시가/고가/저가/종가/거래량 DataFrame</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="coredotfinance.crypto.get_hourly_ohlcv_to_pickle">
-<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_hourly_ohlcv_to_pickle</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticker_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_day</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.crypto.get_hourly_ohlcv_to_pickle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ticker List에 대해 지정된 시작날짜부터의 1시간 간격 가격정보(OHLCV)를 지정된 폴더에 pickle 파일로 저장</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="coredotfinance.crypto.get_date_list">
-<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">get_date_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_day</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">list</span><a class="headerlink" href="#coredotfinance.crypto.get_date_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>시작일부터 오늘까지를 1달 간격으로 나눈 것을 리스트로 만듦</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="coredotfinance.crypto.make_ohlcv_graph">
-<code class="sig-prename descclassname"><span class="pre">coredotfinance.crypto.</span></code><code class="sig-name descname"><span class="pre">make_ohlcv_graph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">open</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'시가'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'고가'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'저가'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">close</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'종가'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'거래량'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#coredotfinance.crypto.make_ohlcv_graph" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
+<span class="target" id="module-coredotfinance.crypto"></span></div>
 
 
               </div>

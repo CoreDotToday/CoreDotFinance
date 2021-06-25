@@ -36,7 +36,6 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Examples" href="examples.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
@@ -70,24 +69,7 @@
       
       <div class="navbar-center-item">
         <ul id="navbar-main-elements" class="navbar-nav">
-    <li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="examples.html">
-  Examples
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="krx.html">
-  KRX
- </a>
-</li>
-
-<li class="toctree-l1 nav-item">
- <a class="reference internal nav-link" href="crypto.html">
-  Crypto
- </a>
-</li>
-
+    
     
 </ul>
       </div>
@@ -143,6 +125,11 @@
 <nav id="bd-toc-nav">
     <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   금융 데이터를 쉽고 빠르게
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#quick-start">
    Quick Start
   </a>
@@ -155,11 +142,6 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#recent-developments">
    Recent developments
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#examples">
-   Examples
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -190,29 +172,39 @@
                 
   <div class="section" id="coredotfinance">
 <h1>CoreDotFinance<a class="headerlink" href="#coredotfinance" title="Permalink to this headline">¶</a></h1>
-<p>Version : 0.0.1</p>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">CoreDotFinance</span></code> is financial data library, easy-to-get financial data from
-<strong>KRX</strong> for Korean Stock price data  and <strong>Binance</strong> for Cryptocurrency.</p>
+<p>Version : 0.0.2</p>
 <p><strong>Core.Today</strong>: <a class="reference external" href="https://core.today">https://core.today</a></p>
+<p><strong>CoreDotFinance</strong>: <a class="reference external" href="https://github.com/CoreDotToday/CoreDotFinance">https://github.com/CoreDotToday/CoreDotFinance</a></p>
+<div class="section" id="id1">
+<h2>금융 데이터를 쉽고 빠르게<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p><strong>CoreDotFinance</strong> 는 데이터를 쉽고 빠르게 사용할 수 있게 도와주는 파이썬 라이브러리입니다.
+한국의 금융데이터는 <strong>Krx</strong>, 가상 화폐 데이터는 <strong>binance</strong> 에서 받아옵니다.
+대용량 데이터의 경우 CoreDotFinance 만의 api를 이용해서 사용할 수 있습니다.</p>
 <p><strong>KRX</strong>: <a class="reference external" href="https://data.krx.co.kr">https://data.krx.co.kr</a></p>
 <p><strong>Binance</strong> <a class="reference external" href="https://binance.com">https://binance.com</a></p>
+</div>
 <div class="section" id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
-<p>Install using <code class="docutils literal notranslate"><span class="pre">pip</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">coredotfinance</span></code> 를 통해서 라이브러리를 설치할 수 있습니다.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install coredotfinance
 </pre></div>
 </div>
-<p>and then import and use one of data-getting function.
-This example reads two months of price data on Samsung.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">coredotfinance.krx</span> <span class="k">as</span> <span class="nn">krx</span>
-<span class="c1"># code number &#39;005930&#39; stands for Samsung</span>
-<span class="n">krx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;005930&#39;</span><span class="p">)</span>
+<ul class="simple">
+<li><p>KrxReader Example</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+<span class="c1"># symbol &#39;005930&#39; stands for Samsung</span>
+<span class="n">krx</span> <span class="o">=</span> <span class="n">KrxReader</span><span class="p">()</span>
+<span class="n">krx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;005930&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-06-03&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2021-06-06&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This example reads 500 rows of Bitcoin price data</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">coredotfinance.crypto</span> <span class="k">as</span> <span class="nn">coin</span>
-<span class="c1"># ticker &#39;BTCUSDT&#39; stands for Bitcoin</span>
-<span class="n">coin</span><span class="o">.</span><span class="n">get_ohlcv</span><span class="p">(</span><span class="s1">&#39;BTCUSDT&#39;</span><span class="p">)</span>
+<ul class="simple">
+<li><p>BinanceReader Example</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">BinanceReader</span>
+<span class="c1"># symbol &#39;BTCUSDT&#39; stands for Bitcoin</span>
+<span class="n">binance</span> <span class="o">=</span> <span class="n">BinanceReader</span><span class="p">()</span>
+<span class="n">binance</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;BTCUSDT&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -225,24 +217,25 @@ This example reads two months of price data on Samsung.</p>
 <img alt="img-top" class="card-img-top" src="_images/krx.png" />
 <div class="card-body docutils">
 <p class="card-text"><strong>KRX</strong></p>
-<p class="card-text">Do you want to get financial data from <em>KRX</em>? Check out the <em>KRX</em> guides.
-It will allow you to have  a lot of easy-to-use financial data.
-coming from <a class="reference external" href="https://data.krx.co.kr">data.krx.co.kr</a></p>
+<p class="card-text">Krx 는 한국의 금융 데이터를 다루는 온라인 웹사이트 입니다.
+CoreDotFinance 를 통해서 주식, ETF, 주식배당금 등의 다양한 데이터를 이용해서 나만의 포트폴리오를 작성해보세요.
+Krx 데이터는 <a class="reference external" href="https://data.krx.co.kr">data.krx.co.kr</a> 에서 불러옵니다.</p>
 </div>
 <div class="card-footer docutils">
-<p class="card-text"><a class="sphinx-bs btn text-wrap bot-block btn-outline-primary reference internal" href="krx.html"><span class="doc">To KRX guides</span></a></p>
+<p class="card-text"><a class="sphinx-bs btn text-wrap bot-block btn-outline-primary reference internal" href="krx_example.html"><span class="doc">Krx Data</span></a></p>
 </div>
 </div>
 </div>
 <div class="d-flex col-lg-6 col-md-6 col-sm-6 col-xs-12 p-2 docutils">
 <div class="card w-100 shadow intro-card text-center docutils">
 <img alt="img-top" class="card-img-top" src="_images/binance.svg" /><div class="card-body docutils">
-<p class="card-text"><strong>Crypto Currency</strong></p>
-<p class="card-text">Crypto Currency! The rising star in financial market.
-CoreDotFinance brings price data of cypto currency from <a class="reference external" href="https://www.binance.com">binance.com</a></p>
+<p class="card-text"><strong>Binance</strong></p>
+<p class="card-text">Binance 는 가상화폐 데이터를 다루는 온라인 웹사이트 입니다.
+CoreDotFinance 를 통해 가상화폐 데이터를 이용해서 화쳬 가격의 동향을 예측해보세요.
+binance 데이터는 <a class="reference external" href="https://www.binance.com">binance.com</a> 에서 불러옵니다.</p>
 </div>
 <div class="card-footer docutils">
-<p class="card-text"><a class="sphinx-bs btn text-wrap bot-block btn-outline-primary reference internal" href="crypto.html"><span class="doc">To binance guides</span></a></p>
+<p class="card-text"><span class="xref any sphinx-bs btn text-wrap bot-block btn-outline-primary">Binance Data</span></p>
 </div>
 </div>
 </div>
@@ -264,15 +257,6 @@ python setup.py install
 </pre></div>
 </div>
 </div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<p>refer to Examples</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-</ul>
-</div>
-</div>
 <div class="section" id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -281,10 +265,6 @@ python setup.py install
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="krx.html">KRX</a></li>
-<li class="toctree-l1"><a class="reference internal" href="crypto.html">Crypto</a></li>
-</ul>
 </div>
 </div>
 </div>
@@ -295,7 +275,6 @@ python setup.py install
               
               <div class='prev-next-bottom'>
                 
-    <a class='right-next' id="next-link" href="examples.html" title="next page">Examples</a>
 
               </div>
               

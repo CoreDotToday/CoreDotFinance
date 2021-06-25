@@ -1,0 +1,476 @@
+
+<!DOCTYPE html>
+
+<html lang="kr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick start with KrxReader &#8212; CoreDotFinance 0.0.1 documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="index.html">
+  <img src="_static/coredottoday.png" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/CoreDotToday/CoreDotFinance" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   1. 주식
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     1-1. 주식 데이터 불러오기
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id3">
+     1-2. 해당일 모든 주식 데이터 불러오기
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#per">
+     1-3. PER 데이터 불러오기
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id4">
+     1-4. 해당일 모든 PER 데이터 불러오기
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#etf">
+   2. ETF
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id5">
+     2-1. ETF 데이터 불러오기
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id6">
+     2-2. 해당일 모든 ETF 불러오기
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#etn">
+   3. ETN
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id7">
+     3-1. ETN 데이터 불러오기
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id8">
+     3-2. 해당일 모든 ETN 데이터 불러오기
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#elw">
+   4. ELW
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id9">
+     4-1. ELW 데이터 불러오기
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id10">
+     4-2. 해당일 모든 ELW 데이터 불러오기
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#documentation">
+       Documentation
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="section" id="quick-start-with-krxreader">
+<h1>Quick start with KrxReader<a class="headerlink" href="#quick-start-with-krxreader" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>1. 주식<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>1-1. 주식 데이터 불러오기<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span> <span class="o">=</span> <span class="n">KrxReader</span><span class="p">()</span>
+<span class="n">krx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;005930&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-06-16&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">)</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+<span class="n">삼성전자</span>
+             <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>     <span class="n">시가</span>      <span class="n">고가</span>      <span class="n">저가</span>      <span class="n">거래량</span>     <span class="n">거래대금</span>    <span class="n">시가총액</span>    <span class="n">상장주식수</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">22</span>   <span class="mi">80000</span>   <span class="mi">100</span>     <span class="mf">0.13</span>    <span class="mi">80200</span>   <span class="mi">80300</span>   <span class="mi">79900</span>   <span class="mi">11773365</span>        <span class="mi">942656966106</span>    <span class="mi">477582604000000</span> <span class="mi">5969782550</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">21</span>   <span class="mi">79900</span>   <span class="o">-</span><span class="mi">600</span>    <span class="o">-</span><span class="mf">0.75</span>   <span class="mi">79700</span>   <span class="mi">80000</span>   <span class="mi">79600</span>   <span class="mi">16063340</span>        <span class="mi">1282081340900</span>   <span class="mi">476985625745000</span> <span class="mi">5969782550</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">18</span>   <span class="mi">80500</span>   <span class="o">-</span><span class="mi">400</span>    <span class="o">-</span><span class="mf">0.49</span>   <span class="mi">81100</span>   <span class="mi">81100</span>   <span class="mi">80500</span>   <span class="mi">14916721</span>        <span class="mi">1202369230300</span>   <span class="mi">480567495275000</span> <span class="mi">5969782550</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">17</span>   <span class="mi">80900</span>   <span class="o">-</span><span class="mi">900</span>    <span class="o">-</span><span class="mf">1.10</span>   <span class="mi">81100</span>   <span class="mi">81300</span>   <span class="mi">80700</span>   <span class="mi">14007385</span>        <span class="mi">1132293020100</span>   <span class="mi">482955408295000</span> <span class="mi">5969782550</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">16</span>   <span class="mi">81800</span>   <span class="mi">900</span>     <span class="mf">1.11</span>    <span class="mi">81500</span>   <span class="mi">81900</span>   <span class="mi">81100</span>   <span class="mi">14999855</span>        <span class="mi">1223108169181</span>   <span class="mi">488328212590000</span> <span class="mi">5969782550</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>1-2. 해당일 모든 주식 데이터 불러오기<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read_all</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+     <span class="n">종목코드</span>    <span class="n">종목명</span>     <span class="n">시장구분</span>    <span class="n">소속부</span>     <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>     <span class="n">시가</span>      <span class="n">고가</span>      <span class="n">저가</span>      <span class="n">거래량</span>     <span class="n">거래대금</span>    <span class="n">시가총액</span>    <span class="n">상장주식수</span>
+<span class="mi">0</span>    <span class="mi">060310</span>  <span class="mi">3</span><span class="n">S</span>      <span class="n">KOSDAQ</span>  <span class="n">중견기업부</span>   <span class="mi">3260</span>    <span class="o">-</span><span class="mi">20</span>     <span class="o">-</span><span class="mf">0.61</span>   <span class="mi">3310</span>    <span class="mi">3310</span>    <span class="mi">3205</span>    <span class="mi">262244</span>  <span class="mi">848117815</span>       <span class="mi">150845132380</span>    <span class="mi">46271513</span>
+<span class="mi">1</span>    <span class="mi">095570</span>  <span class="n">AJ네트웍스</span>  <span class="n">KOSPI</span>           <span class="mi">6010</span>    <span class="o">-</span><span class="mi">100</span>    <span class="o">-</span><span class="mf">1.64</span>   <span class="mi">6100</span>    <span class="mi">6100</span>    <span class="mi">5970</span>    <span class="mi">143696</span>  <span class="mi">863763320</span>       <span class="mi">281401992950</span>    <span class="mi">46822295</span>
+<span class="mi">2</span>    <span class="mi">006840</span>  <span class="n">AK홀딩스</span>   <span class="n">KOSPI</span>           <span class="mi">33250</span>   <span class="mi">500</span>     <span class="mf">1.53</span>    <span class="mi">33000</span>   <span class="mi">33450</span>   <span class="mi">32800</span>   <span class="mi">24751</span>   <span class="mi">819795450</span>       <span class="mi">440481403250</span>    <span class="mi">13247561</span>
+<span class="mi">3</span>    <span class="mi">054620</span>  <span class="n">APS홀딩스</span>  <span class="n">KOSDAQ</span>  <span class="n">중견기업부</span>   <span class="mi">17150</span>   <span class="mi">900</span>     <span class="mf">5.54</span>    <span class="mi">16350</span>   <span class="mi">17350</span>   <span class="mi">16000</span>   <span class="mi">279681</span>  <span class="mi">4707799300</span>      <span class="mi">349760890150</span>    <span class="mi">20394221</span>
+<span class="mi">4</span>    <span class="mi">265520</span>  <span class="n">AP시스템</span>   <span class="n">KOSDAQ</span>  <span class="n">우량기업부</span>   <span class="mi">34100</span>   <span class="mi">600</span>     <span class="mf">1.79</span>    <span class="mi">33800</span>   <span class="mi">34200</span>   <span class="mi">33100</span>   <span class="mi">959984</span>  <span class="mi">32312463800</span>     <span class="mi">493775740700</span>    <span class="mi">14480227</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="per">
+<h3>1-3. PER 데이터 불러오기<a class="headerlink" href="#per" title="Permalink to this headline">¶</a></h3>
+<p>PER 데이터 뿐만 아니라 EPS, PER, BPS, PBR, 주당배당금, 배당수익률 등의 데이터도 얻을 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;005930&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;per&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-06-16&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">)</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span>
+<span class="n">삼성전자</span>
+             <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>     <span class="n">EPS</span>     <span class="n">PER</span>     <span class="n">BPS</span>     <span class="n">PBR</span>     <span class="n">주당배당금</span>   <span class="n">배당수익률</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">22</span>   <span class="mi">80000</span>   <span class="mi">100</span>     <span class="mf">0.13</span>    <span class="mi">3841</span>    <span class="mf">20.83</span>   <span class="mi">39406</span>   <span class="mf">2.03</span>    <span class="mi">2994</span>    <span class="mf">3.74</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">21</span>   <span class="mi">79900</span>   <span class="o">-</span><span class="mi">600</span>    <span class="o">-</span><span class="mf">0.75</span>   <span class="mi">3841</span>    <span class="mf">20.80</span>   <span class="mi">39406</span>   <span class="mf">2.03</span>    <span class="mi">2994</span>    <span class="mf">3.75</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">18</span>   <span class="mi">80500</span>   <span class="o">-</span><span class="mi">400</span>    <span class="o">-</span><span class="mf">0.49</span>   <span class="mi">3841</span>    <span class="mf">20.96</span>   <span class="mi">39406</span>   <span class="mf">2.04</span>    <span class="mi">2994</span>    <span class="mf">3.72</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">17</span>   <span class="mi">80900</span>   <span class="o">-</span><span class="mi">900</span>    <span class="o">-</span><span class="mf">1.10</span>   <span class="mi">3841</span>    <span class="mf">21.06</span>   <span class="mi">39406</span>   <span class="mf">2.05</span>    <span class="mi">2994</span>    <span class="mf">3.70</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">16</span>   <span class="mi">81800</span>   <span class="mi">900</span>     <span class="mf">1.11</span>    <span class="mi">3841</span>    <span class="mf">21.30</span>   <span class="mi">39406</span>   <span class="mf">2.08</span>    <span class="mi">2994</span>    <span class="mf">3.66</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>1-4. 해당일 모든 PER 데이터 불러오기<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>PER 데이터 뿐만 아니라 EPS, PER, BPS, PBR, 주당배당금, 배당수익률 등의 데이터도 얻을 수 있다.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read_all</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;per&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">5</span><span class="p">]:</span>
+     <span class="n">종목코드</span>    <span class="n">종목명</span>     <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>     <span class="n">EPS</span>     <span class="n">PER</span>     <span class="n">BPS</span>     <span class="n">PBR</span>     <span class="n">주당배당금</span>   <span class="n">배당수익률</span>
+<span class="mi">0</span>    <span class="mi">060310</span>  <span class="mi">3</span><span class="n">S</span>      <span class="mi">3260</span>    <span class="o">-</span><span class="mi">20</span>     <span class="o">-</span><span class="mf">0.61</span>   <span class="mi">0</span>       <span class="mf">0.00</span>    <span class="mi">745</span>     <span class="mf">4.38</span>    <span class="mi">0</span>       <span class="mf">0.00</span>
+<span class="mi">1</span>    <span class="mi">095570</span>  <span class="n">AJ네트웍스</span>  <span class="mi">6010</span>    <span class="o">-</span><span class="mi">100</span>    <span class="o">-</span><span class="mf">1.64</span>   <span class="mi">0</span>       <span class="mf">0.00</span>    <span class="mi">6089</span>    <span class="mf">0.99</span>    <span class="mi">210</span>     <span class="mf">3.49</span>
+<span class="mi">2</span>    <span class="mi">006840</span>  <span class="n">AK홀딩스</span>   <span class="mi">33250</span>   <span class="mi">500</span>     <span class="mf">1.53</span>    <span class="mi">0</span>       <span class="mf">0.00</span>    <span class="mi">50471</span>   <span class="mf">0.66</span>    <span class="mi">400</span>     <span class="mf">1.20</span>
+<span class="mi">3</span>    <span class="mi">054620</span>  <span class="n">APS홀딩스</span>  <span class="mi">17150</span>   <span class="mi">900</span>     <span class="mf">5.54</span>    <span class="mi">0</span>       <span class="mf">0.00</span>    <span class="mi">8135</span>    <span class="mf">2.11</span>    <span class="mi">0</span>       <span class="mf">0.00</span>
+<span class="mi">4</span>    <span class="mi">265520</span>  <span class="n">AP시스템</span>   <span class="mi">34100</span>   <span class="mi">600</span>     <span class="mf">1.79</span>    <span class="mi">1736</span>    <span class="mf">19.64</span>   <span class="mi">9041</span>    <span class="mf">3.77</span>    <span class="mi">120</span>     <span class="mf">0.35</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="etf">
+<h2>2. ETF<a class="headerlink" href="#etf" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>2-1. ETF 데이터 불러오기<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;152100&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-06-16&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;etf&#39;</span><span class="p">)</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span>
+<span class="n">ARIRANG</span> <span class="mi">200</span>
+             <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>     <span class="n">순자산가치</span><span class="p">(</span><span class="n">NAV</span><span class="p">)</span>      <span class="n">시가</span>      <span class="n">고가</span>      <span class="n">저가</span>      <span class="n">거래량</span>     <span class="n">거래대금</span>    <span class="n">시가총액</span>    <span class="n">순자산총액</span>   <span class="n">상장좌수</span>    <span class="n">기초지수</span>
+                                                                                                                                    <span class="n">지수명</span>      <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">22</span>   <span class="mi">43745</span>   <span class="mi">290</span>     <span class="mf">0.67</span>    <span class="mf">43861.26</span>        <span class="mi">43695</span>   <span class="mi">43810</span>   <span class="mi">43645</span>   <span class="mi">42959</span>   <span class="mi">1879340220</span>      <span class="mi">861776500000</span>    <span class="mi">864066878141</span>    <span class="mi">19700000</span>        <span class="n">코스피</span> <span class="mi">200</span> <span class="mf">434.42</span>  <span class="mf">2.96</span>    <span class="mf">0.69</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">21</span>   <span class="mi">43455</span>   <span class="mi">420</span>     <span class="o">-</span><span class="mf">0.96</span>   <span class="mf">43563.54</span>        <span class="mi">43565</span>   <span class="mi">43600</span>   <span class="mi">43265</span>   <span class="mi">38641</span>   <span class="mi">1677991085</span>      <span class="mi">860409000000</span>    <span class="mi">858201745592</span>    <span class="mi">19800000</span>        <span class="n">코스피</span> <span class="mi">200</span> <span class="mf">431.46</span>  <span class="mf">3.56</span>    <span class="o">-</span><span class="mf">0.82</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">18</span>   <span class="mi">43875</span>   <span class="mi">110</span>     <span class="mf">0.25</span>    <span class="mf">43923.01</span>        <span class="mi">43785</span>   <span class="mi">43970</span>   <span class="mi">43765</span>   <span class="mi">42819</span>   <span class="mi">1880091335</span>      <span class="mi">829237500000</span>    <span class="mi">869675659899</span>    <span class="mi">18900000</span>        <span class="n">코스피</span> <span class="mi">200</span> <span class="mf">435.02</span>  <span class="mf">0.29</span>    <span class="mf">0.07</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">17</span>   <span class="mi">43765</span>   <span class="mi">230</span>     <span class="o">-</span><span class="mf">0.52</span>   <span class="mf">43893.56</span>        <span class="mi">43800</span>   <span class="mi">43825</span>   <span class="mi">43600</span>   <span class="mi">13435</span>   <span class="mi">587449695</span>       <span class="mi">827158500000</span>    <span class="mi">829588218252</span>    <span class="mi">18900000</span>        <span class="n">코스피</span> <span class="mi">200</span> <span class="mf">434.73</span>  <span class="mf">2.23</span>    <span class="o">-</span><span class="mf">0.51</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">16</span>   <span class="mi">43995</span>   <span class="mi">235</span>     <span class="mf">0.54</span>    <span class="mf">44121.21</span>        <span class="mi">43760</span>   <span class="mi">44050</span>   <span class="mi">43760</span>   <span class="mi">106684</span>  <span class="mi">4693974037</span>      <span class="mi">831505500000</span>    <span class="mi">833890893930</span>    <span class="mi">18900000</span>        <span class="n">코스피</span> <span class="mi">200</span> <span class="mf">436.96</span>  <span class="mf">2.83</span>    <span class="mf">0.65</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>2-2. 해당일 모든 ETF 불러오기<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">7</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read_all</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;etf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">7</span><span class="p">]:</span>
+     <span class="n">종목코드</span>    <span class="n">종목명</span>     <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>     <span class="n">순자산가치</span><span class="p">(</span><span class="n">NAV</span><span class="p">)</span>      <span class="n">시가</span>      <span class="n">고가</span>      <span class="n">저가</span>      <span class="n">거래량</span>     <span class="n">거래대금</span>    <span class="n">시가총액</span>    <span class="n">순자산총액</span>   <span class="n">상장좌수</span>    <span class="n">기초지수</span>
+                                                                                                                                                <span class="n">지수명</span>  <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>
+<span class="mi">0</span>    <span class="mi">152100</span>  <span class="n">ARIRANG</span> <span class="mi">200</span>     <span class="mi">43745</span>   <span class="mi">290</span>     <span class="mf">0.67</span>    <span class="mf">43861.26</span>        <span class="mi">43695</span>   <span class="mi">43810</span>   <span class="mi">43645</span>   <span class="mi">42959</span>   <span class="mi">1879340220</span>      <span class="mi">861776500000</span>    <span class="mi">864066878141</span>    <span class="mi">19700000</span>        <span class="n">코스피</span> <span class="mi">200</span> <span class="mf">434.42</span>  <span class="mf">2.96</span>    <span class="mf">0.69</span>
+<span class="mi">1</span>    <span class="mi">295820</span>  <span class="n">ARIRANG</span> <span class="mi">200</span><span class="n">동일가중</span> <span class="mi">12275</span>   <span class="mi">180</span>     <span class="mf">1.49</span>    <span class="mf">12257.85</span>        <span class="mi">12115</span>   <span class="mi">12275</span>   <span class="mi">12115</span>   <span class="mi">248</span>     <span class="mi">3033510</span> <span class="mi">15343750000</span>     <span class="mi">15322313321</span>     <span class="mi">1250000</span> <span class="n">코스피</span> <span class="mi">200</span> <span class="n">동일가중지수</span>  <span class="mf">2681.00</span> <span class="mf">32.76</span>   <span class="mf">1.24</span>
+<span class="mi">2</span>    <span class="mi">253150</span>  <span class="n">ARIRANG</span> <span class="mi">200</span><span class="n">선물레버리지</span>       <span class="mi">51960</span>   <span class="mi">720</span>     <span class="mf">1.41</span>    <span class="mf">51970.87</span>        <span class="mi">51800</span>   <span class="mi">52075</span>   <span class="mi">51650</span>   <span class="mi">1023</span>    <span class="mi">53030520</span>        <span class="mi">15588000000</span>     <span class="mi">12992717266</span>     <span class="mi">300000</span>  <span class="n">코스피</span> <span class="mi">200</span> <span class="n">선물지수</span>    <span class="mf">2173.41</span> <span class="mf">15.30</span>   <span class="mf">0.71</span>
+<span class="mi">3</span>    <span class="mi">253160</span>  <span class="n">ARIRANG</span> <span class="mi">200</span><span class="n">선물인버스2X</span>      <span class="mi">3805</span>    <span class="o">-</span><span class="mi">50</span>     <span class="o">-</span><span class="mf">1.30</span>   <span class="mf">3796.80</span> <span class="mi">3830</span>    <span class="mi">3830</span>    <span class="mi">3780</span>    <span class="mi">18559</span>   <span class="mi">70532780</span>        <span class="mi">14839500000</span>     <span class="mi">14617674812</span>     <span class="mi">3900000</span> <span class="n">코스피</span> <span class="mi">200</span> <span class="n">선물지수</span>    <span class="mf">2173.41</span> <span class="mf">15.30</span>   <span class="mf">0.71</span>
+<span class="mi">4</span>    <span class="mi">278420</span>  <span class="n">ARIRANG</span> <span class="n">ESG우수기업</span> <span class="mi">9885</span>    <span class="mi">100</span>     <span class="mf">1.02</span>    <span class="mf">9895.12</span> <span class="mi">9860</span>    <span class="mi">9900</span>    <span class="mi">9845</span>    <span class="mi">649</span>     <span class="mi">6413000</span> <span class="mi">3954000000</span>      <span class="mi">3958047397</span>      <span class="mi">400000</span>  <span class="n">WISE</span> <span class="n">ESG우수기업</span> <span class="n">지수</span> <span class="mf">1383.67</span> <span class="mf">13.12</span>   <span class="mf">0.96</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="etn">
+<h2>3. ETN<a class="headerlink" href="#etn" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>3-1. ETN 데이터 불러오기<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">8</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;580011&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-06-16&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;etn&#39;</span><span class="p">)</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">8</span><span class="p">]:</span>
+<span class="n">KB</span> <span class="n">FnGuide</span> <span class="n">언택트</span> <span class="n">ETN</span>
+             <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>     <span class="n">지표가치</span><span class="p">(</span><span class="n">IV</span><span class="p">)</span>        <span class="n">시가</span>      <span class="n">고가</span>      <span class="n">저가</span>      <span class="n">거래량</span>     <span class="n">거래대금</span>    <span class="n">시가총액</span>    <span class="n">지표가치총액</span>  <span class="n">상장증권수</span>   <span class="n">기초지수</span>
+                                                                                                                                <span class="n">지수명</span>  <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">22</span>   <span class="mi">14910</span>   <span class="mi">65</span>      <span class="mf">0.44</span>    <span class="mf">14909.11</span>        <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">14910000000</span>     <span class="mi">14909110000</span>     <span class="mi">1000000</span> <span class="n">FnGuide</span> <span class="n">언택트</span> <span class="n">지수</span>  <span class="mf">2977.49</span> <span class="mf">13.08</span>   <span class="mf">0.44</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">21</span>   <span class="mi">14845</span>   <span class="o">-</span><span class="mi">65</span>     <span class="o">-</span><span class="mf">0.44</span>   <span class="mf">14843.94</span>        <span class="mi">14880</span>   <span class="mi">14955</span>   <span class="mi">14845</span>   <span class="mi">360</span>     <span class="mi">5378360</span> <span class="mi">14845000000</span>     <span class="mi">14843940000</span>     <span class="mi">1000000</span> <span class="n">FnGuide</span> <span class="n">언택트</span> <span class="n">지수</span>  <span class="mf">2964.41</span> <span class="mf">10.45</span>   <span class="o">-</span><span class="mf">0.35</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">18</span>   <span class="mi">14910</span>   <span class="mi">340</span>     <span class="mf">2.33</span>    <span class="mf">14896.59</span>        <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">14910000000</span>     <span class="mi">14896590000</span>     <span class="mi">1000000</span> <span class="n">FnGuide</span> <span class="n">언택트</span> <span class="n">지수</span>  <span class="mf">2974.86</span> <span class="mf">67.45</span>   <span class="mf">2.32</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">17</span>   <span class="mi">14570</span>   <span class="mi">120</span>     <span class="mf">0.83</span>    <span class="mf">14559.79</span>        <span class="mi">14490</span>   <span class="mi">14610</span>   <span class="mi">14490</span>   <span class="mi">34</span>      <span class="mi">492955</span>  <span class="mi">14570000000</span>     <span class="mi">14559790000</span>     <span class="mi">1000000</span> <span class="n">FnGuide</span> <span class="n">언택트</span> <span class="n">지수</span>  <span class="mf">2907.41</span> <span class="mf">10.82</span>   <span class="mf">0.37</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">16</span>   <span class="mi">14450</span>   <span class="o">-</span><span class="mi">45</span>     <span class="o">-</span><span class="mf">0.31</span>   <span class="mf">14505.92</span>        <span class="mi">14495</span>   <span class="mi">14495</span>   <span class="mi">14450</span>   <span class="mi">33</span>      <span class="mi">476985</span>  <span class="mi">14450000000</span>     <span class="mi">14505920000</span>     <span class="mi">1000000</span> <span class="n">FnGuide</span> <span class="n">언택트</span> <span class="n">지수</span>  <span class="mf">2896.59</span> <span class="mf">0.82</span>    <span class="mf">0.03</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h3>3-2. 해당일 모든 ETN 데이터 불러오기<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">9</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read_all</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;etn&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">9</span><span class="p">]:</span>
+         <span class="n">종목코드</span>        <span class="n">종목명</span>     <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>     <span class="n">지표가치</span><span class="p">(</span><span class="n">IV</span><span class="p">)</span>        <span class="n">시가</span>      <span class="n">고가</span>      <span class="n">저가</span>      <span class="n">거래량</span>     <span class="n">거래대금</span>    <span class="n">시가총액</span>    <span class="n">지표가치총액</span>  <span class="n">상장증권수</span>   <span class="n">기초지수</span>
+                                                                                                                                                   <span class="n">지수명</span>       <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>
+<span class="mi">0</span>    <span class="mi">580011</span>  <span class="n">KB</span> <span class="n">FnGuide</span> <span class="n">언택트</span> <span class="n">ETN</span>      <span class="mi">14910</span>   <span class="mi">65</span>      <span class="mf">0.44</span>    <span class="mf">14909.11</span>        <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">14910000000</span>     <span class="mi">14909110000</span>     <span class="mi">1000000</span> <span class="n">FnGuide</span> <span class="n">언택트</span> <span class="n">지수</span>  <span class="mf">2977.49</span> <span class="mf">13.08</span>   <span class="mf">0.44</span>
+<span class="mi">1</span>    <span class="mi">580013</span>  <span class="n">KB</span> <span class="n">KRX</span> <span class="n">ESG</span> <span class="n">Eco</span> <span class="n">ETN</span>      <span class="mi">13800</span>   <span class="mi">175</span>     <span class="mf">1.28</span>    <span class="mf">13789.72</span>        <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">13800000000</span>     <span class="mi">13789720000</span>     <span class="mi">1000000</span> <span class="n">KRX</span> <span class="n">Eco</span> <span class="n">Leaders</span> <span class="mi">100</span>     <span class="mf">2396.69</span> <span class="mf">31.77</span>   <span class="mf">1.34</span>
+<span class="mi">2</span>    <span class="mi">580012</span>  <span class="n">KB</span> <span class="n">KRX300</span> <span class="n">ETN</span>   <span class="mi">13295</span>   <span class="mi">55</span>      <span class="mf">0.42</span>    <span class="mf">13286.96</span>        <span class="mi">13295</span>   <span class="mi">13295</span>   <span class="mi">13295</span>   <span class="mi">16</span>      <span class="mi">212720</span>  <span class="mi">13295000000</span>     <span class="mi">13286960000</span>     <span class="mi">1000000</span> <span class="n">KRX</span> <span class="mi">300</span> <span class="mf">1964.83</span> <span class="mf">11.12</span>   <span class="mf">0.57</span>
+<span class="mi">3</span>    <span class="mi">580010</span>  <span class="n">KB</span> <span class="n">Wise</span> <span class="n">분할매매</span> <span class="n">ETN</span>        <span class="mi">11900</span>   <span class="mi">0</span>       <span class="mf">0.00</span>    <span class="mf">11900.20</span>        <span class="mi">11900</span>   <span class="mi">11900</span>   <span class="mi">11900</span>   <span class="mi">169</span>     <span class="mi">2011100</span> <span class="mi">71400000000</span>     <span class="mi">71401200000</span>     <span class="mi">6000000</span> <span class="n">Wise</span> <span class="n">분할매매</span> <span class="mi">5</span><span class="o">%/</span><span class="mi">1</span><span class="o">%</span> <span class="mi">6</span><span class="n">M</span> <span class="n">지수</span>   <span class="mf">1634.40</span> <span class="mf">0.03</span>    <span class="mf">0.00</span>
+<span class="mi">4</span>    <span class="mi">580016</span>  <span class="n">KB</span> <span class="n">레버리지</span> <span class="n">S</span><span class="o">&amp;</span><span class="n">P</span> <span class="mi">500</span> <span class="n">선물</span> <span class="n">ETN</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>       <span class="mi">10520</span>   <span class="mi">370</span>     <span class="mf">3.65</span>    <span class="mf">10479.43</span>        <span class="mi">10495</span>   <span class="mi">10520</span>   <span class="mi">10495</span>   <span class="mi">10700</span>   <span class="mi">111279365</span>       <span class="mi">10520000000</span>     <span class="mi">10479430000</span>     <span class="mi">1000000</span> <span class="n">S</span><span class="o">&amp;</span><span class="n">P</span> <span class="mi">500</span> <span class="n">Futures</span> <span class="mi">2</span><span class="n">X</span> <span class="n">Leveraged</span> <span class="n">Daily</span> <span class="n">Index</span> <span class="n">TR</span>     <span class="mf">926.00</span>  <span class="mf">9.78</span>    <span class="mf">1.07</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="elw">
+<h2>4. ELW<a class="headerlink" href="#elw" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id9">
+<h3>4-1. ELW 데이터 불러오기<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">10</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;58FF24&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-06-16&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;elw&#39;</span><span class="p">)</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">10</span><span class="p">]:</span>
+<span class="n">KBFF24삼성전자콜</span>
+             <span class="n">종가</span>   <span class="n">대비</span> <span class="n">시가</span>      <span class="n">고가</span>      <span class="n">저가</span>      <span class="n">거래량</span>     <span class="n">거래대금</span>    <span class="n">시가총액</span>    <span class="n">상장증권수</span>   <span class="n">기초자산</span>
+                                                                                     <span class="n">자산명</span>     <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">22</span>   <span class="mi">140</span>     <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">2926000000</span>      <span class="mi">20900000</span>        <span class="n">삼성전자</span>    <span class="mi">80000</span>   <span class="mi">100</span>     <span class="mf">0.13</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">21</span>   <span class="mi">140</span>     <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">2926000000</span>      <span class="mi">20900000</span>        <span class="n">삼성전자</span>    <span class="mi">79900</span>   <span class="o">-</span><span class="mi">600</span>    <span class="o">-</span><span class="mf">0.75</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">18</span>   <span class="mi">140</span>     <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">2926000000</span>      <span class="mi">20900000</span>        <span class="n">삼성전자</span>    <span class="mi">80500</span>   <span class="o">-</span><span class="mi">400</span>    <span class="o">-</span><span class="mf">0.49</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">17</span>   <span class="mi">140</span>     <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">2926000000</span>      <span class="mi">20900000</span>        <span class="n">삼성전자</span>    <span class="mi">80900</span>   <span class="o">-</span><span class="mi">900</span>    <span class="o">-</span><span class="mf">1.10</span>
+<span class="mi">2021</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="mi">16</span>   <span class="mi">140</span>     <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">2926000000</span>      <span class="mi">20900000</span>        <span class="n">삼성전자</span>    <span class="mi">81800</span>   <span class="mi">900</span>     <span class="mf">1.11</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id10">
+<h3>4-2. 해당일 모든 ELW 데이터 불러오기<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">11</span><span class="p">]:</span>
+<span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+
+<span class="n">krx</span><span class="o">.</span><span class="n">read_all</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s1">&#39;2021-06-22&#39;</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;elw&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="n">Out</span><span class="p">[</span><span class="mi">11</span><span class="p">]:</span>
+         <span class="n">종목코드</span>        <span class="n">종목명</span>     <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">시가</span>      <span class="n">고가</span>      <span class="n">저가</span>      <span class="n">거래량</span>     <span class="n">거래대금</span>    <span class="n">시가총액</span>    <span class="n">상장증권수</span>   <span class="n">기초자산</span>
+                                                                                                          <span class="n">자산명</span>        <span class="n">종가</span>      <span class="n">대비</span>      <span class="n">등락률</span>
+<span class="mi">0</span>    <span class="mi">58</span><span class="n">FF21</span>  <span class="n">KBFF21LG화학콜</span>     <span class="mi">55</span>      <span class="mi">10</span>      <span class="mi">50</span>      <span class="mi">55</span>      <span class="mi">50</span>      <span class="mi">1620</span>    <span class="mi">81500</span>   <span class="mi">847000000</span>       <span class="mi">15400000</span>        <span class="n">LG화학</span>    <span class="mf">842000.0</span>        <span class="mf">20000.0</span> <span class="mf">2.43</span>
+<span class="mi">1</span>    <span class="mi">58</span><span class="n">FF22</span>  <span class="n">KBFF22네이버콜</span>      <span class="mi">115</span>     <span class="o">-</span><span class="mi">10</span>     <span class="mi">115</span>     <span class="mi">115</span>     <span class="mi">115</span>     <span class="mi">45000</span>   <span class="mi">5175000</span> <span class="mi">1805500000</span>      <span class="mi">15700000</span>        <span class="n">NAVER</span>   <span class="mf">391000.0</span>        <span class="o">-</span><span class="mf">6000.0</span> <span class="o">-</span><span class="mf">1.51</span>
+<span class="mi">2</span>    <span class="mi">58</span><span class="n">FF23</span>  <span class="n">KBFF23SK하이닉콜</span>    <span class="mi">300</span>     <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">5100000000</span>      <span class="mi">17000000</span>        <span class="n">SK하이닉스</span>  <span class="mf">122000.0</span>        <span class="mf">0.0</span>     <span class="mf">0.00</span>
+<span class="mi">3</span>    <span class="mi">58</span><span class="n">FF24</span>  <span class="n">KBFF24삼성전자콜</span>     <span class="mi">140</span>     <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">2926000000</span>      <span class="mi">20900000</span>        <span class="n">삼성전자</span>    <span class="mf">80000.0</span> <span class="mf">100.0</span>   <span class="mf">0.13</span>
+<span class="mi">4</span>    <span class="mi">58</span><span class="n">FF25</span>  <span class="n">KBFF25신한지주콜</span>     <span class="mi">65</span>      <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1222000000</span>      <span class="mi">18800000</span>        <span class="n">신한지주</span>    <span class="mf">40750.0</span> <span class="mf">950.0</span>   <span class="mf">2.39</span>
+</pre></div>
+</div>
+<div class="section" id="documentation">
+<h4>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h4>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="krx_documentation.html">Documentation</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2021, Core.Today.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

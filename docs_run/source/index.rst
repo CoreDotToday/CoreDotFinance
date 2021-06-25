@@ -115,4 +115,4 @@ Indices and tables
 .. toctree::
    :maxdepth: 1
 
-   krx.rst
+   krx_documentation.rst

@@ -2,7 +2,7 @@
 
 CoreDotFinance
 ===============
-Version : 0.0.4
+Version : 0.0.5
 
 **Core.Today**: `https://core.today <https://core.today>`__
 

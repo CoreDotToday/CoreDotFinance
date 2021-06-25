@@ -1,5 +1,5 @@
-from coredotfinance.krx.krx_website import stock
-from coredotfinance.krx.krx_website import products
+from coredotfinance.krx.core.krx_website import stock
+from coredotfinance.krx.core.krx_website import products
 from coredotfinance.krx.core.function_code_list import *
 
 

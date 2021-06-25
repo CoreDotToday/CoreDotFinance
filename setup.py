@@ -1,6 +1,6 @@
 import re
 import sys
-from setuptools import setup
+from setuptools import find_packages, setup
 
 # Using numpy 1.20.0 requires python >= 3.7
 if sys.version_info[:2] < (3, 7):
@@ -42,11 +42,13 @@ REQUIREMENTS = [
 
 PACKAGES = [
     'coredotfinance',
-    'coredotfinance.log',
     'coredotfinance.krx',
-    'coredotfinance.krx.krx_website',
+    'coredotfinance.krx.api',
+    'coredotfinance.krx.core',
+    'coredotfinance.krx.core.krx_website',
     'coredotfinance.crypto',
     'coredotfinance.crypto.binance',
+    'coredotfinance.yahoo'
 ]
 
 INSTALL_REQUIRES = [
@@ -73,7 +75,7 @@ KEYWORDS = [
 setup(
     name='coredotfinance',
     version=__version__,
-    packages=PACKAGES,
+    packages=find_packages(),
     url='https://github.com/coredottoday/CoreDotFinance',
     license='',
     author='Core.Today',

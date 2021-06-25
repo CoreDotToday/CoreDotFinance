@@ -11,18 +11,11 @@ class KrxReader:
     불러오게 하면 krx에서 IP를 차단하기 때문에 많은 양의 데이터 읽어오기는
     api 기능을 사용하는 것을 권장한다.
 
-    Returns DataFrame of korean financial data from data.krx.co.kr.
-    Trying to get bulky data through many times of iteration leads IP blocking.
-    So using api to get bulky data is highly recommended
-
     Parameters
     ----------
     api_key : str
         coredotfinance의 데이터베이스에서 데이터를 받아오기 위해서는
         api_key 설정이 필요하다. api 기능을 사용해서 IP 차단을 피할 수 있다.
-
-        to fetch data from database on coredotfinance.
-        For avoiding IP blocking from web site.
     """
 
     def __init__(
@@ -70,41 +63,22 @@ class KrxReader:
         """
         data.krx로 부터 금융 데이터를 읽어온다.
 
-        reads financial data from data.krx
-
         Parameters
         ----------
         symbol : str
             조회하고자 하는 데이터의 종목코드
             형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
-
-            stands for stock symbol which is used to called in Korean stock market.
-            Proper symbol is needed for each source. For example, Samsung electronics : '005930', ARIRANG 200 : '152100'
         start : str
             조회하고자 하는 데이터의 시작일
             형태는 YYYYMMDD가 되어야 한다. 예) 20210601
-
-            stands for start date DataReader fetches data from.
-            Form has to be "YYYY-MM-DD". For example, "2021-06-17"
-
         end : str
             조회하고자 하는 데이터의 종료일
             형태는 YYYYMMDD가 되어야 한다. 예) 20210601
-
-            stands for end date DataReader fetches data until.
-            Form has to be "YYYY-MM-DD". For example, "2021-06-17"
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류
-            데이터의 종류:
-                krx : ["stock", "etf", "etn", "elw", "per"]
-
-            Some sources need to specify this parameter.
-            list of kind:
-                krx : ["stock", "etf", "etn", "elw", "per"]
+            데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
             만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
-
-            If api is True but api_key is not set, It will raise error
 
         Returns
         -------
@@ -147,21 +121,12 @@ class KrxReader:
         date : str
             조회하고자 하는 데이터의 조회일
             형태는 YYYYMMDD가 되어야 한다. 예) 20210601
-
-            stands for the date DataReader fetches for.
-            Form has to be "YYYY-MM-DD". For example, "2021-06-17"
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류
-            데이터의 종류:
-                krx : ["stock", "etf", "etn", "elw", "per"]
-
-            Some sources need to specify this parameter.
-            list of kind:
-                krx : ["stock", "etf", "etn", "elw", "per"]
+            데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
            만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
 
-            If api is True but api_key is not set, It will raise error
         Returns
         -------
         DataFrame

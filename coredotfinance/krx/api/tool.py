@@ -82,7 +82,7 @@ def get_stock_pack(
 
 
 def get_df_12009(
-    item, start: str = _get_date_past_days_ago(), end: str = _get_date_today()
+    item, start: str = datetime_util.get_date_past_days_ago(), end: str = datetime_util.get_date_today()
 ) -> pd.DataFrame:
     """[12009] 투자자별 거래실적(개별종목) 조회 기능에서 2개 표(거래량-순매수, 거래대금-순매수)를 하나의 DataFrame으로 합쳐서 반환
     Parameters

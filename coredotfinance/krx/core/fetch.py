@@ -1,9 +1,6 @@
 import json
-import os
 
 from coredotfinance.krx.core import webio
-
-FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def convert_vaild_post_params(jsp_soup, post_params):
@@ -37,8 +34,8 @@ def convert_vaild_post_params(jsp_soup, post_params):
             "csvxls_isNo": "false",
         }
     """
-    converting_map = parse_converting_map(jsp_soup)
-    converting_map = remove_empty_dict(converting_map)
+    converting_map = _parse_converting_map(jsp_soup)
+    converting_map = _remove_empty_dict(converting_map)
 
     for key in post_params.keys():
         converting_by_key = converting_map.get(key, None)
@@ -48,7 +45,25 @@ def convert_vaild_post_params(jsp_soup, post_params):
     return post_params
 
 
-def parse_converting_map(jsp_soup):
+def get_krx_data(post_params):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/"
+                      "605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15"
+    }
+    url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
+    r = webio.post(url, data=post_params, headers=headers)
+    try:
+        return json.loads(r.content)
+    except json.JSONDecodeError as e:
+        print(
+            f"\tdata:\t{post_params}\n"
+            f"error:\t{e}\n"
+            f"status code:\t{r.status_code}"
+            f"response:\t{r}"
+        )
+
+
+def _parse_converting_map(jsp_soup):
     """
     converting map is utilized to convert post_parmas into vaild_post_params to get krx data
 
@@ -93,8 +108,8 @@ def parse_converting_map(jsp_soup):
             "selecbox",
             "invstTpCd",
         ]:  # [14021], [15001], [15007]
-            efrb_url = parse_efrb_url(select_tag)
-            result = get_converting_map(efrb_url)
+            efrb_url = _parse_efrb_url(select_tag)
+            result = _get_converting_map(efrb_url)
             converting_map[select_tag.attrs["name"]] = result
         elif select_tag.find_all("option") != "":
             dic = {}
@@ -108,7 +123,7 @@ def parse_converting_map(jsp_soup):
     return converting_map
 
 
-def remove_empty_dict(converting_map):
+def _remove_empty_dict(converting_map):
     """
     removes some co
 
@@ -139,7 +154,7 @@ def remove_empty_dict(converting_map):
     return converting_map
 
 
-def get_converting_map(efrb_url):
+def _get_converting_map(efrb_url):
     """
     Getting bundle from ExecuteForResourceBundle.cmd in order to make korean map.
     if user inputs '코스피200 선물' as a parameter, It needs to be converted into 'KRDRVFUK2I'.
@@ -188,7 +203,7 @@ def get_converting_map(efrb_url):
     return converting_map
 
 
-def parse_efrb_url(select_tag):
+def _parse_efrb_url(select_tag):
     """
     returns efrb_url to get converting map
 
@@ -212,22 +227,3 @@ def parse_efrb_url(select_tag):
             key = e
     efrb_url = f"http://data.krx.co.kr/comm/bldAttendant/executeForResourceBundle.cmd?baseName={baseName}&key={key}&type=kospi"
     return efrb_url
-
-
-def get_krx_data(post_params):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/"
-        "605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15"
-    }
-    url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
-    r = webio.post(url, data=post_params, headers=headers)
-    try:
-        return json.loads(r.content)
-    except json.JSONDecodeError as e:
-        print(
-            f"\tdata:\t{post_params}\n"
-            f"error:\t{e}\n"
-            f"status code:\t{r.status_code}"
-            f"response:\t{r}"
-        )
-

@@ -3,7 +3,8 @@ import os
 
 from coredotfinance.krx.core.process import get_dataframe
 from coredotfinance.krx.core.classify import get_krx_instance
-from coredotfinance.krx.core import fetch, webio, column
+from coredotfinance.krx.core import fetch, column
+from coredotfinance.krx.core import jsp_util
 
 """
 data_reader는 data.krx.co.kr로 부터 데이터를 가져온다.
@@ -55,7 +56,7 @@ def data_reader(
         print(symbol_name)
 
     mdcstat = _parse_mdcstat(post_params)
-    jsp_soup = _get_jsp_soup(mdcstat)
+    jsp_soup = jsp_util.get_jsp_soup(mdcstat)
 
     valid_post_params = fetch.convert_vaild_post_params(jsp_soup, post_params)
     krx_data = fetch.get_krx_data(valid_post_params)
@@ -95,51 +96,3 @@ def _parse_mdcstat(post_params):
     bld = post_params["bld"]
     mdcstat = bld.split("/")[-1]
     return mdcstat
-
-
-def _get_jsp_soup(mdcstat):
-    """
-    jsp_soup will be used for getting korean columns, valid_post_params.
-
-    Parameters
-    ----------
-    mdcstat : str
-
-    Returns
-    -------
-    jsp_soup : bs4.BeautifulSoup
-
-    """
-    jsp_filename = mdcstat[:-2]
-    if _is_file(jsp_filename):
-        jsp_soup = webio.soup(_load_jsp(jsp_filename))
-    else:
-        url = f"http://data.krx.co.kr/contents/MDC/STAT/standard/{jsp_filename}.jsp"
-        jsp_soup = webio.get(url)
-        _save_jsp(jsp_filename, jsp_soup)
-    return jsp_soup
-
-
-"""
-자주 사용하는 기능의 jsp 파일은 저장해서 불러오는 걸로 사용하자.
-server에 2번 요청하지 않도록.
-"""
-
-FILE_PATH = os.path.dirname(os.path.realpath(__file__))
-
-
-def _is_file(jsp_filename):
-    path = os.path.join(FILE_PATH, f'core/jsp/{jsp_filename}.jsp')
-    return os.path.isfile(path)
-
-
-def _save_jsp(jsp_filename, jsp_soup):
-    path = os.path.join(FILE_PATH, f'core/jsp/{jsp_filename}.jsp')
-    with open(path, 'w', encoding='utf-8') as f:
-        f.write(str(jsp_soup))
-
-
-def _load_jsp(jsp_filename):
-    path = os.path.join(FILE_PATH, f'core/jsp/{jsp_filename}.jsp')
-    with open(path, 'r', encoding='utf-8') as f:
-        return f.read()

@@ -3,6 +3,7 @@ import datetime
 import warnings
 
 from coredotfinance.krx.api.data_reader import data_reader
+from coredotfinance.database import krx_db
 
 
 class KrxReader:
@@ -19,8 +20,8 @@ class KrxReader:
     """
 
     def __init__(
-        self,
-        api_key=None,
+            self,
+            api_key=None,
     ):
         self.api_key = api_key
 
@@ -36,6 +37,17 @@ class KrxReader:
     def _date_convert(self, date):
         """
         date 가 None 이면 today 를 return 한다.
+
+        Parameters
+        ----------
+
+        date : str
+            YYYY-MM-DD
+
+        Returns
+        --------
+        str
+            YYYYMMDD
         """
         today = str(datetime.datetime.now().date())
         if date is None:
@@ -93,24 +105,27 @@ class KrxReader:
 
         self._date_check(start)
         self._date_check(end)
-        start = self._date_convert(start)
-        end = self._date_convert(end)
+        start_8_digit = self._date_convert(start)
+        end_8_digit = self._date_convert(end)
         self._kind_check(kind)
         self._api_key_check(api)
 
         if start > end:
             raise ValueError(f"start has to be earlier than end, but {start}, {end}")
 
+        if api:
+            return krx_db.read(symbol, start, end, kind=kind, resource='krx')
+
         if kind == "stock":
-            return data_reader("12003", symbol=symbol, start=start, end=end, kind=kind)
+            return data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
         elif kind == "per":
-            return data_reader("12021", symbol=symbol, start=start, end=end, kind=kind, search_type="개별추이")
+            return data_reader("12021", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, search_type="개별추이")
         elif kind == "etf":
-            return data_reader("13103", symbol=symbol, start=start, end=end, kind=kind)
+            return data_reader("13103", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
         elif kind == "etn":
-            return data_reader("13203", symbol=symbol, start=start, end=end, kind=kind)
+            return data_reader("13203", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
         elif kind == "elw":
-            return data_reader('13302', symbol=symbol, start=start, end=end, kind=kind)
+            return data_reader('13302', symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
@@ -139,23 +154,26 @@ class KrxReader:
                           "or before stock marker is opened")
 
         self._date_check(date)
-        date = self._date_convert(date)
+        date_8_digit = self._date_convert(date)
         self._kind_check(kind)
         self._api_key_check(api)
+
+        if api:
+            return krx_db.read_all(date, kind=kind, resouce='krx')
 
         if kind == "stock":
             return data_reader("12001", date=date)
         elif kind == "per":
             # 12021 기능 호출시 종목명 error -> <em class ="up"></em> 가 붙어서 나오는 error
-            df = data_reader("12021", search_type="전종목", market='전체', date=date)
+            df = data_reader("12021", search_type="전종목", market='전체', date=date_8_digit)
             df.replace(' <em class ="up"></em>', '', regex=True, inplace=True)
             return df
         elif kind == "etf":
-            return data_reader("13101", date=date, kind=kind)
+            return data_reader("13101", date=date_8_digit, kind=kind)
         elif kind == "etn":
-            return data_reader("13201", date=date, kind=kind)
+            return data_reader("13201", date=date_8_digit, kind=kind)
         elif kind == "elw":
-            return data_reader('13301', date=date, kind=kind)
+            return data_reader('13301', date=date_8_digit, kind=kind)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
@@ -166,6 +184,6 @@ class BinanceReader:
         Trying to get bulky data through many times of iteration leads IP blocking.
         So using api to get bulky data is highly recommended.
     """
+
     def __init__(self):
         pass
-

@@ -71,6 +71,7 @@ class KrxReader:
             end=None,
             kind="stock",
             api=False,
+            **kwargs
     ):
         """
         data.krx로 부터 금융 데이터를 읽어온다.
@@ -90,31 +91,43 @@ class KrxReader:
             조회하고자 하는 데이터의 종류
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
-            만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+            만약 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+        **kwargs:
+            whole: bool
+                True일때 상장일부터 현재까지 모든 데이터를 조회한다.
 
         Returns
         -------
         DataFrame
         """
 
+        whole = kwargs.get('whole', False)
+
         if start is None or end is None:
             warnings.warn("start or end is None. "
                           "It would lead an error because datetime.datetime.now() is default "
                           "and it could be holiday when stock marker was not held "
                           "or before stock marker is opened")
+        if whole:
+            if start is not None or end is not None:
+                print(AssertionError("when whole is not False, start and end is no needed"))
 
-        self._date_check(start)
-        self._date_check(end)
-        start_8_digit = self._date_convert(start)
-        end_8_digit = self._date_convert(end)
+            start_8_digit = '0' * 8
+            end_8_digit = '9' * 8
+        else:
+            self._date_check(start)
+            self._date_check(end)
+            start_8_digit = self._date_convert(start)
+            end_8_digit = self._date_convert(end)
+
         self._kind_check(kind)
         self._api_key_check(api)
 
-        if start > end:
+        if start_8_digit > end_8_digit:
             raise ValueError(f"start has to be earlier than end, but {start}, {end}")
 
         if api:
-            return krx_db.read(symbol, start, end, kind=kind, resource='krx')
+            return krx_db.read(symbol, start, end, kind=kind, resource='krx', whole=whole)
 
         if kind == "stock":
             return data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)

@@ -24,12 +24,12 @@ def read(symbol, start, end, kind, resource, whole=False):
     return transformed
 
 
-def read_all(date, kind, resouce):
-    url = os.path.join(__url, resouce, kind, 'readall', f'?date={date}')
-    data = eval(requests.get(url).content)
+def read_all(date, kind, resource):
+    url = os.path.join(__url, resource, kind, 'readall', f'?date={date}')
+    data = eval(requests.get(url).content)['data']
 
     data_list = []
-    length = len(data['data']['종목코드'])
+    length = len(data['종목코드'])
     for i in range(length):
         data_dict = {}
         for key in data['data']:

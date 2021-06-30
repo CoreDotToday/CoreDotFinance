@@ -127,7 +127,7 @@ class KrxReader:
             raise ValueError(f"start has to be earlier than end, but {start}, {end}")
 
         if api:
-            return krx_db.read(symbol, start, end, kind=kind, resource='krx', whole=whole)
+            return krx_db.read(symbol, start, end, kind=kind, resource='krx', api_key=self.api_key, whole=whole)
 
         if kind == "stock":
             return data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
@@ -172,10 +172,10 @@ class KrxReader:
         self._api_key_check(api)
 
         if api:
-            return krx_db.read_all(date, kind=kind, resouce='krx')
+            return krx_db.read_all(date, kind=kind, resource='krx', api_key=self.api_key)
 
         if kind == "stock":
-            return data_reader("12001", date=date)
+            return data_reader("12001", date=date_8_digit, kind=kind)
         elif kind == "per":
             # 12021 기능 호출시 종목명 error -> <em class ="up"></em> 가 붙어서 나오는 error
             df = data_reader("12021", search_type="전종목", market='전체', date=date_8_digit)

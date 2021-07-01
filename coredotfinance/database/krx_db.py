@@ -26,9 +26,9 @@ def read(symbol, start, end, kind, resource, api_key, **kwargs):
     return transformed
 
 
-def read_all(date, kind, resource, api_key):
+def read_date(date, kind, resource, api_key):
     url = os.path.join(__url, resource, kind, 'readall', f'?date={date}&apikey={api_key}')
-    response = eval(requests.get(url).content)
+    response = requests.get(url).json()
     if response.get('msg', False):
         return response
 

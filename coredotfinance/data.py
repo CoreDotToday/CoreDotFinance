@@ -19,6 +19,8 @@ class KrxReader:
         api_key 설정이 필요하다. api 기능을 사용해서 IP 차단을 피할 수 있다.
     """
 
+    not_service_api = ["etf", "etn", "elw", "per"]
+
     def __init__(
             self,
             api_key=None,
@@ -70,11 +72,10 @@ class KrxReader:
             start=None,
             end=None,
             kind="stock",
-            api=False,
-            **kwargs
+            api=False
     ):
         """
-        data.krx로 부터 금융 데이터를 읽어온다.
+        해당 주식 가격 데이터를 시작일(start) 부터 종료일(end) 까지 읽어온다.
 
         Parameters
         ----------
@@ -92,34 +93,26 @@ class KrxReader:
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
             만약 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
-        **kwargs:
-            whole: bool
-                True일때 상장일부터 현재까지 모든 데이터를 조회한다.
+            api 이용은 주식 가격만 가능하다.
 
         Returns
         -------
         DataFrame
         """
 
-        whole = kwargs.get('whole', False)
-
         if start is None or end is None:
-            warnings.warn("start or end is None. "
-                          "It would lead an error because datetime.datetime.now() is default "
-                          "and it could be holiday when stock marker was not held "
-                          "or before stock marker is opened")
-        if whole:
-            if start is not None or end is not None:
-                print(AssertionError("when whole is not False, start and end is no needed"))
+            warnings.warn("""start or end is None. 
+                          It would lead an error because datetime.datetime.now() is default 
+                          and it could be holiday when stock marker was not held 
+                          or before stock marker is opened""")
 
-            start_8_digit = '0' * 8
-            end_8_digit = '9' * 8
-        else:
-            self._date_check(start)
-            self._date_check(end)
-            start_8_digit = self._date_convert(start)
-            end_8_digit = self._date_convert(end)
+        if api and kind in KrxReader.not_service_api:
+            raise ValueError(f"{kind} does not service api yet.")
 
+        self._date_check(start)
+        self._date_check(end)
+        start_8_digit = self._date_convert(start)
+        end_8_digit = self._date_convert(end)
         self._kind_check(kind)
         self._api_key_check(api)
 
@@ -127,7 +120,7 @@ class KrxReader:
             raise ValueError(f"start has to be earlier than end, but {start}, {end}")
 
         if api:
-            return krx_db.read(symbol, start, end, kind=kind, resource='krx', api_key=self.api_key, whole=whole)
+            return krx_db.read(symbol, start, end, kind=kind, resource='krx', api_key=self.api_key)
 
         if kind == "stock":
             return data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
@@ -142,13 +135,49 @@ class KrxReader:
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
-    def read_all(self, date=None, *, kind='stock', api=False):
+    def read_all(
+            self,
+            symbol,
+            *,
+            kind="stock",
+            api=False
+    ):
         """
+        전기간의 해당 주식 가격 데이터를 읽어온다.
+
+        Parameters
+        ----------
+        symbol : str
+            조회하고자 하는 데이터의 종목코드
+            형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
+        start : str
+            조회하고자 하는 데이터의 시작일
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+        end : str
+            조회하고자 하는 데이터의 종료일
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+        kind : str, default "stock"
+            조회하고자 하는 데이터의 종류
+            데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
+        api : bool, default False
+            만약 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+            api 이용은 주식가격만 가능하다.
+
+        Returns
+        -------
+        DataFrame
+        """
+        return self.read(symbol, start='1900-01-01', end='2030-01-01', kind=kind, api=api)
+
+    def read_date(self, date=None, *, kind='stock', api=False):
+        """
+        해당 일자의 전 종목 주식 데이터를 불러온다.
+
         Parameters
         ----------
         date : str
             조회하고자 하는 데이터의 조회일
-            형태는 YYYYMMDD가 되어야 한다. 예) 20210601
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
@@ -159,6 +188,9 @@ class KrxReader:
         -------
         DataFrame
         """
+
+        if api and kind in KrxReader.not_service_api:
+            raise ValueError(f"{kind} does not service api yet.")
 
         if date is None:
             warnings.warn("date is None. "
@@ -172,7 +204,7 @@ class KrxReader:
         self._api_key_check(api)
 
         if api:
-            return krx_db.read_all(date, kind=kind, resource='krx', api_key=self.api_key)
+            return krx_db.read_date(date, kind=kind, resource='krx', api_key=self.api_key)
 
         if kind == "stock":
             return data_reader("12001", date=date_8_digit, kind=kind)

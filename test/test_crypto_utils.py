@@ -1,4 +1,4 @@
-from coredotfinance.crypto.utils import get_date_list
+from coredotfinance.binance.utils import get_date_list
 from freezegun import freeze_time
 
 

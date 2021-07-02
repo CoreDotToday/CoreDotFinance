@@ -45,7 +45,7 @@ Quick Start
    from coredotfinance.data import BinanceReader
    # symbol 'BTCUSDT' stands for Bitcoin
    binance = BinanceReader()
-   binance.read('BTCUSDT')
+   binance.read('BTCUSDT', start = '2021-06-04', end = '2021-07-01', interval = '1h')
 
 Contents
 --------

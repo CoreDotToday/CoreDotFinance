@@ -1,14 +1,14 @@
 from datetime import datetime, timedelta
 
-from coredotfinance.crypto.binance.api import api_check_server_time
-from coredotfinance.crypto.binance.binance import (
+from coredotfinance.binance.api import api_check_server_time
+from coredotfinance.binance.binance import (
     get_24hr_all_price,
     get_current_price,
     get_ohlcv,
     get_orderbook,
     get_symbols,
 )
-from coredotfinance.crypto.utils import get_date_list
+from coredotfinance.binance.utils import get_date_list
 from freezegun import freeze_time
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import numpy as np
+import numpy as np  # 'np.int32' 로 사용된다.
 from datetime import datetime
 
 second_column_map = {
@@ -107,39 +107,120 @@ def _multi_columnize(column_data, columns_depth):
 def _dataframe_astype(dataframe: pd.DataFrame):
     dataframe = _remove_punctuation(dataframe)
     column_data_type = _get_column_data_type(dataframe)
+    dataframe = _0_to_empty_str(dataframe, column_data_type)
     return _data_type_as(dataframe, column_data_type)
 
 
 def _remove_punctuation(dataframe: pd.DataFrame):
     dataframe.replace(',', '', regex=True, inplace=True)
     dataframe.replace('\-$', '0', regex=True, inplace=True)
+    dataframe.replace('', '0', regex=True, inplace=True)
+
     return dataframe
 
 
 def _get_column_data_type(dataframe: pd.DataFrame):
+    """
+    Returns
+    -------
+        when krx.read_date(date='2021-06-22')
+
+        {'종목명': 'str',
+         '시장구분': 'str',
+         '소속부': 'str',
+         '종가': 'np.int64',
+         '대비': 'np.int64',
+         '등락률': 'float',
+         '시가': 'np.int64',
+         '고가': 'np.int64',
+         '저가': 'np.int64',
+         '거래량': 'np.int64',
+         '거래대금': 'np.int64',
+         '시가총액': 'np.int64',
+         '상장주식수': 'np.int64'}
+
+         또는
+
+        when krx.read('152100', start = '2012-01-01', end='2012-02-01', kind='etf')
+
+         {('종가', ''): 'np.int64',
+         ('대비', ''): 'np.int64',
+         ('등락률', ''): 'float',
+         ('지표가치(IV)', ''): 'float',
+         ('시가', ''): 'np.int64',
+         ('고가', ''): 'np.int64',
+         ('저가', ''): 'np.int64',
+         ('거래량', ''): 'np.int64',
+         ('거래대금', ''): 'np.int64',
+         ('시가총액', ''): 'np.int64',
+         ('지표가치총액', ''): 'np.int64',
+         ('상장증권수', ''): 'np.int64',
+         ('기초지수', '지수명'): 'str',
+         ('기초지수', '종가'): 'float',
+         ('기초지수', '대비'): 'float',
+         ('기초지수', '등락률'): 'float'}
+    """
     column_data_type = {}
 
     for column in dataframe.columns:
         if column in ['종목코드', ('종목코드', '')]:
             continue
         for data in dataframe[column]:
-            if data == 0 or data == '':
+            if data == '' or data == '0':
                 continue
             try:
                 data = eval(data)
             except:
+                # 문자가 들어있는 str은 eval이 작동하지 못한다. ex) 3S, KOSDAQ, 중견기업부
                 pass
             data_type = type(data)
+
             if data_type is str:
+                column_data_type[column] = 'str'
                 break
             elif data_type is int:
                 column_data_type[column] = 'np.int64'
+                break
             elif data_type is float:
                 column_data_type[column] = 'float'
+                break
+
     return column_data_type
 
 
+def _0_to_empty_str(dataframe: pd.DataFrame, column_data_type: dict):
+    """
+    데이터가 str인 column에 들어있는 0을 '' 로 바꾸어 준다.
+    column_data_type 에서 value가 'str' 인 column 만 바꾸어 준다.
+    """
+    for column, datatype in column_data_type.items():
+        if datatype == 'str':
+            dataframe[column].replace('0', '', inplace=True)
+    return dataframe
+
+
 def _data_type_as(dataframe: pd.DataFrame, column_data_type: dict):
-    for column_name in column_data_type:
-        dataframe = dataframe.astype({column_name: eval(column_data_type[column_name])})
+    """
+    모든 데이터가 str으로 들어가 있는 dateframe을 column_data_type에 담겨있는 정보에 따라서
+    데이터의 type을 바꾸어 준다.
+    소수로 이루어져 있는 데이터는 str -> float
+    정수로 이루어져 있는 데이터는 str -> np.int64
+
+    Parameters
+    ----------
+    dataframe
+    column_data_type
+
+    Returns
+    -------
+
+    """
+    for column, datatype in column_data_type.items():
+        if datatype == 'str':
+            continue
+        try:
+            dataframe = dataframe.astype({column: eval(datatype)})
+        except ValueError:
+            # 햔 column에 int와 float이 같이 들어있는 경우가 있다. 그때!! 바로!! 쓴다!!
+            dataframe = dataframe.astype({column: float})
     return dataframe

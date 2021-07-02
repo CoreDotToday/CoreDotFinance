@@ -8,14 +8,14 @@ import pandas as pd
 from coredotfinance.util import datetime_util
 from coredotfinance.util import dataframe_util
 
-from coredotfinance.crypto.binance.api import (
+from coredotfinance.binance.api import (
     api_24hr,
     api_avg_price,
     api_depth,
     api_exchange_info,
     api_klines,
 )
-from coredotfinance.crypto.utils import get_date_list
+from coredotfinance.binance.utils import get_date_list
 
 
 def get_symbols() -> list:

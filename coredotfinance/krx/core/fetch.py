@@ -53,7 +53,7 @@ def get_krx_data(post_params):
     url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
     r = webio.post(url, data=post_params, headers=headers)
     try:
-        return json.loads(r.content)
+        return r.json()
     except json.JSONDecodeError as e:
         print(
             f"\tdata:\t{post_params}\n"

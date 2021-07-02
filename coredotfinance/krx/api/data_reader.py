@@ -26,7 +26,7 @@ def data_reader(
     code : str
         수행하고자 하는 krx의 기능번호
         https://data.krx.co.kr에서 이용하고자 하는 기능에 이용번호를 입력한다.
-    symbol : str
+    symbol : str, int
         조회하고자 하는 데이터의 종목코드
         형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
     start : str
@@ -47,8 +47,11 @@ def data_reader(
 
     Returns
     -------
-
+    pd.DataFrame
     """
+
+    if not isinstance(code, str):
+        raise ValueError(f"code has to be {str} but got {type(code)}")
     krx_instance = get_krx_instance(code, symbol=symbol, start=start, end=end, date=date, **kwargs)
     post_params = krx_instance.get_requested_data()
     if symbol:

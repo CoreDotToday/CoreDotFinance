@@ -3,6 +3,7 @@ import datetime
 import warnings
 
 from coredotfinance.krx.api.data_reader import data_reader
+from coredotfinance.database import krx_db
 
 
 class KrxReader:
@@ -18,9 +19,11 @@ class KrxReader:
         api_key 설정이 필요하다. api 기능을 사용해서 IP 차단을 피할 수 있다.
     """
 
+    not_service_api = ["etf", "etn", "elw", "per"]
+
     def __init__(
-        self,
-        api_key=None,
+            self,
+            api_key=None,
     ):
         self.api_key = api_key
 
@@ -36,6 +39,17 @@ class KrxReader:
     def _date_convert(self, date):
         """
         date 가 None 이면 today 를 return 한다.
+
+        Parameters
+        ----------
+
+        date : str
+            YYYY-MM-DD
+
+        Returns
+        --------
+        str
+            YYYYMMDD
         """
         today = str(datetime.datetime.now().date())
         if date is None:
@@ -58,10 +72,10 @@ class KrxReader:
             start=None,
             end=None,
             kind="stock",
-            api=False,
+            api=False
     ):
         """
-        data.krx로 부터 금융 데이터를 읽어온다.
+        해당 주식 가격 데이터를 시작일(start) 부터 종료일(end) 까지 읽어온다.
 
         Parameters
         ----------
@@ -70,15 +84,16 @@ class KrxReader:
             형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         start : str
             조회하고자 하는 데이터의 시작일
-            형태는 YYYYMMDD가 되어야 한다. 예) 20210601
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         end : str
             조회하고자 하는 데이터의 종료일
-            형태는 YYYYMMDD가 되어야 한다. 예) 20210601
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
-            만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+            api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+            api 이용은 주식 가격만 가능하다.
 
         Returns
         -------
@@ -86,76 +101,124 @@ class KrxReader:
         """
 
         if start is None or end is None:
-            warnings.warn("start or end is None. "
-                          "It would lead an error because datetime.datetime.now() is default "
-                          "and it could be holiday when stock marker was not held "
-                          "or before stock marker is opened")
+            warnings.warn("""start or end is None. 
+                          It would lead an error because datetime.datetime.now() is default 
+                          and it could be holiday when stock marker was not held 
+                          or before stock marker is opened""")
+
+        if api and kind in KrxReader.not_service_api:
+            raise ValueError(f"{kind} does not service api yet.")
 
         self._date_check(start)
         self._date_check(end)
-        start = self._date_convert(start)
-        end = self._date_convert(end)
+        start_8_digit = self._date_convert(start)
+        end_8_digit = self._date_convert(end)
         self._kind_check(kind)
         self._api_key_check(api)
 
-        if start > end:
+        if start_8_digit > end_8_digit:
             raise ValueError(f"start has to be earlier than end, but {start}, {end}")
 
+        if api:
+            return krx_db.read(symbol, start, end, kind=kind, resource='krx', api_key=self.api_key)
+
         if kind == "stock":
-            return data_reader("12003", symbol=symbol, start=start, end=end, kind=kind)
+            return data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
         elif kind == "per":
-            return data_reader("12021", symbol=symbol, start=start, end=end, kind=kind, search_type="개별추이")
+            return data_reader("12021", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, search_type="개별추이")
         elif kind == "etf":
-            return data_reader("13103", symbol=symbol, start=start, end=end, kind=kind)
+            return data_reader("13103", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
         elif kind == "etn":
-            return data_reader("13203", symbol=symbol, start=start, end=end, kind=kind)
+            return data_reader("13203", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
         elif kind == "elw":
-            return data_reader('13302', symbol=symbol, start=start, end=end, kind=kind)
+            return data_reader('13302', symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
-    def read_all(self, date=None, *, kind='stock', api=False):
+    def read_all(
+            self,
+            symbol,
+            *,
+            kind="stock",
+            api=False
+    ):
         """
+        전기간의 해당 주식 가격 데이터를 읽어온다.
+
         Parameters
         ----------
-        date : str
-            조회하고자 하는 데이터의 조회일
-            형태는 YYYYMMDD가 되어야 한다. 예) 20210601
+        symbol : str
+            조회하고자 하는 데이터의 종목코드
+            형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
+        start : str
+            조회하고자 하는 데이터의 시작일
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+        end : str
+            조회하고자 하는 데이터의 종료일
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
-           만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+            api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+            api 이용은 주식가격만 가능하다.
+
+        Returns
+        -------
+        DataFrame
+        """
+        return self.read(symbol, start='1900-01-01', end='2030-01-01', kind=kind, api=api)
+
+    def read_date(self, date=None, *, kind='stock', api=False):
+        """
+        해당 일자의 전 종목 주식 데이터를 불러온다.
+
+        Parameters
+        ----------
+        date : str
+            조회하고자 하는 데이터의 조회일
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+        kind : str, default "stock"
+            조회하고자 하는 데이터의 종류
+            데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
+        api : bool, default False
+           api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
 
         Returns
         -------
         DataFrame
         """
 
+        if api and kind in KrxReader.not_service_api:
+            raise ValueError(f"{kind} does not service api yet.")
+
         if date is None:
-            warnings.warn("date is None. "
-                          "It would lead an error because datetime.datetime.now() is default"
-                          "and it could be holiday when stock marker was not held "
-                          "or before stock marker is opened")
+            warnings.warn("""date is None.
+                          It would lead an error because datetime.datetime.now() is default 
+                          and it could be holiday when stock marker was not held 
+                          or before stock marker is opened""")
 
         self._date_check(date)
-        date = self._date_convert(date)
+        date_8_digit = self._date_convert(date)
         self._kind_check(kind)
         self._api_key_check(api)
 
+        if api:
+            return krx_db.read_date(date, kind=kind, resource='krx', api_key=self.api_key)
+
         if kind == "stock":
-            return data_reader("12001", date=date)
+            return data_reader("12001", date=date_8_digit, kind=kind)
         elif kind == "per":
-            # 12021 기능 호출시 종목명 error -> <em class ="up"></em> 가 붙어서 나오는 error
-            df = data_reader("12021", search_type="전종목", market='전체', date=date)
+            df = data_reader("12021", search_type="전종목", market='전체', date=date_8_digit)
+            # 12021 기능 호출시 종목명 <em class ="up"></em> 가 붙어서 나오는 문제를 해결하기 위함
             df.replace(' <em class ="up"></em>', '', regex=True, inplace=True)
             return df
         elif kind == "etf":
-            return data_reader("13101", date=date, kind=kind)
+            return data_reader("13101", date=date_8_digit, kind=kind)
         elif kind == "etn":
-            return data_reader("13201", date=date, kind=kind)
+            return data_reader("13201", date=date_8_digit, kind=kind)
         elif kind == "elw":
-            return data_reader('13301', date=date, kind=kind)
+            return data_reader('13301', date=date_8_digit, kind=kind)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
@@ -166,6 +229,6 @@ class BinanceReader:
         Trying to get bulky data through many times of iteration leads IP blocking.
         So using api to get bulky data is highly recommended.
     """
+
     def __init__(self):
         pass
-

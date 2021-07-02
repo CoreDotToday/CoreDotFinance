@@ -3,6 +3,7 @@ import datetime
 import warnings
 
 from coredotfinance.krx.api.data_reader import data_reader
+from coredotfinance.binance import binance
 from coredotfinance.database import krx_db
 
 
@@ -233,5 +234,39 @@ class BinanceReader:
         So using api to get bulky data is highly recommended.
     """
 
-    def __init__(self):
-        pass
+    def __init__(
+            self,
+            api_key=None,
+    ):
+        self.api_key = api_key
+
+    @property
+    def symbols(self):
+        return binance.get_symbols()
+
+    def read(self, symbol, start, end, interval):
+        """
+        해당 암호화폐의 가격 데이터를 불러온다.
+
+        Parameters
+        ----------
+        symbol : str, optional
+            Binance Symbol
+        interval : str, optional
+            조회 간격 설정, by default "1d"
+            (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)
+        start : str, optional
+            조회 시작 날짜(YYYY-MM-DD), by default 최근 날짜
+        end : str, optional
+            조회 끝 날짜(YYYY-MM-DD), by default 최근 날짜
+
+        Returns
+        -------
+        pd.DataFrame
+            data
+        """
+
+        start = start.replace('-', '')
+        end = end.replace('-', '')
+
+        return binance.get_ohlcv(symbol=symbol, start=start, end=end, interval=interval)

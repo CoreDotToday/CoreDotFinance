@@ -84,15 +84,15 @@ class KrxReader:
             형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         start : str
             조회하고자 하는 데이터의 시작일
-            형태는 YYYYMMDD가 되어야 한다. 예) 20210601
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         end : str
             조회하고자 하는 데이터의 종료일
-            형태는 YYYYMMDD가 되어야 한다. 예) 20210601
+            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
-            만약 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+            api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
             api 이용은 주식 가격만 가능하다.
 
         Returns
@@ -160,7 +160,7 @@ class KrxReader:
             조회하고자 하는 데이터의 종류
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
-            만약 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+            api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
             api 이용은 주식가격만 가능하다.
 
         Returns
@@ -182,7 +182,7 @@ class KrxReader:
             조회하고자 하는 데이터의 종류
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
-           만얀 api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+           api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
 
         Returns
         -------
@@ -193,10 +193,10 @@ class KrxReader:
             raise ValueError(f"{kind} does not service api yet.")
 
         if date is None:
-            warnings.warn("date is None. "
-                          "It would lead an error because datetime.datetime.now() is default"
-                          "and it could be holiday when stock marker was not held "
-                          "or before stock marker is opened")
+            warnings.warn("""date is None.
+                          It would lead an error because datetime.datetime.now() is default 
+                          and it could be holiday when stock marker was not held 
+                          or before stock marker is opened""")
 
         self._date_check(date)
         date_8_digit = self._date_convert(date)
@@ -209,8 +209,8 @@ class KrxReader:
         if kind == "stock":
             return data_reader("12001", date=date_8_digit, kind=kind)
         elif kind == "per":
-            # 12021 기능 호출시 종목명 error -> <em class ="up"></em> 가 붙어서 나오는 error
             df = data_reader("12021", search_type="전종목", market='전체', date=date_8_digit)
+            # 12021 기능 호출시 종목명 <em class ="up"></em> 가 붙어서 나오는 문제를 해결하기 위함
             df.replace(' <em class ="up"></em>', '', regex=True, inplace=True)
             return df
         elif kind == "etf":

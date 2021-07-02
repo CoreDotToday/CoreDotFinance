@@ -79,7 +79,7 @@ Contents
 
    +++
 
-   .. link-button:: crypto
+   .. link-button:: binance_documentation 
             :type: ref
             :text: Binance Data
             :classes: bot-block btn-outline-primary

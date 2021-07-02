@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Python Module Index &#8212; CoreDotFinance 0.0.1 documentation</title>
+    <title>Documentation &#8212; CoreDotFinance 0.0.1 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet" />
   <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
@@ -36,12 +36,9 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
     
-
-
   </head>
   <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
     
@@ -123,6 +120,20 @@
           
           <div class="d-none d-xl-block col-xl-2 bd-toc">
             
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
           </div>
           
 
@@ -134,39 +145,45 @@
               
               <div>
                 
+  <div class="section" id="module-coredotfinance.data">
+<span id="documentation"></span><h1>Documentation<a class="headerlink" href="#module-coredotfinance.data" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="coredotfinance.data.BinanceReader">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">coredotfinance.data.</span></code><code class="sig-name descname"><span class="pre">BinanceReader</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.data.BinanceReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns DataFrame of crypto currency price data from binance.com
+Trying to get bulky data through many times of iteration leads IP blocking.
+So using api to get bulky data is highly recommended.</p>
+<dl class="py method">
+<dt id="coredotfinance.data.BinanceReader.read">
+<code class="sig-name descname"><span class="pre">read</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.data.BinanceReader.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>해당 암호화폐의 가격 데이터를 불러온다.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em><em>, </em><em>optional</em>) -- Binance Symbol</p></li>
+<li><p><strong>interval</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 간격 설정, by default &quot;1d&quot;
+(1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)</p></li>
+<li><p><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 시작 날짜(YYYY-MM-DD), by default 최근 날짜</p></li>
+<li><p><strong>end</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 끝 날짜(YYYY-MM-DD), by default 최근 날짜</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
-   <h1>Python Module Index</h1>
+</dd></dl>
 
-   <div class="modindex-jumpbox">
-   <a href="#cap-c"><strong>c</strong></a>
-   </div>
+<span class="target" id="module-coredotfinance.binance"></span><dl class="py function">
+<dt id="coredotfinance.binance.binance">
+<code class="sig-prename descclassname"><span class="pre">coredotfinance.binance.</span></code><code class="sig-name descname"><span class="pre">binance</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.binance.binance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-c"><td></td><td>
-       <strong>c</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <code class="xref">coredotfinance</code></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="binance_documentation.html#module-coredotfinance.binance"><code class="xref">coredotfinance.binance</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="krx_documentation.html#module-coredotfinance.data"><code class="xref">coredotfinance.data</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="krx_documentation.html#module-coredotfinance.krx"><code class="xref">coredotfinance.krx</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+</div>
 
 
               </div>

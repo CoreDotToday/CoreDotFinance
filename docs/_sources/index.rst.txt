@@ -2,7 +2,7 @@
 
 CoreDotFinance
 ===============
-Version : 0.0.5
+Version : 1.0.0
 
 **Core.Today**: `https://core.today <https://core.today>`__
 
@@ -45,7 +45,7 @@ Quick Start
    from coredotfinance.data import BinanceReader
    # symbol 'BTCUSDT' stands for Bitcoin
    binance = BinanceReader()
-   binance.read('BTCUSDT')
+   binance.read('BTCUSDT', start = '2021-06-04', end = '2021-07-01', interval = '1h')
 
 Contents
 --------
@@ -79,7 +79,7 @@ Contents
 
    +++
 
-   .. link-button:: crypto
+   .. link-button:: binance_documentation 
             :type: ref
             :text: Binance Data
             :classes: bot-block btn-outline-primary

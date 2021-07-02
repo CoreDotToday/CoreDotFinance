@@ -80,16 +80,16 @@ class KrxReader:
         Parameters
         ----------
         symbol : str
-            조회하고자 하는 데이터의 종목코드
+            조회하고자 하는 데이터의 종목코드.
             형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         start : str
-            조회하고자 하는 데이터의 시작일
+            조회하고자 하는 데이터의 시작일.
             형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         end : str
-            조회하고자 하는 데이터의 종료일
+            조회하고자 하는 데이터의 종료일.
             형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류
+            조회하고자 하는 데이터의 종류.
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
             api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
@@ -97,7 +97,8 @@ class KrxReader:
 
         Returns
         -------
-        DataFrame
+        pd.DataFrame
+            data
         """
 
         if start is None or end is None:
@@ -148,24 +149,25 @@ class KrxReader:
         Parameters
         ----------
         symbol : str
-            조회하고자 하는 데이터의 종목코드
+            조회하고자 하는 데이터의 종목코드.
             형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         start : str
-            조회하고자 하는 데이터의 시작일
+            조회하고자 하는 데이터의 시작일.
             형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         end : str
-            조회하고자 하는 데이터의 종료일
+            조회하고자 하는 데이터의 종료일.
             형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류
-            데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
+            조회하고자 하는 데이터의 종류.
+            krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
             api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
             api 이용은 주식가격만 가능하다.
 
         Returns
         -------
-        DataFrame
+        pd.DataFrame
+            data
         """
         return self.read(symbol, start='1900-01-01', end='2030-01-01', kind=kind, api=api)
 
@@ -176,17 +178,18 @@ class KrxReader:
         Parameters
         ----------
         date : str
-            조회하고자 하는 데이터의 조회일
+            조회하고자 하는 데이터의 조회일.
             형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류
+            조회하고자 하는 데이터의 종류.
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         api : bool, default False
            api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
 
         Returns
         -------
-        DataFrame
+        pd.DataFrame
+            data
         """
 
         if api and kind in KrxReader.not_service_api:

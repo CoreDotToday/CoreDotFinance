@@ -14,17 +14,16 @@ def read(symbol, start, end, kind, resource, api_key, **kwargs):
     Parameters
     ----------
     symbol : str
-        조회하고자 하는 데이터의 종목코드
+        조회하고자 하는 데이터의 종목코드.
         형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
     start : str
-        조회하고자 하는 데이터의 시작일
+        조회하고자 하는 데이터의 시작일.
         형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
     end : str
-        조회하고자 하는 데이터의 종료일
+        조회하고자 하는 데이터의 종료일.
         형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
     kind : str, default "stock"
-        조회하고자 하는 데이터의 종류
-        데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
+        조회하고자 하는 데이터의 종류.
     api : bool, default False
         api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
         api 이용은 주식 가격만 가능하다.
@@ -63,11 +62,10 @@ def read_date(date, kind, resource, api_key):
     Parameters
     ----------
     date : str
-        조회하고자 하는 데이터의 조회일
+        조회하고자 하는 데이터의 조회일.
         형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
     kind : str, default "stock"
-        조회하고자 하는 데이터의 종류
-        데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
+        조회하고자 하는 데이터의 종류.
     resource : str
         url 주소를 완성하기 위한 것으로 데이터의 출처값을 있다.
     api_key : str

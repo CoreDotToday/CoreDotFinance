@@ -4,8 +4,7 @@ import requests
 import pandas as pd
 import numpy as np
 
-__url = 'http://13.124.198.252:8080/'
-
+__url = 'http://13.125.155.121:8080/'
 
 def read(symbol, start, end, kind, resource, api_key, **kwargs):
     """

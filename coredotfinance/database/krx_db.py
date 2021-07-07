@@ -4,7 +4,22 @@ import requests
 import pandas as pd
 import numpy as np
 
-__url = 'http://13.125.155.121:8080/'
+__url = 'http://52.79.172.205:8080/'
+
+def _requests_with_retry(url):
+    for _ in range(5):
+        try:
+            retry = False
+            response = requests.get(url, timeout = 15).json()
+        except requests.exceptions.ReadTimeout:
+            retry = True
+            response = {'msg' : 'Error : requests.exceptions.ReadTimeout'}
+        if retry:
+            continue
+        else:
+            break
+    return response
+
 
 def read(symbol, start, end, kind, resource, api_key, **kwargs):
     """
@@ -38,7 +53,7 @@ def read(symbol, start, end, kind, resource, api_key, **kwargs):
     """
     whole = kwargs.get('whole', False)
     url = os.path.join(__url, resource, kind, 'read', f'?symbol={symbol}&apikey={api_key}')
-    response = requests.get(url).json()
+    response = _requests_with_retry(url)
     if response.get('msg', False):
         return response
 
@@ -77,7 +92,7 @@ def read_date(date, kind, resource, api_key):
     """
 
     url = os.path.join(__url, resource, kind, 'readall', f'?date={date}&apikey={api_key}')
-    response = requests.get(url).json()
+    response = _requests_with_retry(url)
     if response.get('msg', False):
         return response
 

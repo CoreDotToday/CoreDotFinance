@@ -2,14 +2,14 @@
 
 CoreDotFinance
 ===============
-Version : 1.0.1
+Version : 1.0.2
 
 **Core.Today**: `https://core.today <https://core.today>`__
 
 **CoreDotFinance**: `https://github.com/CoreDotToday/CoreDotFinance <https://github.com/CoreDotToday/CoreDotFinance>`__
 
 .. note::
-    api 사용은  1.0.1 버전부터 사용이 가능합니다.
+    api 사용은  1.0.2 버전부터 사용이 가능합니다.
 
 금융 데이터를 쉽고 빠르게
 -------------------

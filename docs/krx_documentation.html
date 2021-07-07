@@ -239,6 +239,32 @@ api 이용은 주식가격만 가능하다.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="coredotfinance.data.KrxReader.search">
+<code class="sig-name descname"><span class="pre">search</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">find</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stock'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.data.KrxReader.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>필요 주식의 종목코드 또는 종목명을 검색한다.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>find</strong> (<em>str</em>) -- 종목명 또는 종목코드</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>종목명, 종목코드, 종목코드약식</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">coredotfinance.data</span> <span class="kn">import</span> <span class="n">KrxReader</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">krx</span> <span class="o">=</span> <span class="n">KrxReader</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">krx</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;삼성전자&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="s1">&#39;삼성전자&#39;</span><span class="p">,</span> <span class="s1">&#39;KR7005930003&#39;</span><span class="p">,</span> <span class="s1">&#39;005930&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <span class="target" id="module-coredotfinance.krx"></span><dl class="py function">

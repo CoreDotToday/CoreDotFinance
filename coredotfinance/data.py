@@ -2,6 +2,7 @@ import re
 import datetime
 import warnings
 
+from coredotfinance.krx.core.krx_website.info import Info
 from coredotfinance.krx.api.data_reader import data_reader
 from coredotfinance.binance import binance
 from coredotfinance.database import krx_db
@@ -65,6 +66,30 @@ class KrxReader:
     def _api_key_check(self, api):
         if self.api_key is None and api is not False:
             raise ValueError("api_key has to be set in order to use api")
+
+    def search(self, find, kind='stock'):
+        """
+        필요 주식의 종목코드 또는 종목명을 검색한다.
+
+        Parameters
+        ----------
+        find : str
+            종목명 또는 종목코드
+
+        Returns
+        -------
+        tuple
+            종목명, 종목코드, 종목코드약식
+
+        Examples
+        --------
+        from coredotfinance.data import KrxReader
+        krx = KrxReader()
+        krx.search('삼성전자')
+
+        >>> ('삼성전자', 'KR7005930003', '005930')
+        """
+        return Info(None, None, None).autocomplete(find, kind)
 
     def read(
             self,

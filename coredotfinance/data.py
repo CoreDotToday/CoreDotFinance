@@ -83,9 +83,9 @@ class KrxReader:
 
         Examples
         --------
-        from coredotfinance.data import KrxReader
-        krx = KrxReader()
-        krx.search('삼성전자')
+        >>> from coredotfinance.data import KrxReader
+        >>> krx = KrxReader()
+        >>> krx.search('삼성전자')
 
         >>> ('삼성전자', 'KR7005930003', '005930')
         """

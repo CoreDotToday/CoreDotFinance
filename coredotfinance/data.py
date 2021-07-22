@@ -195,7 +195,11 @@ class KrxReader:
         pd.DataFrame
             data
         """
-        return self.read(symbol, start='1900-01-01', end='2030-01-01', kind=kind, api=api)
+
+        if api:
+            return krx_db.read_all(symbol, kind=kind, resource='krx', api_key=self.api_key)
+        else:
+            return self.read(symbol, start='1900-01-01', end='2030-01-01', kind=kind, api=api)
 
     def read_date(self, date=None, *, kind='stock', api=False):
         """

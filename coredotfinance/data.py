@@ -83,9 +83,9 @@ class KrxReader:
 
         Examples
         --------
-        from coredotfinance.data import KrxReader
-        krx = KrxReader()
-        krx.search('삼성전자')
+        >>> from coredotfinance.data import KrxReader
+        >>> krx = KrxReader()
+        >>> krx.search('삼성전자')
 
         >>> ('삼성전자', 'KR7005930003', '005930')
         """
@@ -195,7 +195,11 @@ class KrxReader:
         pd.DataFrame
             data
         """
-        return self.read(symbol, start='1900-01-01', end='2030-01-01', kind=kind, api=api)
+
+        if api:
+            return krx_db.read_all(symbol, kind=kind, resource='krx', api_key=self.api_key)
+        else:
+            return self.read(symbol, start='1900-01-01', end='2030-01-01', kind=kind, api=api)
 
     def read_date(self, date=None, *, kind='stock', api=False):
         """

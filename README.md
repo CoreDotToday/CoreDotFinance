@@ -28,9 +28,9 @@ pip install coredotfinance
     'division': '소속부', 
     'close': '종가',
     'change': '대비', 
-    'change_ratio': 
-    '등락률', 'open': 
-    '시가', 'high': '고가',
+    'change_ratio': '등락률', 
+    'open': '시가', 
+    'high': '고가',
     'low': '저가',
     'trading_volume': '거래량',
     'trading_value': '거래대금',

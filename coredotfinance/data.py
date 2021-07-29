@@ -98,7 +98,8 @@ class KrxReader:
             start=None,
             end=None,
             kind="stock",
-            api=False
+            api=False,
+            **kwargs
     ):
         """
         해당 주식 가격 데이터를 시작일(start) 부터 종료일(end) 까지 읽어온다.
@@ -150,15 +151,15 @@ class KrxReader:
             return krx_db.read(symbol, start, end, kind=kind, resource='krx', api_key=self.api_key)
 
         if kind == "stock":
-            return data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
+            return data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
         elif kind == "per":
-            return data_reader("12021", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, search_type="개별추이")
+            return data_reader("12021", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, search_type="개별추이", **kwargs)
         elif kind == "etf":
-            return data_reader("13103", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
+            return data_reader("13103", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
         elif kind == "etn":
-            return data_reader("13203", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
+            return data_reader("13203", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
         elif kind == "elw":
-            return data_reader('13302', symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind)
+            return data_reader('13302', symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 

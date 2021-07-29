@@ -1,5 +1,6 @@
 import re
 import os
+import json
 
 FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
@@ -47,6 +48,12 @@ def get_korean_columns(jsp_soup, mdcstat):
         div_map = _parse_div_map(div_tag)
         map_.update(div_map)
     return map_
+
+
+def get_english_column(code):
+    with open(f'Korean2English/{code}.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
+
 
 
 def _parse_jsGrid_dict(jsp_soup):

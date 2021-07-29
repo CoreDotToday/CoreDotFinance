@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from coredotfinance.util import datetime_util
+from coredotfinance.binance import datetime_util
 from coredotfinance.krx.api.data_reader import data_reader
 
 

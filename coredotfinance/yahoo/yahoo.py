@@ -1,8 +1,7 @@
 import pandas as pd
 import requests
 
-from coredotfinance.util import datetime_util
-from coredotfinance.util import dataframe_util
+from coredotfinance.binance import dataframe_util, datetime_util
 
 
 def request_get_data(symbol, start_timestamp, end_timestamp):

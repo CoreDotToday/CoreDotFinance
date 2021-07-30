@@ -1,0 +1,17 @@
+{
+	"name": "종목명",
+	"market": "시장구분",
+	"division": "소속부",
+	"close": "종가",
+	"change": "대비",
+	"change_ratio": "등락률",
+	"open": "시가",
+	"high": "고가",
+	"low": "저가",
+	"volume": "거래량",
+	"trading_value": "거래대금",
+	"market_cap": "시가총액",
+	"shares_outstanding": "상장주식수",
+	"date": "날짜",
+	"symbol": "종목코드"
+}

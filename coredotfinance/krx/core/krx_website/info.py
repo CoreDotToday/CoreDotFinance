@@ -87,7 +87,13 @@ class Info:
         html = webio.post(url=url, data=post_data[kind])
         html_list = eval(html.content)["block1"]
         if not html_list:
-            raise ValueError(f"Can not find any data from krx. symbol : {symbol}, kind : {kind}")
+            raise ValueError(
+                f"Can not find any data from krx. symbol : {symbol}, kind : {kind}"
+            )
         else:
             html_dict = html_list[0]
-            return html_dict["codeName"], html_dict["full_code"], html_dict["short_code"]
+            return (
+                html_dict["codeName"],
+                html_dict["full_code"],
+                html_dict["short_code"],
+            )

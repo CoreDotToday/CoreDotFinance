@@ -28,6 +28,3 @@ _cols_kor = {
 def rename_cols2kor(df):
     df = df.rename(columns=_cols_kor)
     return df
-
-
-

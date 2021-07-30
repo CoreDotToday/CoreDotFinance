@@ -112,9 +112,9 @@ def _dataframe_astype(dataframe: pd.DataFrame):
 
 
 def _remove_punctuation(dataframe: pd.DataFrame):
-    dataframe.replace(',', '', regex=True, inplace=True)
-    dataframe.replace('\-$', '0', regex=True, inplace=True)
-    dataframe.replace('', '0', regex=True, inplace=True)
+    dataframe.replace(",", "", regex=True, inplace=True)
+    dataframe.replace("\-$", "0", regex=True, inplace=True)
+    dataframe.replace("", "0", regex=True, inplace=True)
 
     return dataframe
 
@@ -163,10 +163,10 @@ def _get_column_data_type(dataframe: pd.DataFrame):
     column_data_type = {}
 
     for column in dataframe.columns:
-        if column in ['종목코드', ('종목코드', '')]:
+        if column in ["종목코드", ("종목코드", "")]:
             continue
         for data in dataframe[column]:
-            if data == '' or data == '0':
+            if data == "" or data == "0":
                 continue
             try:
                 data = eval(data)
@@ -176,13 +176,13 @@ def _get_column_data_type(dataframe: pd.DataFrame):
             data_type = type(data)
 
             if data_type is str:
-                column_data_type[column] = 'str'
+                column_data_type[column] = "str"
                 break
             elif data_type is int:
-                column_data_type[column] = 'np.int64'
+                column_data_type[column] = "np.int64"
                 break
             elif data_type is float:
-                column_data_type[column] = 'float'
+                column_data_type[column] = "float"
                 break
 
     return column_data_type
@@ -194,8 +194,8 @@ def _0_to_empty_str(dataframe: pd.DataFrame, column_data_type: dict):
     column_data_type 에서 value가 'str' 인 column 만 바꾸어 준다.
     """
     for column, datatype in column_data_type.items():
-        if datatype == 'str':
-            dataframe[column].replace('0', '', inplace=True)
+        if datatype == "str":
+            dataframe[column].replace("0", "", inplace=True)
     return dataframe
 
 
@@ -216,7 +216,7 @@ def _data_type_as(dataframe: pd.DataFrame, column_data_type: dict):
 
     """
     for column, datatype in column_data_type.items():
-        if datatype == 'str':
+        if datatype == "str":
             continue
         try:
             dataframe = dataframe.astype({column: eval(datatype)})

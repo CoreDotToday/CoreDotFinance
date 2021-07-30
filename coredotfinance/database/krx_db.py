@@ -3,7 +3,7 @@ import requests
 
 import pandas as pd
 
-__url = 'http://15.165.18.200:8080/'
+__url = "http://15.165.18.200:8080/"
 
 
 def _requests_with_retry(url):
@@ -13,7 +13,7 @@ def _requests_with_retry(url):
             response = requests.get(url, timeout=15).json()
         except requests.exceptions.ReadTimeout:
             retry = True
-            response = {'msg': 'Error : requests.exceptions.ReadTimeout'}
+            response = {"msg": "Error : requests.exceptions.ReadTimeout"}
         if retry:
             continue
         else:
@@ -47,16 +47,22 @@ def read(symbol, start, end, kind, resource, api_key):
     pd.DataFrame
     """
 
-    url = os.path.join(__url, resource, kind, 'read', f'?symbol={symbol}&start={start}&end={end}&apikey={api_key}')
+    url = os.path.join(
+        __url,
+        resource,
+        kind,
+        "read",
+        f"?symbol={symbol}&start={start}&end={end}&apikey={api_key}",
+    )
     response = _requests_with_retry(url)
-    if response.get('msg', False):
+    if response.get("msg", False):
         return response
 
-    data = response['data']
+    data = response["data"]
     df = pd.DataFrame(data)
-    df.index = df['date']
-    df.index.name = ''
-    transformed = df.drop(['name', 'market', 'division', 'date'], axis='columns')
+    df.index = df["date"]
+    df.index.name = ""
+    transformed = df.drop(["name", "market", "division", "date"], axis="columns")
 
     return transformed
 
@@ -82,16 +88,18 @@ def read_all(symbol, kind, resource, api_key):
     pd.DataFrame
 
     """
-    url = os.path.join(__url, resource, kind, 'read-all', f'?symbol={symbol}&apikey={api_key}')
+    url = os.path.join(
+        __url, resource, kind, "read-all", f"?symbol={symbol}&apikey={api_key}"
+    )
     response = _requests_with_retry(url)
-    if response.get('msg', False):
+    if response.get("msg", False):
         return response
 
-    data = response['data']
+    data = response["data"]
     df = pd.DataFrame(data)
-    df.index = df['date']
-    df.index.name = ''
-    transformed = df.drop(['name', 'market', 'division', 'date'], axis='columns')
+    df.index = df["date"]
+    df.index.name = ""
+    transformed = df.drop(["name", "market", "division", "date"], axis="columns")
 
     return transformed
 
@@ -118,9 +126,11 @@ def read_date(date, kind, resource, api_key):
 
     """
 
-    url = os.path.join(__url, resource, kind, 'read-date', f'?date={date}&apikey={api_key}')
+    url = os.path.join(
+        __url, resource, kind, "read-date", f"?date={date}&apikey={api_key}"
+    )
     response = _requests_with_retry(url)
-    if response.get('msg', False):
+    if response.get("msg", False):
         return response
-    data = response['data']
+    data = response["data"]
     return pd.DataFrame(data)

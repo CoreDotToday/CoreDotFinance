@@ -17,7 +17,7 @@ def get(url, params=None):
     """
     res = requests.get(url, params=params)
     status_ok(res)
-    return bs(res.content, 'html.parser')
+    return bs(res.content, "html.parser")
 
 
 def post(url, data, headers=None, soup=False):
@@ -37,17 +37,19 @@ def post(url, data, headers=None, soup=False):
     res = requests.post(url, headers=headers, data=data)
     status_ok(res)
     if soup:
-        return bs(res.content, 'html.parser')
+        return bs(res.content, "html.parser")
     else:
         return res
 
 
 def soup(txt):
-    return bs(txt, 'html.parser')
+    return bs(txt, "html.parser")
 
 
 def status_ok(res):
     if res.status_code != 200:
-        raise ConnectionError(f"response is not 200 from the server.\nstatus_code : {res.status_code}")
+        raise ConnectionError(
+            f"response is not 200 from the server.\nstatus_code : {res.status_code}"
+        )
     else:
         pass

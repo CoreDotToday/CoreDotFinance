@@ -50,12 +50,6 @@ def get_korean_columns(jsp_soup, mdcstat):
     return map_
 
 
-def get_english_column(code):
-    with open(f'Korean2English/{code}.json', 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-
-
 def _parse_jsGrid_dict(jsp_soup):
     """
     Parameters

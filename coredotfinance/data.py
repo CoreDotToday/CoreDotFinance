@@ -6,6 +6,7 @@ from coredotfinance.krx.core.krx_website.info import Info
 from coredotfinance.krx.api.data_reader import data_reader
 from coredotfinance.binance import binance
 from coredotfinance.database import krx_db
+from coredotfinance.krx.core import option
 
 
 class KrxReader:
@@ -148,20 +149,21 @@ class KrxReader:
             raise ValueError(f"start has to be earlier than end, but {start}, {end}")
 
         if api:
-            return krx_db.read(symbol, start, end, kind=kind, resource='krx', api_key=self.api_key)
-
-        if kind == "stock":
-            return data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
+            dataframe = krx_db.read(symbol, start, end, kind=kind, resource='krx', api_key=self.api_key)
+        elif kind == "stock":
+            dataframe = data_reader("12003", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
         elif kind == "per":
-            return data_reader("12021", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, search_type="개별추이", **kwargs)
+            dataframe = data_reader("12021", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, search_type="개별추이", **kwargs)
         elif kind == "etf":
-            return data_reader("13103", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
+            dataframe = data_reader("13103", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
         elif kind == "etn":
-            return data_reader("13203", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
+            dataframe = data_reader("13203", symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
         elif kind == "elw":
-            return data_reader('13302', symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
+            dataframe = data_reader('13302', symbol=symbol, start=start_8_digit, end=end_8_digit, kind=kind, **kwargs)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
+
+        return option.options(dataframe=dataframe, **kwargs)
 
     def read_all(
             self,
@@ -178,12 +180,6 @@ class KrxReader:
         symbol : str
             조회하고자 하는 데이터의 종목코드.
             형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
-        start : str
-            조회하고자 하는 데이터의 시작일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
-        end : str
-            조회하고자 하는 데이터의 종료일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류.
             krx : ["stock", "etf", "etn", "elw", "per"]

@@ -54,8 +54,11 @@ def read(symbol, start, end, kind, resource, api_key):
 
     data = response['data']
     df = pd.DataFrame(data)
+    df.index = df['date']
+    df.index.name = ''
+    transformed = df.drop(['name', 'market', 'division', 'date'], axis='columns')
 
-    return df
+    return transformed
 
 
 def read_all(symbol, kind, resource, api_key):

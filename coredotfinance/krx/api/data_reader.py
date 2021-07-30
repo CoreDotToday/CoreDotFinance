@@ -3,7 +3,6 @@ import os
 
 from coredotfinance.krx.core.process import get_dataframe
 from coredotfinance.krx.core.classify import get_krx_instance
-from coredotfinance.krx.core.adjust_price import adjust_price
 from coredotfinance.krx.core import fetch, column
 from coredotfinance.krx.core import jsp_util
 
@@ -65,17 +64,6 @@ def data_reader(
     krx_data = fetch.get_krx_data(valid_post_params)
     korean_columns = column.get_korean_columns(jsp_soup, mdcstat)
     dataframe = get_dataframe(krx_data, korean_columns)
-
-    if kwargs.get('adjust', None) is True:
-        dataframe = adjust_price(code, dataframe)
-
-    if kwargs.get('kor', None) is None:
-        # dataframe is coming with Korean columns so when kor is None, then if has to be changed
-        english_column = column.get_english_column(code)
-        dataframe.rename(english_column, inplace=True)
-
-    if kwargs.get('reverse', None) is True:
-        dataframe = dataframe.iloc[::-1]
 
     return dataframe
 

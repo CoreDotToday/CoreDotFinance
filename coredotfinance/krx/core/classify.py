@@ -15,8 +15,6 @@ def get_krx_instance(code, symbol, start, end, date, **kwargs):
         krx_instance = stock.Stock(code, symbol=symbol, start=start, end=end, date=date, **kwargs)
     elif code in product_code_list:
         krx_instance = products.Product(code, symbol=symbol, start=start, end=end, date=date, **kwargs)
-
-
     else:
         raise ValueError(f"No function code, [{code}]")
 

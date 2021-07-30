@@ -15,9 +15,7 @@ data_reader는 data.krx.co.kr로 부터 데이터를 가져온다.
 """
 
 
-def data_reader(
-    code, symbol=None, start=None, end=None, date=None, **kwargs
-):
+def data_reader(code, symbol=None, start=None, end=None, date=None, **kwargs):
     """
     data.krx.co.kr 에서 데이터를 읽어 온다.
 
@@ -52,7 +50,9 @@ def data_reader(
 
     if not isinstance(code, str):
         raise ValueError(f"code has to be {str} but got {type(code)}")
-    krx_instance = get_krx_instance(code, symbol=symbol, start=start, end=end, date=date, **kwargs)
+    krx_instance = get_krx_instance(
+        code, symbol=symbol, start=start, end=end, date=date, **kwargs
+    )
     post_params = krx_instance.get_requested_data()
     if symbol:
         symbol_name = krx_instance.data_nm
@@ -60,13 +60,12 @@ def data_reader(
 
     mdcstat = _parse_mdcstat(post_params)
     jsp_soup = jsp_util.get_jsp_soup(mdcstat)
-
     valid_post_params = fetch.convert_vaild_post_params(jsp_soup, post_params)
     krx_data = fetch.get_krx_data(valid_post_params)
-
     korean_columns = column.get_korean_columns(jsp_soup, mdcstat)
+    dataframe = get_dataframe(krx_data, korean_columns)
 
-    return get_dataframe(krx_data, korean_columns)
+    return dataframe
 
 
 def _parse_mdcstat(post_params):

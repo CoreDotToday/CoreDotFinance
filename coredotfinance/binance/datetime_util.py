@@ -29,6 +29,7 @@ def get_date_past_days_ago(days: int = 365) -> str:
     past_days_ago = today - timedelta(days)
     return past_days_ago.strftime("%Y%m%d")
 
+
 def set_index_datetime(df):
     if "datetime" in df:
         df = df.set_index("datetime").sort_index(ascending=False)

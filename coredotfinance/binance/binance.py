@@ -5,8 +5,7 @@ import time
 import numpy as np
 import pandas as pd
 
-from coredotfinance.util import datetime_util
-from coredotfinance.util import dataframe_util
+from coredotfinance.binance import dataframe_util, datetime_util
 
 from coredotfinance.binance.api import (
     api_24hr,

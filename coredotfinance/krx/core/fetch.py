@@ -48,7 +48,7 @@ def convert_vaild_post_params(jsp_soup, post_params):
 def get_krx_data(post_params):
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/"
-                      "605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15"
+        "605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15"
     }
     url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
     r = webio.post(url, data=post_params, headers=headers)

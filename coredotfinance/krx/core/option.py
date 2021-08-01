@@ -38,7 +38,7 @@ def adjust_price(dataframe: pd.DataFrame):
 
     standard_ratio = dataframe[shares][0] / dataframe[shares]
     for column in available_column_list:
-        data = dataframe.get(column, None)
+        data = dataframe.get(column)
         if data is None:
             continue
         if column == volume:
@@ -64,24 +64,30 @@ def get_column_map(file):
         return json.load(f)
 
 
-def options(dataframe, **kwargs):
+def rename_dataframe(dataframe, column_file_name):
+    new_column = get_column_map(column_file_name)
+    return dataframe.rename(columns=new_column)
 
-    if kwargs.get("adjust", None) is True:
+
+def options(dataframe, **kwargs):
+    if isinstance(dataframe.columns, pd.core.indexes.multi.MultiIndex):
+        # multi index!!
+        # 어떻게 하지...?? 멀티인덱스는 기냥 따로 처리해줘야 하냐....
+        # 과감하게 어떠한 옵션도 주지 않겠다!!!
+        return dataframe
+
+    if kwargs.get("adjust") is True:
         dataframe = adjust_price(dataframe)
 
-    if kwargs.get("kor", None) is True:
+    if kwargs.get("kor") is True:
         # dataframe is coming with Korean columns so when kor is None, then if has to be changed
         if not is_kor_column(dataframe.columns):
-            column_file_name = "eng2kor"
-            english_column = get_column_map(column_file_name)
-            dataframe.rename(columns=english_column, inplace=True)
+            dataframe = rename_dataframe(dataframe, column_file_name="eng2kor")
     else:
         if is_kor_column(dataframe.columns):
-            column_file_name = "kor2eng"
-            korean_column = get_column_map(column_file_name)
-            dataframe.rename(columns=korean_column, inplace=True)
+            dataframe = rename_dataframe(dataframe, column_file_name="kor2eng")
 
-    if kwargs.get("reverse", None) is True:
+    if kwargs.get("reverse") is True:
         dataframe = dataframe.iloc[::-1]
 
     return dataframe

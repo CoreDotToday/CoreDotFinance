@@ -312,7 +312,7 @@ class BinanceReader:
     def symbols(self):
         return binance.get_symbols()
 
-    def read(self, symbol, start, end, interval):
+    def read(self, symbol, start, end, interval, **kwargs):
         """
         해당 암호화폐의 가격 데이터를 불러온다.
 
@@ -337,4 +337,5 @@ class BinanceReader:
         start = start.replace("-", "")
         end = end.replace("-", "")
 
-        return binance.get_ohlcv(symbol=symbol, start=start, end=end, interval=interval)
+        dataframe = binance.get_ohlcv(symbol=symbol, start=start, end=end, interval=interval)
+        return option.options(dataframe, **kwargs)

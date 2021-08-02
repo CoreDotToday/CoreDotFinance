@@ -117,7 +117,7 @@ def get_ohlcv(
         df.tz_localize("UTC")
 
     print(symbol.upper())
-    return df
+    return df.astype(float)
 
 
 def get_hourly_ohlcv_to_pickle(symbol_list, start_day, dir):

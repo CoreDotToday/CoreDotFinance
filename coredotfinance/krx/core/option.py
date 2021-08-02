@@ -68,11 +68,6 @@ def rename_dataframe(dataframe, column_file_name):
     return dataframe.rename(columns=new_column)
 
 
-def rename_dataframe_multi_index(dataframe, column_file_name):
-    new_column = get_column_map(column_file_name)
-    return dataframe.rename(columns=new_column)
-
-
 def options(dataframe, **kwargs):
     if not isinstance(dataframe, pd.DataFrame):
         return dataframe
@@ -84,7 +79,7 @@ def options(dataframe, **kwargs):
         if kwargs.get("kor") is True:
             pass
         else:
-            dataframe = rename_dataframe_multi_index(dataframe, column_file_name='kor2eng')
+            dataframe = rename_dataframe(dataframe, column_file_name='kor2eng')
     else:
         if kwargs.get("kor") is True:
             # dataframe is coming with Korean columns so when kor is None, then if has to be changed

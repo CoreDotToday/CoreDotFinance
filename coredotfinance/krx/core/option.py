@@ -74,6 +74,9 @@ def rename_dataframe_multi_index(dataframe, column_file_name):
 
 
 def options(dataframe, **kwargs):
+    if not isinstance(dataframe, pd.DataFrame):
+        return dataframe
+
     if kwargs.get("adjust") is True:
         dataframe = adjust_price(dataframe)
 

@@ -13,5 +13,12 @@
 	"시가총액": "market_cap",
 	"상장주식수": "shares_outstanding",
 	"날짜": "date",
-	"종목코드": "symbol"
+	"종목코드": "symbol",
+	"순자산가치(NAV)": "NAV",
+	"순자산총액": "Net Assets",
+	"상장좌수": "shares_outstanding",
+	"기초지수": "Fundamental_index",
+	"지수명": "index_name",
+	"주당배당금" : "dividend",
+	"배당수익률" : "dividend rate"
 }

@@ -15,5 +15,4 @@ dist/
 test.py
 *.log
 **/key.cfg
-
-
+test/apikey.txt

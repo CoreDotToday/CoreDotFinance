@@ -62,7 +62,7 @@ def read(symbol, start, end, kind, resource, api_key):
     df = pd.DataFrame(data)
     df.index = df["date"]
     df.index.name = ""
-    transformed = df.drop(["name", "market", "division", "date"], axis="columns")
+    transformed = df.drop(["name", "market", "division", "date", "symbol"], axis="columns")
 
     return transformed
 
@@ -99,7 +99,7 @@ def read_all(symbol, kind, resource, api_key):
     df = pd.DataFrame(data)
     df.index = df["date"]
     df.index.name = ""
-    transformed = df.drop(["name", "market", "division", "date"], axis="columns")
+    transformed = df.drop(["name", "market", "division", "date", "symbol"], axis="columns")
 
     return transformed
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import numpy as np  # 'np.int32' 로 사용된다.
+import numpy as np
 from datetime import datetime
 
 second_column_map = {
@@ -35,7 +35,7 @@ def get_dataframe(krx_data, column_map):
     columns_depth = max([len(c) for c in column_data])
     if not _single_column(columns_depth):
         column_data = _remove_same_named_column(column_data, columns_depth)
-        columns = _multi_columnize(column_data, columns_depth)
+        columns = _multi_columnize(column_data)
         data.columns = columns
     data = _dataframe_astype(data)
 
@@ -92,16 +92,8 @@ def _remove_same_named_column(column_data, columns_depth):
     return column_data
 
 
-def _multi_columnize(column_data, columns_depth):
-    columns = []
-    # column 만들기
-    for i in range(1, columns_depth + 1):
-        layer = []
-        for column in column_data:
-            layer.append(column[:i][-1])
-        columns.append(layer)
-
-    return columns
+def _multi_columnize(column_data):
+    return np.array(column_data).T.tolist()
 
 
 def _dataframe_astype(dataframe: pd.DataFrame):

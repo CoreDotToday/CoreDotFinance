@@ -3,9 +3,7 @@ from coredotfinance.krx.core.krx_website.info import Info
 
 
 class Product(Info):
-    def __init__(
-        self, code, symbol, start, end, date, **kwargs
-    ):
+    def __init__(self, code, symbol, start, end, date, **kwargs):
         """
         증권상품
         :param code:
@@ -22,7 +20,9 @@ class Product(Info):
         self.symbol = symbol
 
         if symbol:
-            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(symbol, 'product')
+            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(
+                symbol, "etf"
+            )
         self.search_type = kwargs.get("search_type", None)
         self.trade_index = kwargs.get("trade_index", None)
         self.trade_check = kwargs.get("trade_check", None)
@@ -307,8 +307,6 @@ class Product(Info):
             "quarter": self.quarter,
         }
         return self.update_requested_data(data)
-
-
 
     def etn_price_of_entire_items(self):
         """

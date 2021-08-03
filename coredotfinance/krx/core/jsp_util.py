@@ -35,17 +35,17 @@ FILE_PATH = os.path.dirname(os.path.realpath(__file__))
 
 
 def _is_file(jsp_filename):
-    path = os.path.join(FILE_PATH, f'jsp/{jsp_filename}.jsp')
+    path = os.path.join(FILE_PATH, f"jsp/{jsp_filename}.jsp")
     return os.path.isfile(path)
 
 
 def _save_jsp(jsp_filename, jsp_soup):
-    path = os.path.join(FILE_PATH, f'jsp/{jsp_filename}.jsp')
-    with open(path, 'w', encoding='utf-8') as f:
+    path = os.path.join(FILE_PATH, f"jsp/{jsp_filename}.jsp")
+    with open(path, "w", encoding="utf-8") as f:
         f.write(str(jsp_soup))
 
 
 def _load_jsp(jsp_filename):
-    path = os.path.join(FILE_PATH, f'jsp/{jsp_filename}.jsp')
-    with open(path, 'r', encoding='utf-8') as f:
+    path = os.path.join(FILE_PATH, f"jsp/{jsp_filename}.jsp")
+    with open(path, "r", encoding="utf-8") as f:
         return f.read()

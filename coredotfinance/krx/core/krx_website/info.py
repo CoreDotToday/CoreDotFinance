@@ -11,14 +11,14 @@ class Info:
 
         self.start = start
         self.end = end
-        self.day = date
+        self.date = date
 
     def update_requested_data(self, requested_data):
         requested_data["MIME Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
         requested_data["csvxls_isNo"] = "false"
         return requested_data
 
-    def autocomplete(self, symbol, kind):
+    def autocomplete(self, symbol, kind, **kwargs):
         """
         Returns data_nm, data_cd, data_tp from below result of requests.
 
@@ -71,6 +71,13 @@ class Info:
         html.content:
             b'{"block1":[],"CURRENT_DATETIME":"2021.06.22 AM 10:21:54"}'
         """
+        division = kwargs.get('division')
+        other_index_mktsel = {
+            '선물지수': '0201',
+            '옵션지수': '0202',
+            '전략지수': '0300',
+            '상품지수': '0600'
+        }
         url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
         post_data = {
             "stock": {
@@ -78,16 +85,48 @@ class Info:
                 "searchText": symbol,
                 "bld": "dbms/comm/finder/finder_stkisu",
             },
-            "product": {
+            "etf": {
                 "mktsel": "ALL",
                 "searchText": symbol,
                 "bld": "dbms/comm/finder/finder_secuprodisu",
             },
+            "etn": {
+                "mktsel": "ALL",
+                "searchText": symbol,
+                "bld": "dbms/comm/finder/finder_secuprodisu",
+            },
+            "elw": {
+                "mktsel": "ALL",
+                "searchText": symbol,
+                "bld": "dbms/comm/finder/finder_secuprodisu",
+            },
+            "index": {
+                "mktsel": "1",
+                "searchText": symbol,
+                "bld": "dbms/comm/finder/finder_equidx",
+            },
+            "other_index": {
+                "mktsel": other_index_mktsel.get(division),
+                "searchText": symbol,
+                "bld": "dbms/comm/finder/finder_drvetcidx",
+                "searchText2": symbol,
+            },
+
         }
         html = webio.post(url=url, data=post_data[kind])
-        html_list = eval(html.content)["block1"]
+        try:
+            html_list = html.json()["block1"]
+        except KeyError:
+            html_list = html.json()["output"]
+
         if not html_list:
-            raise ValueError(f"Can not find any data from krx. symbol : {symbol}, kind : {kind}")
+            raise ValueError(
+                f"Can not find any data from krx. symbol : {symbol}, kind : {kind}"
+            )
         else:
             html_dict = html_list[0]
-            return html_dict["codeName"], html_dict["full_code"], html_dict["short_code"]
+            return (
+                html_dict["codeName"],
+                html_dict["full_code"],
+                html_dict["short_code"],
+            )

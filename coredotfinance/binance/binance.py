@@ -5,8 +5,7 @@ import time
 import numpy as np
 import pandas as pd
 
-from coredotfinance.util import datetime_util
-from coredotfinance.util import dataframe_util
+from coredotfinance.binance import dataframe_util, datetime_util
 
 from coredotfinance.binance.api import (
     api_24hr,
@@ -118,7 +117,7 @@ def get_ohlcv(
         df.tz_localize("UTC")
 
     print(symbol.upper())
-    return df
+    return df.astype(float)
 
 
 def get_hourly_ohlcv_to_pickle(symbol_list, start_day, dir):

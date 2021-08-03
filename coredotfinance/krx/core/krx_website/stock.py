@@ -3,10 +3,7 @@ from coredotfinance.krx.core.krx_website.info import Info
 
 
 class Stock(Info):
-
-    def __init__(
-        self, code, start, end, date, symbol, **kwargs
-    ):
+    def __init__(self, code, start, end, date, symbol, **kwargs):
         """
         주가
         :param code:
@@ -41,8 +38,10 @@ class Stock(Info):
             self.elw = "ELW" if "ELW" in addition_item else None
 
         if symbol:
-            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(symbol, 'stock')
-        division = kwargs.get('division', None)
+            self.data_nm, self.data_cd, self.data_tp = self.autocomplete(
+                symbol, "stock"
+            )
+        division = kwargs.get("division", None)
         self.division = "전체" if division is None else division.upper()
 
         self.code_to_function = {

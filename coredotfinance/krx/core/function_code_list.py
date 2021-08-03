@@ -6,7 +6,11 @@ index_code_list = [str(code) for code in range(11001, 11014)]
 
 stock_code_list = [str(code) for code in range(12001, 12029)]
 
-product_code_list = [str(code) for code in range(13101, 13118)] + [str(code) for code in range(13201, 13217)] + [str(code) for code in range(13301, 13313)]
+product_code_list = (
+    [str(code) for code in range(13101, 13118)]
+    + [str(code) for code in range(13201, 13217)]
+    + [str(code) for code in range(13301, 13313)]
+)
 
 
 bond_code_list_price = ["14001", "14002"]

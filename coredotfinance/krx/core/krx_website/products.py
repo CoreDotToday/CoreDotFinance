@@ -21,7 +21,7 @@ class Product(Info):
 
         if symbol:
             self.data_nm, self.data_cd, self.data_tp = self.autocomplete(
-                symbol, "product"
+                symbol, "etf"
             )
         self.search_type = kwargs.get("search_type", None)
         self.trade_index = kwargs.get("trade_index", None)

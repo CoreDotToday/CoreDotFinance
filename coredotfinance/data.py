@@ -62,7 +62,7 @@ class KrxReader:
         return date.replace("-", "")
 
     def _kind_check(self, kind):
-        expected_kind = ["stock", "etf", "etn", "elw", "per"]
+        expected_kind = ["stock", "etf", "etn", "elw", "per", "index", "other_index"]
         if kind not in expected_kind:
             raise ValueError(f"expected kind in {expected_kind}, but got {kind}")
 
@@ -70,7 +70,7 @@ class KrxReader:
         if self.api_key is None and api is not False:
             raise ValueError("api_key has to be set in order to use api")
 
-    def search(self, find, kind="stock"):
+    def search(self, find, kind="stock", **kwargs):
         """
         필요 주식의 종목코드 또는 종목명을 검색한다.
 
@@ -92,7 +92,7 @@ class KrxReader:
 
         >>> ('삼성전자', 'KR7005930003', '005930')
         """
-        return Info(None, None, None).autocomplete(find, kind)
+        return Info(None, None, None).autocomplete(find, kind, **kwargs)
 
     def read(self, symbol, *, start=None, end=None, kind="stock", api=False, **kwargs):
         """
@@ -139,6 +139,7 @@ class KrxReader:
         end_8_digit = self._date_convert(end)
         self._kind_check(kind)
         self._api_key_check(api)
+        self.division = kwargs.get('division', '').upper()
 
         if start_8_digit > end_8_digit:
             raise ValueError(f"start has to be earlier than end, but {start}, {end}")
@@ -193,6 +194,25 @@ class KrxReader:
                 kind=kind,
                 **kwargs,
             )
+        elif kind == "index":
+            dataframe = data_reader(
+                "11003",
+                symbol=symbol,
+                start=start_8_digit,
+                end=end_8_digit,
+                kind=kind,
+                **kwargs,
+            )
+        elif kind == "other_index":
+            dataframe = data_reader(
+                "11012",
+                symbol=symbol,
+                start=start_8_digit,
+                end=end_8_digit,
+                kind=kind,
+                **kwargs,
+            )
+
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
@@ -226,10 +246,10 @@ class KrxReader:
             )
         else:
             dataframe = self.read(
-                symbol, start="1900-01-01", end="2030-01-01", kind=kind, api=api
+                symbol, start="1900-01-01", end="2030-01-01", kind=kind, **kwargs
             )
 
-        return option.options(dataframe, **kwargs)
+        return dataframe
 
     def read_date(self, date=None, *, kind="stock", api=False, **kwargs):
         """
@@ -285,6 +305,10 @@ class KrxReader:
             dataframe = data_reader("13201", date=date_8_digit, kind=kind)
         elif kind == "elw":
             dataframe = data_reader("13301", date=date_8_digit, kind=kind)
+        elif kind == "index":
+            dataframe = data_reader("11001", date=date_8_digit, kind=kind, **kwargs)
+        elif kind == "other_index":
+            dataframe = data_reader("11010", date=date_8_digit, kind=kind, **kwargs)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 

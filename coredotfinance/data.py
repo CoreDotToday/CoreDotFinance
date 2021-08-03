@@ -79,6 +79,15 @@ class KrxReader:
         find : str
             종목명 또는 종목코드
 
+        kind : str
+            조회하고자 하는 데이터의 종류
+            krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
+
+        kwargs:
+            division : str
+                조회하고자 하는 데이터의 세부 구분
+                ex) data_reader('11012', symbol='미국달러선물', start=20210101, end=20210701, kind='other_index', division='선물지수')
+
         Returns
         -------
         tuple
@@ -112,14 +121,30 @@ class KrxReader:
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류.
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
-        api : bool, default False
-            api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
-            api 이용은 주식 가격만 가능하다.
+        kwargs :
+            kind : str
+                조회하고자 하는 데이터의 종류
+                krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
+            division : str
+                조회하고자 하는 데이터의 세부 구분
+                other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
+            reverse : bool, default false
+                dataframe을 거꾸로 정렬하기
+            kor : bool, default false
+                columns를 한글로 받아오기
+            adjust : bool, default false
+                수정주가 적용하기
 
         Returns
         -------
         pd.DataFrame
             data
+
+        Examples
+        -------
+        >>> from coredotfinance.data import KrxReader
+        >>> krx = KrxReader()
+        >>> dataframe = krx.read('000660', start='2021-07-01')
         """
 
         if start is None or end is None:
@@ -230,9 +255,19 @@ class KrxReader:
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류.
             krx : ["stock", "etf", "etn", "elw", "per"]
-        api : bool, default False
-            api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
-            api 이용은 주식가격만 가능하다.
+        kwargs :
+            kind : str
+                조회하고자 하는 데이터의 종류
+                krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
+            division : str
+                조회하고자 하는 데이터의 세부 구분
+                other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
+            reverse : bool, default false
+                dataframe을 거꾸로 정렬하기
+            kor : bool, default false
+                columns를 한글로 받아오기
+            adjust : bool, default false
+                수정주가 적용하기
 
         Returns
         -------
@@ -263,8 +298,19 @@ class KrxReader:
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류.
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
-        api : bool, default False
-           api_key가 설정되어 있지 않으면서 api가 True면 error가 발생한다.
+        kwargs :
+            kind : str
+                조회하고자 하는 데이터의 종류
+                krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
+            division : str
+                조회하고자 하는 데이터의 세부 구분
+                other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
+            reverse : bool, default false
+                dataframe을 거꾸로 정렬하기
+            kor : bool, default false
+                columns를 한글로 받아오기
+            adjust : bool, default false
+                수정주가 적용하기
 
         Returns
         -------

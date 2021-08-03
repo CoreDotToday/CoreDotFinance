@@ -305,6 +305,10 @@ class KrxReader:
             dataframe = data_reader("13201", date=date_8_digit, kind=kind)
         elif kind == "elw":
             dataframe = data_reader("13301", date=date_8_digit, kind=kind)
+        elif kind == "index":
+            dataframe = data_reader("11001", date=date_8_digit, kind=kind, **kwargs)
+        elif kind == "other_index":
+            dataframe = data_reader("11010", date=date_8_digit, kind=kind, **kwargs)
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 

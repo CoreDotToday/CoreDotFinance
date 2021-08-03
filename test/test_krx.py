@@ -49,6 +49,12 @@ def test_krx_etf_read():
 
 # multi index adjust check
 def test_krx_etf_adjust():
-    data = krx.read('152100', kind='etf', start='2021-04-15', end='2021-04-16', adjust=True)
-    assert data.loc['2021-04-15']['close'][0] == 45566
+    dataframe = krx.read('152100', kind='etf', start='2021-04-15', end='2021-04-16', adjust=True)
+    assert dataframe.loc['2021-04-15']['close'][0] == 45566
+
+
+# division parameter check
+def test_krx_other_index():
+    dataframe = krx.read('에너지', kind='other_index', start='2021-04-15', end='2021-04-16', division='선물지수')
+    assert dataframe.loc['2021-04-15']['close'][0] == 1890.33
 

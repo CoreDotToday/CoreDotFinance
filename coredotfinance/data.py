@@ -273,6 +273,12 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
+        Examples
+        -------
+        >>> from coredotfinance.data import KrxReader
+        >>> krx = KrxReader()
+        >>> dataframe = krx.read_all('000660')
         """
 
         if api:
@@ -316,6 +322,12 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
+        Examples
+        -------
+        >>> from coredotfinance.data import KrxReader
+        >>> krx = KrxReader()
+        >>> dataframe = krx.read_date('2021-07-20')
         """
 
         if api and kind in KrxReader.not_service_api:

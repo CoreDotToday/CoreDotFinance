@@ -213,8 +213,6 @@ class KrxReader:
                 **kwargs,
             )
 
-
-
         else:
             raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
@@ -248,10 +246,10 @@ class KrxReader:
             )
         else:
             dataframe = self.read(
-                symbol, start="1900-01-01", end="2030-01-01", kind=kind, api=api
+                symbol, start="1900-01-01", end="2030-01-01", kind=kind, **kwargs
             )
 
-        return option.options(dataframe, **kwargs)
+        return dataframe
 
     def read_date(self, date=None, *, kind="stock", api=False, **kwargs):
         """

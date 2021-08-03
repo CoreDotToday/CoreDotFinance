@@ -40,7 +40,7 @@ def data_reader(code, symbol=None, start=None, end=None, date=None, **kwargs):
     Warnings
     --------
     시작일, 종료일, 조회일이 공휴일일 경우에는 해당일의 데이터가 없다.
-    예) data_reader("12003", symbol=symbol, start='202106019', end='20210620', kind=kind)을 호출하면 에러가 뜬다.
+    즉, data_reader("12003", symbol=symbol, start='202106019', end='20210620', kind=kind)을 호출하면 에러가 뜬다.
 
 
     Returns

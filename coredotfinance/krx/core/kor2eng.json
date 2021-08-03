@@ -20,5 +20,6 @@
 	"기초지수": "Fundamental_index",
 	"지수명": "index_name",
 	"주당배당금" : "dividend",
-	"배당수익률" : "dividend rate"
+	"배당수익률" : "dividend rate",
+	"상장시가총액": "market_cap"
 }

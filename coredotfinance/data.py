@@ -92,6 +92,7 @@ class KrxReader:
         tuple
             종목명, 종목코드, 종목코드약식
 
+
         Examples
         --------
         >>> from coredotfinance.data import KrxReader
@@ -138,6 +139,7 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
 
         Examples
         -------
@@ -273,6 +275,7 @@ class KrxReader:
         pd.DataFrame
             data
 
+
         Examples
         -------
         >>> from coredotfinance.data import KrxReader
@@ -321,6 +324,7 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
 
         Examples
         -------

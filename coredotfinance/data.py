@@ -11,15 +11,7 @@ from coredotfinance.krx.core import option
 
 class KrxReader:
     """
-    krx data를 읽어오는 인스턴스를 생성한다. 많은 양의 데이터를 짧은 시간안에
-    불러오게 하면 krx에서 IP를 차단하기 때문에 많은 양의 데이터 읽어오기는
-    api 기능을 사용하는 것을 권장한다.
-
-    Parameters
-    ----------
-    api_key : str
-        coredotfinance의 데이터베이스에서 데이터를 받아오기 위해서는
-        api_key 설정이 필요하다. api 기능을 사용해서 IP 차단을 피할 수 있다.
+    krx data를 읽어오는 인스턴스를 생성한다. 
     """
 
     not_service_api = ["etf", "etn", "elw", "per"]

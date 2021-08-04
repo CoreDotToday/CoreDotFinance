@@ -36,6 +36,20 @@ def data_reader(code, symbol=None, start=None, end=None, date=None, **kwargs):
     date : str
         조회하고자 하는 데이터의 조회일.
         형태는 YYYYMMDD가 되어야 한다. 예) 20210601
+    kwargs :
+        kind : str
+            조회하고자 하는 데이터의 종류
+            krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
+        division : str
+            조회하고자 하는 데이터의 세부 구분
+            other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
+
+
+    Examples
+    --------
+    >>> from coredotfinance.krx.api.data_reader import data_reader
+    >>> data_reader('11012', symbol='미국달러선물', start=20210101, end=20210701, kind='other_index', division='선물지수')
+
 
     Warnings
     --------

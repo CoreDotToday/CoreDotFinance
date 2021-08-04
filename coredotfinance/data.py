@@ -86,7 +86,6 @@ class KrxReader:
         kwargs:
             division : str
                 조회하고자 하는 데이터의 세부 구분
-                ex) data_reader('11012', symbol='미국달러선물', start=20210101, end=20210701, kind='other_index', division='선물지수')
 
         Returns
         -------

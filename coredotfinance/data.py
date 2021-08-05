@@ -72,7 +72,7 @@ class KrxReader:
             종목명 또는 종목코드
 
         kind : str
-            조회하고자 하는 데이터의 종류
+            조회하고자 하는 데이터의 종류\n
             krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
 
         kwargs:
@@ -102,23 +102,26 @@ class KrxReader:
         Parameters
         ----------
         symbol : str
-            조회하고자 하는 데이터의 종목코드.
-            형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
+            조회하고자 하는 데이터의 종목코드.\n
+            형태는 종목과 종류마다 다르다.\n
+            예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         start : str
-            조회하고자 하는 데이터의 시작일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 시작일.\n
+            형태는 YYYY-MM-DD가 되어야 한다. \n
+            예) 2021-06-01
         end : str
-            조회하고자 하는 데이터의 종료일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 종료일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
+            조회하고자 하는 데이터의 종류.\n
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         kwargs :
             kind : str
-                조회하고자 하는 데이터의 종류
+                조회하고자 하는 데이터의 종류\n
                 krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -243,17 +246,18 @@ class KrxReader:
         Parameters
         ----------
         symbol : str
-            조회하고자 하는 데이터의 종목코드.
-            형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
+            조회하고자 하는 데이터의 종목코드.\n
+            형태는 종목과 종류마다 다르다.\n
+            예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
+            조회하고자 하는 데이터의 종류.\n
             krx : ["stock", "etf", "etn", "elw", "per"]
         kwargs :
             kind : str
-                조회하고자 하는 데이터의 종류
+                조회하고자 하는 데이터의 종류\n
                 krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -293,17 +297,18 @@ class KrxReader:
         Parameters
         ----------
         date : str
-            조회하고자 하는 데이터의 조회일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 조회일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
+            조회하고자 하는 데이터의 종류.\n
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         kwargs :
             kind : str
-                조회하고자 하는 데이터의 종류
+                조회하고자 하는 데이터의 종류\n
                 krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -398,7 +403,7 @@ class BinanceReader:
         symbol : str, optional
             Binance Symbol
         interval : str, optional
-            조회 간격 설정, by default "1d"
+            조회 간격 설정, by default "1d"\n
             (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)
         start : str, optional
             조회 시작 날짜(YYYY-MM-DD), by default 최근 날짜

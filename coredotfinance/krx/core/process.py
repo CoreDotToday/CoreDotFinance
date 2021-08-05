@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import numpy as np  # 'np.int32' 로 사용된다.
+import numpy as np
 from datetime import datetime
 
 second_column_map = {
@@ -35,7 +35,7 @@ def get_dataframe(krx_data, column_map):
     columns_depth = max([len(c) for c in column_data])
     if not _single_column(columns_depth):
         column_data = _remove_same_named_column(column_data, columns_depth)
-        columns = _multi_columnize(column_data, columns_depth)
+        columns = _multi_columnize(column_data)
         data.columns = columns
     data = _dataframe_astype(data)
 
@@ -92,16 +92,8 @@ def _remove_same_named_column(column_data, columns_depth):
     return column_data
 
 
-def _multi_columnize(column_data, columns_depth):
-    columns = []
-    # column 만들기
-    for i in range(1, columns_depth + 1):
-        layer = []
-        for column in column_data:
-            layer.append(column[:i][-1])
-        columns.append(layer)
-
-    return columns
+def _multi_columnize(column_data):
+    return np.array(column_data).T.tolist()
 
 
 def _dataframe_astype(dataframe: pd.DataFrame):
@@ -112,9 +104,9 @@ def _dataframe_astype(dataframe: pd.DataFrame):
 
 
 def _remove_punctuation(dataframe: pd.DataFrame):
-    dataframe.replace(',', '', regex=True, inplace=True)
-    dataframe.replace('\-$', '0', regex=True, inplace=True)
-    dataframe.replace('', '0', regex=True, inplace=True)
+    dataframe.replace(",", "", regex=True, inplace=True)
+    dataframe.replace("\-$", "0", regex=True, inplace=True)
+    dataframe.replace("", "0", regex=True, inplace=True)
 
     return dataframe
 
@@ -163,10 +155,10 @@ def _get_column_data_type(dataframe: pd.DataFrame):
     column_data_type = {}
 
     for column in dataframe.columns:
-        if column in ['종목코드', ('종목코드', '')]:
+        if column in ["종목코드", ("종목코드", "")]:
             continue
         for data in dataframe[column]:
-            if data == '' or data == '0':
+            if data == "" or data == "0":
                 continue
             try:
                 data = eval(data)
@@ -176,13 +168,13 @@ def _get_column_data_type(dataframe: pd.DataFrame):
             data_type = type(data)
 
             if data_type is str:
-                column_data_type[column] = 'str'
+                column_data_type[column] = "str"
                 break
             elif data_type is int:
-                column_data_type[column] = 'np.int64'
+                column_data_type[column] = "np.int64"
                 break
             elif data_type is float:
-                column_data_type[column] = 'float'
+                column_data_type[column] = "float"
                 break
 
     return column_data_type
@@ -194,8 +186,8 @@ def _0_to_empty_str(dataframe: pd.DataFrame, column_data_type: dict):
     column_data_type 에서 value가 'str' 인 column 만 바꾸어 준다.
     """
     for column, datatype in column_data_type.items():
-        if datatype == 'str':
-            dataframe[column].replace('0', '', inplace=True)
+        if datatype == "str":
+            dataframe[column].replace("0", "", inplace=True)
     return dataframe
 
 
@@ -216,7 +208,7 @@ def _data_type_as(dataframe: pd.DataFrame, column_data_type: dict):
 
     """
     for column, datatype in column_data_type.items():
-        if datatype == 'str':
+        if datatype == "str":
             continue
         try:
             dataframe = dataframe.astype({column: eval(datatype)})

@@ -12,7 +12,10 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
+from pathlib import Path
+
+lib_file = os.path.abspath('../..')
+sys.path.insert(0, lib_file)
 
 
 # -- Project information -----------------------------------------------------
@@ -22,7 +25,30 @@ copyright = '2021, Core.Today'
 author = 'Core.Today'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+
+import re
+
+target = os.path.join(lib_file, 'coredotfinance', '__init__.py')
+
+def find_version(fname):
+    """Attempts to find the version number in the file names fname.
+    Raises RuntimeError if not found.
+    """
+    version = ''
+    with open(fname, 'r') as fp:
+        reg = re.compile(r'__version__ = [\'"]([^\'"]*)[\'"]')
+        for line in fp:
+            m = reg.match(line)
+            if m:
+                version = m.group(1)
+                break
+    if not version:
+        raise RuntimeError('Cannot find version information')
+    return version
+
+
+__version__ = find_version(target)
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------

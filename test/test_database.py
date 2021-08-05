@@ -5,7 +5,7 @@ from coredotfinance.data import KrxReader
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 api_key_file = os.path.join(BASE_DIR, 'apikey.txt')
 with open(api_key_file, 'r') as f:
-    apikey = f.read()
+    apikey = f.read().strip()
 
 krx = KrxReader(apikey)
 

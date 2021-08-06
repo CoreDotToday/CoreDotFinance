@@ -11,15 +11,7 @@ from coredotfinance.krx.core import option
 
 class KrxReader:
     """
-    krx data를 읽어오는 인스턴스를 생성한다. 많은 양의 데이터를 짧은 시간안에
-    불러오게 하면 krx에서 IP를 차단하기 때문에 많은 양의 데이터 읽어오기는
-    api 기능을 사용하는 것을 권장한다.
-
-    Parameters
-    ----------
-    api_key : str
-        coredotfinance의 데이터베이스에서 데이터를 받아오기 위해서는
-        api_key 설정이 필요하다. api 기능을 사용해서 IP 차단을 피할 수 있다.
+    krx data를 읽어오는 인스턴스를 생성한다. 
     """
 
     not_service_api = ["etf", "etn", "elw", "per"]
@@ -80,7 +72,7 @@ class KrxReader:
             종목명 또는 종목코드
 
         kind : str
-            조회하고자 하는 데이터의 종류
+            조회하고자 하는 데이터의 종류\n
             krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
 
         kwargs:
@@ -91,6 +83,7 @@ class KrxReader:
         -------
         tuple
             종목명, 종목코드, 종목코드약식
+
 
         Examples
         --------
@@ -109,23 +102,26 @@ class KrxReader:
         Parameters
         ----------
         symbol : str
-            조회하고자 하는 데이터의 종목코드.
-            형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
+            조회하고자 하는 데이터의 종목코드.\n
+            형태는 종목과 종류마다 다르다.\n
+            예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         start : str
-            조회하고자 하는 데이터의 시작일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 시작일.\n
+            형태는 YYYY-MM-DD가 되어야 한다. \n
+            예) 2021-06-01
         end : str
-            조회하고자 하는 데이터의 종료일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 종료일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
+            조회하고자 하는 데이터의 종류.\n
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         kwargs :
             kind : str
-                조회하고자 하는 데이터의 종류
+                조회하고자 하는 데이터의 종류\n
                 krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -138,6 +134,7 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
 
         Examples
         -------
@@ -249,17 +246,18 @@ class KrxReader:
         Parameters
         ----------
         symbol : str
-            조회하고자 하는 데이터의 종목코드.
-            형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
+            조회하고자 하는 데이터의 종목코드.\n
+            형태는 종목과 종류마다 다르다.\n
+            예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
+            조회하고자 하는 데이터의 종류.\n
             krx : ["stock", "etf", "etn", "elw", "per"]
         kwargs :
             kind : str
-                조회하고자 하는 데이터의 종류
+                조회하고자 하는 데이터의 종류\n
                 krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -272,6 +270,7 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
 
         Examples
         -------
@@ -298,17 +297,18 @@ class KrxReader:
         Parameters
         ----------
         date : str
-            조회하고자 하는 데이터의 조회일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 조회일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
+            조회하고자 하는 데이터의 종류.\n
             데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
         kwargs :
             kind : str
-                조회하고자 하는 데이터의 종류
+                조회하고자 하는 데이터의 종류\n
                 krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -321,6 +321,7 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
 
         Examples
         -------
@@ -389,9 +390,11 @@ class BinanceReader:
     ):
         self.api_key = api_key
 
-    @property
-    def symbols(self):
+    def symbol_list(self):
         return binance.get_symbols()
+
+    def interval_list(self):
+        return ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1M']
 
     def read(self, symbol, start, end, interval, **kwargs):
         """
@@ -399,15 +402,20 @@ class BinanceReader:
 
         Parameters
         ----------
-        symbol : str, optional
-            Binance Symbol
-        interval : str, optional
-            조회 간격 설정, by default "1d"
+        symbol : str
+            조회하고자 하는 데이터의 코인코드.\n
+            예) 이더리움 : 'ETHBTC'
+        interval : str
+            조회 간격 설정
             (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)
-        start : str, optional
-            조회 시작 날짜(YYYY-MM-DD), by default 최근 날짜
-        end : str, optional
-            조회 끝 날짜(YYYY-MM-DD), by default 최근 날짜
+        start : str
+            조회하고자 하는 데이터의 시작일.\n
+            형태는 YYYY-MM-DD가 되어야 한다. \n
+            예) 2021-06-01
+        end : str
+            조회하고자 하는 데이터의 종료일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
 
         Returns
         -------

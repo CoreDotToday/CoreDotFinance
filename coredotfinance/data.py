@@ -299,11 +299,8 @@ class KrxReader:
             예) 2021-06-01
         kind : str, default "stock"
             조회하고자 하는 데이터의 종류.\n
-            데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
+            krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
         kwargs :
-            kind : str
-                조회하고자 하는 데이터의 종류\n
-                krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
                 조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']

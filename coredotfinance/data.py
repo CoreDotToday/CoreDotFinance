@@ -390,9 +390,11 @@ class BinanceReader:
     ):
         self.api_key = api_key
 
-    @property
-    def symbols(self):
+    def symbol_list(self):
         return binance.get_symbols()
+
+    def interval_list(self):
+        return ['1m', '3m', '5m', '15m', '30m', '1h', '2h', '4h', '6h', '8h', '12h', '1d', '3d', '1w', '1M']
 
     def read(self, symbol, start, end, interval, **kwargs):
         """
@@ -400,15 +402,20 @@ class BinanceReader:
 
         Parameters
         ----------
-        symbol : str, optional
-            Binance Symbol
-        interval : str, optional
-            조회 간격 설정, by default "1d"\n
+        symbol : str
+            조회하고자 하는 데이터의 코인코드.\n
+            예) 이더리움 : 'ETHBTC'
+        interval : str
+            조회 간격 설정
             (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)
-        start : str, optional
-            조회 시작 날짜(YYYY-MM-DD), by default 최근 날짜
-        end : str, optional
-            조회 끝 날짜(YYYY-MM-DD), by default 최근 날짜
+        start : str
+            조회하고자 하는 데이터의 시작일.\n
+            형태는 YYYY-MM-DD가 되어야 한다. \n
+            예) 2021-06-01
+        end : str
+            조회하고자 하는 데이터의 종료일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
 
         Returns
         -------

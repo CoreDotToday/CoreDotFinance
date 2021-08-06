@@ -21,5 +21,8 @@
 	"지수명": "index_name",
 	"주당배당금" : "dividend",
 	"배당수익률" : "dividend rate",
-	"상장시가총액": "market_cap"
+	"상장시가총액": "market_cap",
+	"상장증권수": "shares_outstanding",
+	"지표가치총액": "total_index_value",
+	"지표가치(IV)": "index_value"
 }

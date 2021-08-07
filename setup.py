@@ -40,17 +40,6 @@ REQUIREMENTS = [
     'requests>=2; python_version < "3"',
 ]
 
-PACKAGES = [
-    'coredotfinance',
-    'coredotfinance.krx',
-    'coredotfinance.krx.api',
-    'coredotfinance.krx.core',
-    'coredotfinance.krx.core.krx_website',
-    'coredotfinance.crypto',
-    'coredotfinance.crypto.binance',
-    'coredotfinance.yahoo'
-]
-
 INSTALL_REQUIRES = [
     'pandas >= 0.14',
     'numpy >= 1.8',

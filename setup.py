@@ -61,10 +61,20 @@ KEYWORDS = [
     'index'
 ]
 
+
+with open('package_data/column_dict.txt', 'r') as f:
+    column_dict_list = f.read().split()
+
+
+with open('package_data/jsp_files.txt' ,'r') as f:
+    jsp_files_list = f.read().split()
+
+
 setup(
     name='coredotfinance',
     version=__version__,
     packages=find_packages(),
+    package_data = {'coredotfinance.krx.core': column_dict_list, 'coredotfinance.krx.core.jsp': jsp_files_list},
     url='https://github.com/coredottoday/CoreDotFinance',
     license='',
     author='Core.Today',

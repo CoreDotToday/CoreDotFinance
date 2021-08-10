@@ -9,7 +9,4 @@ Documentation
     :members:
     :inherited-members:
 
-.. py:module:: coredotfinance.krx
-
-.. autofunction:: data_reader
 

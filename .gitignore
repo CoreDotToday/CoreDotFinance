@@ -11,6 +11,7 @@ dist/
 
 # files
 *.ipynb
+!docs_run/source/*.ipynb
 *.pyc
 test.py
 *.log

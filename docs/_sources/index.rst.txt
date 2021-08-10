@@ -6,7 +6,7 @@ CoreDotFinance
 
 .. |issues| image:: https://img.shields.io/github/issues/CoreDotToday/CoreDotFinance
 .. |pr|  image:: https://img.shields.io/github/issues-pr/CoreDotToday/CoreDotFinance
-.. |release| image:: https://img.shields.io/static/v1?label=PyPI&message=1.0.2&color=orange
+.. |release| image:: https://img.shields.io/static/v1?label=PyPI&message=1.1.1&color=orange
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
 .. |isort| image:: https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336
 
@@ -77,7 +77,7 @@ Contents
    **Binance**
 
    Binance 는 가상화폐 데이터를 다루는 온라인 웹사이트 입니다.
-   CoreDotFinance 를 통해 가상화폐 데이터를 이용해서 화쳬 가격의 동향을 예측해보세요.
+   CoreDotFinance 를 통해 가상화폐 데이터를 이용해서 화폐 가격의 동향을 예측해보세요.
    binance 데이터는 `binance.com <https://www.binance.com>`__ 에서 불러옵니다.
 
 

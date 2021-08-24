@@ -20,10 +20,11 @@ pip install coredotfinance
 공식문서 : [https://coredottoday.github.io/CoreDotFinance/](https://coredottoday.github.io/CoreDotFinance/)
 
 
-## License
-Apach License
-
 ## Contributors
 <a href="https://github.com/coredottoday/CoreDotFinance/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=coredottoday/CoreDotFinance" />
 </a>
+
+
+## LICENSE
+`CoreDotFinance` is licensed under the terms of the Apache License 2.0.

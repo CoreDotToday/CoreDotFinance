@@ -283,15 +283,36 @@ class Stock(Info):
 
     def detail_search_of_listed_company(self):
         """상장회사 상세검색 [12020]"""
-        data = {
-            "bld": "dbms/MDC/STAT/standard/MDCSTAT03402",
-            "mktTpCd": self.division,
-            "tboxisuSrtCd_finder_listisu0_3": f"{self.data_tp}/{self.data_nm}",
-            "isuSrtCd": self.data_cd,
-            "isuSrtCd2": "A" + self.data_tp,
-            "codeNmisuSrtCd_finder_listisu0_3": self.data_nm,
-            "sortType": self.sort_type,
-        }
+        if self.symbol is not None:
+            data = {
+                "bld": "dbms/MDC/STAT/standard/MDCSTAT03402",
+                "mktTpCd": self.division,
+                "tboxisuSrtCd_finder_listisu0_3": f"{self.data_tp}/{self.data_nm}",
+                "isuSrtCd": self.data_cd,
+                "isuSrtCd2": "A" + self.data_tp,
+                "codeNmisuSrtCd_finder_listisu0_3": self.data_nm,
+                "sortType": self.sort_type,
+            }
+        else:
+            data = {
+                "bld": "dbms/MDC/STAT/standard/MDCSTAT03402",
+                "mktTpCd": "전체",
+                "tboxisuSrtCd_finder_listisu0_0": "전체",
+                "isuSrtCd": "ALL",
+                "isuSrtCd2": "ALL",
+                "sortType": "종목명",
+                "stdIndCd": "ALL",
+                "sectTpCd": "ALL",
+                "parval": "ALL",
+                "mktcap": "ALL",
+                "acntclsMm": "ALL",
+                "condListShrs": 1,
+                "condCap": 1,
+                "share": 1,
+                "money": 1,
+                "csvxls_isNo": False,
+            }
+
         return self.update_requested_data(data)
 
     def per_pbr_dividend_of_stock(self):

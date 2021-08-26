@@ -107,6 +107,8 @@ def _remove_punctuation(dataframe: pd.DataFrame):
     dataframe.replace(",", "", regex=True, inplace=True)
     dataframe.replace("\-$", "0", regex=True, inplace=True)
     dataframe.replace("", "0", regex=True, inplace=True)
+    # 12020에서 액면가 칼럼의 data 중에서 무액면 이라는 데이터가 숫자 데이터 사이에 끼여있다.
+    dataframe.replace("무액면", "0", inplace=True)
 
     return dataframe
 

@@ -8,7 +8,7 @@
 ----------------------------
 
 ## 금융 데이터를 쉽고 빠르게!
-**CoreDotFinance**는 [KRX](https://www.data.krx.co.kr)의 주식데이터 [Binance](https://www.binance.com)와의 가상화폐 데이터를 
+**CoreDotFinance**(코어닷파이낸스)는 [KRX](https://www.data.krx.co.kr)의 주식데이터 [Binance](https://www.binance.com)와의 가상화폐 데이터를 
 쉽고 빠르게 파이썬 작업 환경에서 작업할 수 있도록 도와주는 파이썬 라이러리입니다. 
 
 ## 설치 방법

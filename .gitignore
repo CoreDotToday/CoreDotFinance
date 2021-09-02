@@ -8,6 +8,7 @@ build/
 coredotfinance.egg-info/
 dist/
 !docs
+ipynb/
 
 # files
 *.ipynb
@@ -16,3 +17,4 @@ test.py
 *.log
 **/key.cfg
 test/apikey.txt
+

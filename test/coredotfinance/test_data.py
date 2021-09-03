@@ -26,10 +26,42 @@ def test_krx_date_None():
         krx.read(symbol="000660")
 
 
+# start > end check
+def test_krx_date_wrong():
+    with pytest.raises(ValueError):
+        krx.read(symbol="000660", start="2021-07-20", end="2021-07-10")
+        krx.read(symbol="000660", start="20210720", end="20210730")
+
+
+# listed_company
+def test_krx_listed_company():
+    dataframe = krx.listed_company()
+    is_skhynix = dataframe["종목코드"] == "000660"
+    skhynixdata = dataframe[is_skhynix]
+    assert skhynixdata["종목명"].to_list()[0] == "SK하이닉스"
+
+
+# not expected_kind
+def test_krx_not_expected_kind():
+    with pytest.raises(ValueError):
+        krx.read(
+            symbol="000660",
+            kind="Not expected_list",
+            start="2021-07-20",
+            end="2021-07-20",
+        )
+
+
 # read_date check
 def test_krx_read_date():
     dataframe = krx.read_date(date="2021-07-20")
     assert dataframe["close"][0] == 3075
+
+
+# read_all check
+def test_krx_read_all():
+    dataframe = krx.read_all(symbol="323410")
+    assert dataframe.loc["2021-09-02"]["close"][0] == 81900
 
 
 # adjust check
@@ -50,6 +82,24 @@ def test_krx_etf_adjust():
         "152100", kind="etf", start="2021-04-15", end="2021-04-16", adjust=True
     )
     assert dataframe.loc["2021-04-15"]["close"][0] == 45566
+
+
+# etn check
+def test_krx_etn_read():
+    dataframe = krx.read("500011", start="2021-09-01", end="2021-09-02", kind="etn")
+    assert dataframe.loc["2021-09-02"]["close"][0] == 10280
+
+
+# elw check
+def test_krx_elw_read():
+    dataframe = krx.read("58G187", start="2021-09-01", end="2021-09-02", kind="elw")
+    assert dataframe.loc["2021-09-02"]["close"][0] == 10
+
+
+# index check
+def test_krx_index_read():
+    dataframe = krx.read("krx 100", start="2021-09-01", end="2021-09-02", kind="index")
+    assert dataframe.loc["2021-09-02"]["close"][0] == 6560.56
 
 
 # division parameter check

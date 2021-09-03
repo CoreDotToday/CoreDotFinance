@@ -1,3 +1,5 @@
+import pytest
+
 from coredotfinance.data import BinanceReader, KrxReader
 
 
@@ -16,6 +18,12 @@ def test_binance_read():
 def test_krx_read():
     dataframe = krx.read(symbol="000660", start="2021-07-20", end="2021-07-20")
     assert dataframe["close"][0] == 118500
+
+
+# date is None check
+def test_krx_date_None():
+    with pytest.warns(UserWarning):
+        krx.read(symbol="000660")
 
 
 # read_date check
@@ -54,9 +62,7 @@ def test_krx_other_index():
 
 # per check
 def test_krx_per_read():
-    dataframe = krx.read(
-        '000660', kind='per', start='2021-04-15', end='2021-04-16'
-    )
+    dataframe = krx.read("000660", kind="per", start="2021-04-15", end="2021-04-16")
     assert dataframe.loc["2021-04-15"]["close"][0] == 137500
 
 
@@ -92,4 +98,3 @@ def test_binance_interval_list():
         "1w",
         "1M",
     ]
-

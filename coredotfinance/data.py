@@ -156,7 +156,8 @@ class KrxReader:
                 """start or end is None.
                   It would lead an error because datetime.datetime.now() is default
                   and it could be holiday when stock marker was not held
-                  or before stock marker is opened"""
+                  or before stock marker is opened""",
+                UserWarning,
             )
 
         if api and kind in KrxReader.not_service_api:

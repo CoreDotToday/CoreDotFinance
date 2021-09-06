@@ -20,6 +20,12 @@ def test_krx_read():
     assert dataframe["close"][0] == 118500
 
 
+# No data Exception check
+def test_krx_no_data():
+    with pytest.raises(Exception):
+        krx.read(symbol="000660", start="3021-07-01", end="3021-07-10")
+
+
 # date is None check
 def test_krx_date_None():
     with pytest.warns(UserWarning):
@@ -30,6 +36,7 @@ def test_krx_date_None():
 def test_krx_date_wrong():
     with pytest.raises(ValueError):
         krx.read(symbol="000660", start="2021-07-20", end="2021-07-10")
+    with pytest.raises(ValueError):
         krx.read(symbol="000660", start="20210720", end="20210730")
 
 
@@ -64,10 +71,12 @@ def test_krx_read_all():
     assert dataframe.loc["2021-09-02"]["close"][0] == 81900
 
 
-# adjust check
-def test_krx_stock_adjust():
-    dataframe = krx.read("035720", start="2021-04-14", end="2021-04-15", adjust=True)
-    assert dataframe.loc["2021-04-14"]["close"][0] == 111600
+# adjust, kor check
+def test_krx_stock_with_options():
+    dataframe = krx.read(
+        "035720", start="2021-04-14", end="2021-04-15", adjust=True, kor=True
+    )
+    assert dataframe.loc["2021-04-14"]["종가"][0] == 111600
 
 
 # multi index check

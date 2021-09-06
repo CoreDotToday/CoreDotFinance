@@ -243,9 +243,6 @@ class KrxReader:
                 **kwargs,
             )
 
-        else:
-            raise ValueError(f"Check {kind} is not in the list of expected_kind")
-
         return option.options(dataframe=dataframe, **kwargs)
 
     def read_all(self, symbol, *, kind="stock", api=False, **kwargs):
@@ -361,7 +358,7 @@ class KrxReader:
         elif kind == "per":
             df = data_reader("12021", search_type="전종목", market="전체", date=date_8_digit)
             # 12021 기능 호출시 종목명 <em class ="up"></em> 가 붙어서 나오는 문제를 해결하기 위함
-            df.replace(' <em class ="up"></em>', "", regex=True, inplace=True)
+            df.replace(' <em class ="up">.*</em>', "", regex=True, inplace=True)
             dataframe = df
         elif kind == "etf":
             dataframe = data_reader("13101", date=date_8_digit, kind=kind)
@@ -373,8 +370,6 @@ class KrxReader:
             dataframe = data_reader("11001", date=date_8_digit, kind=kind, **kwargs)
         elif kind == "other_index":
             dataframe = data_reader("11010", date=date_8_digit, kind=kind, **kwargs)
-        else:
-            raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
         if kwargs.get("adjust", None) is True:
             warnings.warn("data from read_date can not be adjusted")

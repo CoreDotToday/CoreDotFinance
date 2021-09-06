@@ -100,6 +100,11 @@ def test_krx_read_date_None():
         krx.read_date()
 
 
+def test_krx_read_date_adjust():
+    with pytest.warns(UserWarning):
+        krx.read_date("1996-01-09", adjust=True)
+
+
 # read_all check
 def test_krx_read_all():
     dataframe = krx.read_all(symbol="323410")

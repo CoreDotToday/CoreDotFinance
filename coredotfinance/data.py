@@ -243,9 +243,6 @@ class KrxReader:
                 **kwargs,
             )
 
-        else:
-            raise ValueError(f"Check {kind} is not in the list of expected_kind")
-
         return option.options(dataframe=dataframe, **kwargs)
 
     def read_all(self, symbol, *, kind="stock", api=False, **kwargs):

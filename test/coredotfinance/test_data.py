@@ -61,8 +61,43 @@ def test_krx_not_expected_kind():
 
 # read_date check
 def test_krx_read_date():
-    dataframe = krx.read_date(date="2021-07-20")
-    assert dataframe["close"][0] == 3075
+    dataframe = krx.read_date(date="1996-01-09")
+    assert dataframe["symbol"][0] == "009840"
+
+
+def test_krx_read_date_per():
+    dataframe = krx.read_date(date="1996-01-09", kind="per")
+    assert dataframe["symbol"][0] == "009840"
+
+
+def test_krx_read_date_etf():
+    dataframe = krx.read_date(date="2010-01-09", kind="etf")
+    assert dataframe["symbol"][0] == "108630"
+
+
+def test_krx_read_date_etn():
+    dataframe = krx.read_date(date="2015-01-09", kind="etn")
+    assert dataframe["symbol"][0] == "530001"
+
+
+def test_krx_read_date_elw():
+    dataframe = krx.read_date(date="2015-01-09", kind="elw")
+    assert dataframe["symbol"][0] == "754474"
+
+
+def test_krx_read_date_index():
+    dataframe = krx.read_date(date="2015-01-09", kind="index")
+    assert dataframe["index_name"][0] == "KRX 100"
+
+
+def test_krx_read_date_other_index():
+    dataframe = krx.read_date(date="2015-01-09", kind="other_index", division="선물지수")
+    assert dataframe["index_name"][0] == "미국달러선물지수"
+
+
+def test_krx_read_date_None():
+    with pytest.warns(UserWarning):
+        krx.read_date()
 
 
 # read_all check

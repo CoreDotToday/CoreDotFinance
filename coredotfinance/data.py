@@ -358,7 +358,7 @@ class KrxReader:
         elif kind == "per":
             df = data_reader("12021", search_type="전종목", market="전체", date=date_8_digit)
             # 12021 기능 호출시 종목명 <em class ="up"></em> 가 붙어서 나오는 문제를 해결하기 위함
-            df.replace(' <em class ="up"></em>', "", regex=True, inplace=True)
+            df.replace(' <em class ="up">.*</em>', "", regex=True, inplace=True)
             dataframe = df
         elif kind == "etf":
             dataframe = data_reader("13101", date=date_8_digit, kind=kind)

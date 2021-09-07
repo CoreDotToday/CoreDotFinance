@@ -11,43 +11,43 @@ krx = KrxReader()
 # ---------------------------- krx read -----------------------------------
 
 
-# read check
+# read
 def test_krx_read():
     dataframe = krx.read(symbol="000660", start="2021-07-20", end="2021-07-20")
     assert dataframe["close"][0] == 118500
 
 
-# per check
+# per
 def test_krx_per_read():
     dataframe = krx.read("000660", kind="per", start="2021-04-15", end="2021-04-16")
     assert dataframe.loc["2021-04-15"]["close"][0] == 137500
 
 
-# multi index check
+# multi index
 def test_krx_etf_read():
     dataframe = krx.read("152100", kind="etf", start="2021-04-15", end="2021-04-16")
     assert dataframe.loc["2021-04-15"]["close"][0] == 44275
 
 
-# etn check
+# etn
 def test_krx_etn_read():
     dataframe = krx.read("500011", start="2021-09-01", end="2021-09-02", kind="etn")
     assert dataframe.loc["2021-09-02"]["close"][0] == 10280
 
 
-# elw check
+# elw
 def test_krx_elw_read():
     dataframe = krx.read("58G187", start="2021-09-01", end="2021-09-02", kind="elw")
     assert dataframe.loc["2021-09-02"]["close"][0] == 10
 
 
-# index check
+# index
 def test_krx_index_read():
     dataframe = krx.read("krx 100", start="2021-09-01", end="2021-09-02", kind="index")
     assert dataframe.loc["2021-09-02"]["close"][0] == 6560.56
 
 
-# division parameter check
+# division parameter
 def test_krx_other_index_read():
     dataframe = krx.read(
         "에너지", kind="other_index", start="2021-04-15", end="2021-04-16", division="선물지수"
@@ -57,7 +57,7 @@ def test_krx_other_index_read():
 
 # ---------------------------- krx read_date -----------------------------------
 
-# read_date check
+# read_date
 def test_krx_read_date():
     dataframe = krx.read_date(date="1996-01-09")
     assert dataframe["symbol"][0] == "009840"
@@ -95,7 +95,7 @@ def test_krx_read_date_other_index():
 
 # ---------------------------- krx read_all -----------------------------------
 
-# read_all check
+# read_all
 def test_krx_read_all():
     dataframe = krx.read_all(symbol="323410")
     assert dataframe.loc["2021-09-02"]["close"][0] == 81900
@@ -103,7 +103,7 @@ def test_krx_read_all():
 
 # ---------------------------- krx functions & options -------------------------------
 
-# krx_search check
+# krx_search
 def test_krx_search():
     search_tuple = krx.search("삼성전자")
     assert search_tuple == ("삼성전자", "KR7005930003", "005930")
@@ -117,7 +117,7 @@ def test_krx_listed_company():
     assert skhynixdata["종목명"].to_list()[0] == "SK하이닉스"
 
 
-# multi index adjust check
+# multi index adjust
 def test_krx_etf_adjust():
     dataframe = krx.read(
         "152100", kind="etf", start="2021-04-15", end="2021-04-16", adjust=True
@@ -125,7 +125,7 @@ def test_krx_etf_adjust():
     assert dataframe.loc["2021-04-15"]["close"][0] == 45566
 
 
-# adjust, kor check
+# adjust, kor
 def test_krx_stock_with_options():
     dataframe = krx.read(
         "035720", start="2021-04-14", end="2021-04-15", adjust=True, kor=True
@@ -136,13 +136,13 @@ def test_krx_stock_with_options():
 # ---------------------------- krx Error -----------------------------------
 
 
-# No data Exception check
+# No data Exception
 def test_krx_no_data():
     with pytest.raises(Exception):
         krx.read(symbol="000660", start="3021-07-01", end="3021-07-10")
 
 
-# date is None check
+# start,end is None
 def test_krx_date_None():
     # start, end 모두 None 값일때 오류가 발생했다.
     # test code를 실행시킨 시점에 주식시장이 열리지 않았으면
@@ -155,7 +155,7 @@ def test_krx_date_None():
         krx.read(symbol="000660", start=start)
 
 
-# start > end check
+# start > end
 def test_krx_date_wrong():
     with pytest.raises(ValueError):
         krx.read(symbol="000660", start="2021-07-20", end="2021-07-10")
@@ -174,7 +174,7 @@ def test_krx_not_expected_kind():
         )
 
 
-# date in None check
+# when start, end is None
 def test_krx_read_date_None():
     # test_krx_date_None 의 경우와는 다르게
     # read_date는 Exception("No data") 를 발생시키지 않는다.
@@ -183,7 +183,7 @@ def test_krx_read_date_None():
         krx.read_date()
 
 
-#
+# when try to get adjust data from read_date
 def test_krx_read_date_adjust():
     with pytest.warns(UserWarning):
         krx.read_date("1996-01-09", adjust=True)

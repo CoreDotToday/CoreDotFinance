@@ -1,4 +1,5 @@
 import pytest
+from datetime import datetime, timedelta
 
 from coredotfinance.data import BinanceReader, KrxReader
 
@@ -28,8 +29,15 @@ def test_krx_no_data():
 
 # date is None check
 def test_krx_date_None():
+    # start, end 모두 None 값일때 오류가 발생했다.
+    # test code를 실행시킨 시점에 주식시장이 열리지 않았으면
+    # Warning 이전에 Exception("No data") 가 발생한다.
+    # 따라서 불러오는 데이터에 start 값은 입력하고 end 값만 None으로 준다.
+    # 데이터는 통신 속도를 높이기 위해 1주일 치만 불러온다.
+
+    start = str(datetime.today().date() - timedelta(7))
     with pytest.warns(UserWarning):
-        krx.read(symbol="000660")
+        krx.read(symbol="000660", start=start)
 
 
 # start > end check

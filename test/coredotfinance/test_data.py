@@ -135,6 +135,11 @@ def test_krx_stock_with_options():
 
 # ---------------------------- krx Error -----------------------------------
 
+# Wrong symbol to get data
+def test_krx_wrong_symbol():
+    with pytest.raises(ValueError):
+        krx.read(symbol="0006600", start="2021-07-01", end="2021-07-10")
+
 
 # No data Exception
 def test_krx_no_data():

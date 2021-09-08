@@ -2,7 +2,7 @@
 ### Powerful Python financial data library
 [![GitHup issues](https://img.shields.io/github/issues/CoreDotToday/CoreDotFinance)](https://github.com/CoreDotToday/CoreDotFinance/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/CoreDotToday/CoreDotFinance)](https://github.com/CoreDotToday/CoreDotFinance/pulls)
-[![PyPI Latest Release](https://img.shields.io/static/v1?label=PyPI&message=1.1.1&color=orange)](https://pypi.org/project/coredotfinance/)
+[![PyPI Latest Release](https://img.shields.io/static/v1?label=PyPI&message=1.2.1&color=orange)](https://pypi.org/project/coredotfinance/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 ----------------------------

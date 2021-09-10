@@ -8,6 +8,8 @@ build/
 coredotfinance.egg-info/
 dist/
 !docs
+ipynb/
+htmlcov/
 
 # files
 *.ipynb
@@ -17,3 +19,5 @@ test.py
 *.log
 **/key.cfg
 test/apikey.txt
+.coverage
+*.swp

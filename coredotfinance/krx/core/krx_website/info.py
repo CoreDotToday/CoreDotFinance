@@ -71,12 +71,12 @@ class Info:
         html.content:
             b'{"block1":[],"CURRENT_DATETIME":"2021.06.22 AM 10:21:54"}'
         """
-        division = kwargs.get('division')
+        division = kwargs.get("division")
         other_index_mktsel = {
-            '선물지수': '0201',
-            '옵션지수': '0202',
-            '전략지수': '0300',
-            '상품지수': '0600'
+            "선물지수": "0201",
+            "옵션지수": "0202",
+            "전략지수": "0300",
+            "상품지수": "0600",
         }
         url = "http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd"
         post_data = {
@@ -111,7 +111,6 @@ class Info:
                 "bld": "dbms/comm/finder/finder_drvetcidx",
                 "searchText2": symbol,
             },
-
         }
         html = webio.post(url=url, data=post_data[kind])
         try:

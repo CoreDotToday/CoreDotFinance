@@ -11,15 +11,7 @@ from coredotfinance.krx.core import option
 
 class KrxReader:
     """
-    krx data를 읽어오는 인스턴스를 생성한다. 많은 양의 데이터를 짧은 시간안에
-    불러오게 하면 krx에서 IP를 차단하기 때문에 많은 양의 데이터 읽어오기는
-    api 기능을 사용하는 것을 권장한다.
-
-    Parameters
-    ----------
-    api_key : str
-        coredotfinance의 데이터베이스에서 데이터를 받아오기 위해서는
-        api_key 설정이 필요하다. api 기능을 사용해서 IP 차단을 피할 수 있다.
+    krx data를 읽어오는 인스턴스를 생성한다.
     """
 
     not_service_api = ["etf", "etn", "elw", "per"]
@@ -80,7 +72,7 @@ class KrxReader:
             종목명 또는 종목코드
 
         kind : str
-            조회하고자 하는 데이터의 종류
+            조회하고자 하는 데이터의 종류\n
             krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
 
         kwargs:
@@ -92,6 +84,7 @@ class KrxReader:
         tuple
             종목명, 종목코드, 종목코드약식
 
+
         Examples
         --------
         >>> from coredotfinance.data import KrxReader
@@ -102,6 +95,17 @@ class KrxReader:
         """
         return Info(None, None, None).autocomplete(find, kind, **kwargs)
 
+    def listed_company(self):
+        """
+        상장된 주식 정보를 읽어온다.
+
+        Returns
+        -------
+        pd.DataFrame
+            data
+        """
+        return data_reader("12020")
+
     def read(self, symbol, *, start=None, end=None, kind="stock", api=False, **kwargs):
         """
         해당 주식 가격 데이터를 시작일(start) 부터 종료일(end) 까지 읽어온다.
@@ -109,23 +113,23 @@ class KrxReader:
         Parameters
         ----------
         symbol : str
-            조회하고자 하는 데이터의 종목코드.
-            형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
+            조회하고자 하는 데이터의 종목코드.\n
+            형태는 종목과 종류마다 다르다.\n
+            예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         start : str
-            조회하고자 하는 데이터의 시작일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 시작일.\n
+            형태는 YYYY-MM-DD가 되어야 한다. \n
+            예) 2021-06-01
         end : str
-            조회하고자 하는 데이터의 종료일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 종료일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
-            데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
+            조회하고자 하는 데이터의 종류.\n
+            krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
         kwargs :
-            kind : str
-                조회하고자 하는 데이터의 종류
-                krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -139,6 +143,7 @@ class KrxReader:
         pd.DataFrame
             data
 
+
         Examples
         -------
         >>> from coredotfinance.data import KrxReader
@@ -148,10 +153,11 @@ class KrxReader:
 
         if start is None or end is None:
             warnings.warn(
-                """start or end is None. 
-                          It would lead an error because datetime.datetime.now() is default 
-                          and it could be holiday when stock marker was not held 
-                          or before stock marker is opened"""
+                """start or end is None.
+                  It would lead an error because datetime.datetime.now() is default
+                  and it could be holiday when stock marker was not held
+                  or before stock marker is opened""",
+                UserWarning,
             )
 
         if api and kind in KrxReader.not_service_api:
@@ -163,7 +169,7 @@ class KrxReader:
         end_8_digit = self._date_convert(end)
         self._kind_check(kind)
         self._api_key_check(api)
-        self.division = kwargs.get('division', '').upper()
+        self.division = kwargs.get("division", "").upper()
 
         if start_8_digit > end_8_digit:
             raise ValueError(f"start has to be earlier than end, but {start}, {end}")
@@ -237,9 +243,6 @@ class KrxReader:
                 **kwargs,
             )
 
-        else:
-            raise ValueError(f"Check {kind} is not in the list of expected_kind")
-
         return option.options(dataframe=dataframe, **kwargs)
 
     def read_all(self, symbol, *, kind="stock", api=False, **kwargs):
@@ -249,17 +252,18 @@ class KrxReader:
         Parameters
         ----------
         symbol : str
-            조회하고자 하는 데이터의 종목코드.
-            형태는 종목과 종류마다 다르다. 예) 삼성전자 : '005930', ARIRANG 200 : '152100'
+            조회하고자 하는 데이터의 종목코드.\n
+            형태는 종목과 종류마다 다르다.\n
+            예) 삼성전자 : '005930', ARIRANG 200 : '152100'
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
+            조회하고자 하는 데이터의 종류.\n
             krx : ["stock", "etf", "etn", "elw", "per"]
         kwargs :
             kind : str
-                조회하고자 하는 데이터의 종류
+                조회하고자 하는 데이터의 종류\n
                 krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -272,6 +276,7 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
 
         Examples
         -------
@@ -298,17 +303,15 @@ class KrxReader:
         Parameters
         ----------
         date : str
-            조회하고자 하는 데이터의 조회일.
-            형태는 YYYY-MM-DD가 되어야 한다. 예) 2021-06-01
+            조회하고자 하는 데이터의 조회일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
         kind : str, default "stock"
-            조회하고자 하는 데이터의 종류.
-            데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]
+            조회하고자 하는 데이터의 종류.\n
+            krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
         kwargs :
-            kind : str
-                조회하고자 하는 데이터의 종류
-                krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']
             division : str
-                조회하고자 하는 데이터의 세부 구분
+                조회하고자 하는 데이터의 세부 구분\n
                 other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']
             reverse : bool, default false
                 dataframe을 거꾸로 정렬하기
@@ -321,6 +324,7 @@ class KrxReader:
         -------
         pd.DataFrame
             data
+
 
         Examples
         -------
@@ -335,9 +339,9 @@ class KrxReader:
         if date is None:
             warnings.warn(
                 """date is None.
-                          It would lead an error because datetime.datetime.now() is default 
-                          and it could be holiday when stock marker was not held 
-                          or before stock marker is opened"""
+                  It would lead an error because datetime.datetime.now() is default
+                  and it could be holiday when stock marker was not held
+                  or before stock marker is opened"""
             )
 
         self._date_check(date)
@@ -354,7 +358,7 @@ class KrxReader:
         elif kind == "per":
             df = data_reader("12021", search_type="전종목", market="전체", date=date_8_digit)
             # 12021 기능 호출시 종목명 <em class ="up"></em> 가 붙어서 나오는 문제를 해결하기 위함
-            df.replace(' <em class ="up"></em>', "", regex=True, inplace=True)
+            df.replace(' <em class ="up">.*</em>', "", regex=True, inplace=True)
             dataframe = df
         elif kind == "etf":
             dataframe = data_reader("13101", date=date_8_digit, kind=kind)
@@ -366,12 +370,10 @@ class KrxReader:
             dataframe = data_reader("11001", date=date_8_digit, kind=kind, **kwargs)
         elif kind == "other_index":
             dataframe = data_reader("11010", date=date_8_digit, kind=kind, **kwargs)
-        else:
-            raise ValueError(f"Check {kind} is not in the list of expected_kind")
 
-        if kwargs.get('adjust', None) is True:
-            warnings.warn('data from read_date can not be adjusted')
-            del kwargs['adjust']
+        if kwargs.get("adjust", None) is True:
+            warnings.warn("data from read_date can not be adjusted")
+            del kwargs["adjust"]
 
         return option.options(dataframe, **kwargs)
 
@@ -389,9 +391,27 @@ class BinanceReader:
     ):
         self.api_key = api_key
 
-    @property
-    def symbols(self):
+    def symbol_list(self):
         return binance.get_symbols()
+
+    def interval_list(self):
+        return [
+            "1m",
+            "3m",
+            "5m",
+            "15m",
+            "30m",
+            "1h",
+            "2h",
+            "4h",
+            "6h",
+            "8h",
+            "12h",
+            "1d",
+            "3d",
+            "1w",
+            "1M",
+        ]
 
     def read(self, symbol, start, end, interval, **kwargs):
         """
@@ -399,15 +419,20 @@ class BinanceReader:
 
         Parameters
         ----------
-        symbol : str, optional
-            Binance Symbol
-        interval : str, optional
-            조회 간격 설정, by default "1d"
+        symbol : str
+            조회하고자 하는 데이터의 코인코드.\n
+            예) 이더리움 : 'ETHBTC'
+        interval : str
+            조회 간격 설정
             (1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)
-        start : str, optional
-            조회 시작 날짜(YYYY-MM-DD), by default 최근 날짜
-        end : str, optional
-            조회 끝 날짜(YYYY-MM-DD), by default 최근 날짜
+        start : str
+            조회하고자 하는 데이터의 시작일.\n
+            형태는 YYYY-MM-DD가 되어야 한다. \n
+            예) 2021-06-01
+        end : str
+            조회하고자 하는 데이터의 종료일.\n
+            형태는 YYYY-MM-DD가 되어야 한다.\n
+            예) 2021-06-01
 
         Returns
         -------
@@ -418,5 +443,7 @@ class BinanceReader:
         start = start.replace("-", "")
         end = end.replace("-", "")
 
-        dataframe = binance.get_ohlcv(symbol=symbol, start=start, end=end, interval=interval)
+        dataframe = binance.get_ohlcv(
+            symbol=symbol, start=start, end=end, interval=interval
+        )
         return option.options(dataframe, **kwargs)

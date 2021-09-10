@@ -205,6 +205,13 @@
     <li class="md-nav__item">
     
     
+      <a href="user_guide.html" class="md-nav__link">User Guide</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
       <a href="tutorial.html" class="md-nav__link">Tutorial 🐣</a>
       
     
@@ -260,12 +267,19 @@ So using api to get bulky data is highly recommended.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>symbol</strong> (<em>str</em><em>, </em><em>optional</em>) -- Binance Symbol</p></li>
-<li><p><strong>interval</strong> (<em>str</em><em>, </em><em>optional</em>) -- <p>조회 간격 설정, by default "1d"</p>
-<p>(1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)</p>
+<li><p><strong>symbol</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 코인코드.</p>
+<p>예) 이더리움 : 'ETHBTC'</p>
 </p></li>
-<li><p><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 시작 날짜(YYYY-MM-DD), by default 최근 날짜</p></li>
-<li><p><strong>end</strong> (<em>str</em><em>, </em><em>optional</em>) -- 조회 끝 날짜(YYYY-MM-DD), by default 최근 날짜</p></li>
+<li><p><strong>interval</strong> (<em>str</em>) -- 조회 간격 설정
+(1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)</p></li>
+<li><p><strong>start</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 시작일.</p>
+<p>형태는 YYYY-MM-DD가 되어야 한다.</p>
+<p>예) 2021-06-01</p>
+</p></li>
+<li><p><strong>end</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종료일.</p>
+<p>형태는 YYYY-MM-DD가 되어야 한다.</p>
+<p>예) 2021-06-01</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

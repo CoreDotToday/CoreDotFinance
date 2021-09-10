@@ -205,6 +205,13 @@
     <li class="md-nav__item">
     
     
+      <a href="user_guide.html" class="md-nav__link">User Guide</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
       <a href="tutorial.html" class="md-nav__link">Tutorial 🐣</a>
       
     
@@ -250,32 +257,43 @@
 <dl class="py class">
 <dt id="coredotfinance.data.KrxReader">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">coredotfinance.data.</span></code><code class="sig-name descname"><span class="pre">KrxReader</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.data.KrxReader" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>krx data를 읽어오는 인스턴스를 생성한다.</p>
+<dl class="py method">
+<dt id="coredotfinance.data.KrxReader.listed_company">
+<code class="sig-name descname"><span class="pre">listed_company</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.data.KrxReader.listed_company" title="Permalink to this definition">¶</a></dt>
+<dd><p>상장된 주식 정보를 읽어온다.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
 <dt id="coredotfinance.data.KrxReader.read">
 <code class="sig-name descname"><span class="pre">read</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stock'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coredotfinance.data.KrxReader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>해당 주식 가격 데이터를 시작일(start) 부터 종료일(end) 까지 읽어온다.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>symbol</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종목코드.
-형태는 종목과 종류마다 다르다.</p>
+<li><p><strong>symbol</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종목코드.</p>
+<p>형태는 종목과 종류마다 다르다.</p>
 <p>예) 삼성전자 : '005930', ARIRANG 200 : '152100'</p>
 </p></li>
-<li><p><strong>start</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 시작일.
-형태는 YYYY-MM-DD가 되어야 한다.</p>
+<li><p><strong>start</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 시작일.</p>
+<p>형태는 YYYY-MM-DD가 되어야 한다.</p>
 <p>예) 2021-06-01</p>
 </p></li>
-<li><p><strong>end</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종료일.
-형태는 YYYY-MM-DD가 되어야 한다.</p>
+<li><p><strong>end</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종료일.</p>
+<p>형태는 YYYY-MM-DD가 되어야 한다.</p>
 <p>예) 2021-06-01</p>
 </p></li>
 <li><p><strong>kind</strong> (<em>str</em><em>, </em><em>default "stock"</em>) -- <p>조회하고자 하는 데이터의 종류.</p>
-<p>데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]</p>
+<p>krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']</p>
 </p></li>
 <li><p><strong>kwargs</strong> -- <dl>
-<dt>kind<span class="classifier">str</span></dt><dd><p>조회하고자 하는 데이터의 종류</p>
-<p>krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']</p>
-</dd>
 <dt>division<span class="classifier">str</span></dt><dd><p>조회하고자 하는 데이터의 세부 구분</p>
 <p>other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']</p>
 </dd>
@@ -310,8 +328,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>symbol</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종목코드.
-형태는 종목과 종류마다 다르다.</p>
+<li><p><strong>symbol</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 종목코드.</p>
+<p>형태는 종목과 종류마다 다르다.</p>
 <p>예) 삼성전자 : '005930', ARIRANG 200 : '152100'</p>
 </p></li>
 <li><p><strong>kind</strong> (<em>str</em><em>, </em><em>default "stock"</em>) -- <p>조회하고자 하는 데이터의 종류.</p>
@@ -355,17 +373,14 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 조회일.
-형태는 YYYY-MM-DD가 되어야 한다.</p>
+<li><p><strong>date</strong> (<em>str</em>) -- <p>조회하고자 하는 데이터의 조회일.</p>
+<p>형태는 YYYY-MM-DD가 되어야 한다.</p>
 <p>예) 2021-06-01</p>
 </p></li>
 <li><p><strong>kind</strong> (<em>str</em><em>, </em><em>default "stock"</em>) -- <p>조회하고자 하는 데이터의 종류.</p>
-<p>데이터의 종류 - krx : ["stock", "etf", "etn", "elw", "per"]</p>
+<p>krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']</p>
 </p></li>
 <li><p><strong>kwargs</strong> -- <dl>
-<dt>kind<span class="classifier">str</span></dt><dd><p>조회하고자 하는 데이터의 종류</p>
-<p>krx : ['stock', 'etf', 'index' ,'per', 'index', 'other_index']</p>
-</dd>
 <dt>division<span class="classifier">str</span></dt><dd><p>조회하고자 하는 데이터의 세부 구분</p>
 <p>other_index : ['선물지수', '옵션지수', '전략지수', '상품지수']</p>
 </dd>

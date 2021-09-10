@@ -17,6 +17,7 @@ Version : 1.1.1
 .. toctree::
    :maxdepth: 2
 
+   user_guide.ipynb
    tutorial.ipynb
    usage.ipynb
    changelog

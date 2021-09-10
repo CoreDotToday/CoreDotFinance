@@ -10,6 +10,7 @@ with open(api_key_file, "r") as f:
 krx = KrxReader(apikey)
 
 
+"""
 def test_krx_read():
     dataframe = krx.read(
         symbol="000660", start="2021-07-20", end="2021-07-20", api=True
@@ -27,3 +28,4 @@ def test_krx_stock_adjust():
         "035720", start="2021-04-14", end="2021-04-15", adjust=True, api=True
     )
     assert dataframe.loc["2021-04-14"]["close"] == 111600
+"""

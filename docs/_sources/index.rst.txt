@@ -6,7 +6,7 @@ CoreDotFinance
 
 .. |issues| image:: https://img.shields.io/github/issues/CoreDotToday/CoreDotFinance
 .. |pr|  image:: https://img.shields.io/github/issues-pr/CoreDotToday/CoreDotFinance
-.. |release| image:: https://img.shields.io/static/v1?label=PyPI&message=1.1.1&color=orange
+.. |release| image:: https://badge.fury.io/py/coredotfinance.svg
 .. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
 .. |isort| image:: https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336
 

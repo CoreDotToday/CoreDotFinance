@@ -37,8 +37,8 @@ def test_krx_etn_read():
 
 # elw
 def test_krx_elw_read():
-    dataframe = krx.read("58G187", start="2021-09-01", end="2021-09-02", kind="elw")
-    assert dataframe.loc["2021-09-02"]["close"][0] == 10
+    dataframe = krx.read("58G194", start="2021-09-01", end="2021-09-02", kind="elw")
+    assert dataframe.loc["2021-09-02"]["close"][0] == 20
 
 
 # index

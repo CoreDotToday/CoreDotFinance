@@ -23,7 +23,6 @@ jobs:
         pip install coverage
         coverage run -m pytest
         coverage xml
-        ls
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:

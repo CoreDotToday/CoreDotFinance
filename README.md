@@ -4,8 +4,7 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/CoreDotToday/CoreDotFinance)](https://github.com/CoreDotToday/CoreDotFinance/pulls)
 [![PyPI version](https://badge.fury.io/py/coredotfinance.svg)](https://badge.fury.io/py/coredotfinance)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Coverage Status](https://coveralls.io/repos/CoreDotToday/CoreDotFinance/badge.svg?branch=master&service=github)](https://coveralls.io/github/CoreDotToday/CoreDotFinance)
-[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+[![codecov](https://codecov.io/gh/CoreDotToday/CoreDotFinance/branch/master/graph/badge.svg?token=5mGXseCl4l)](https://codecov.io/gh/CoreDotToday/CoreDotFinance)
 ----------------------------
 
 ## 금융 데이터를 쉽고 빠르게!

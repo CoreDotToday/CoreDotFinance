@@ -1,4 +1,4 @@
-name: Codecov.
+name: Codecov
 on: [push]
 jobs:
   run:

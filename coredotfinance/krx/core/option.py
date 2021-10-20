@@ -5,16 +5,17 @@ import os
 
 import pandas as pd
 
+
 def get_shares_volume_column(columns):
 
-    for shares_column in ['상장주식수', '상장좌수', "shares_outstanding"]:
+    for shares_column in ["상장주식수", "상장좌수", "shares_outstanding"]:
         if shares_column in columns:
             shares = shares_column
             break
         else:
             shares = None
 
-    for volume_column in ['거래량', 'volume']:
+    for volume_column in ["거래량", "volume"]:
         if volume_column in columns:
             volume = volume_column
             break
@@ -33,8 +34,20 @@ def adjust_price(dataframe: pd.DataFrame):
         return dataframe
 
     standard_ratio = dataframe[shares][0] / dataframe[shares]
-
-    available_column_list = ["close", "change", "open", "high", "low", "volume", "종가", "대비", "시가", "고가", "저가", "거래량"]
+    available_column_list = [
+        "close",
+        "change",
+        "open",
+        "high",
+        "low",
+        "volume",
+        "종가",
+        "대비",
+        "시가",
+        "고가",
+        "저가",
+        "거래량",
+    ]
 
     for column in available_column_list:
         data = dataframe.get(column)
@@ -73,13 +86,14 @@ def options(dataframe, **kwargs):
         return dataframe
 
     if kwargs.get("adjust") is True:
+        dataframe.replace("0", 0, inplace=True)
         dataframe = adjust_price(dataframe)
 
     if isinstance(dataframe.columns, pd.core.indexes.multi.MultiIndex):
         if kwargs.get("kor") is True:
             pass
         else:
-            dataframe = rename_dataframe(dataframe, column_file_name='kor2eng')
+            dataframe = rename_dataframe(dataframe, column_file_name="kor2eng")
     else:
         if kwargs.get("kor") is True:
             # dataframe is coming with Korean columns so when kor is None, then if has to be changed

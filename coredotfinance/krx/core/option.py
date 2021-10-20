@@ -51,21 +51,12 @@ def adjust_price(dataframe: pd.DataFrame):
 
     for column in available_column_list:
         data = dataframe.get(column)
-        print("\n", "-" * 100, "\n")
-        print("standard_ratio : ", standard_ratio)
-        print("type(standard_ratio) : ", type(standard_ratio))
-        print("\n")
-        print("data : ", data)
-        print("type(data) : ", type(data))
         if data is None:
             continue
         if column == volume:
             # volume only needs to be multiplied by standard_ratio
             dataframe[column] = (data * standard_ratio).astype(int)
         else:
-            print(data)
-            print("data[0] : ", data[0])
-            print("type(data[0]) : ", type(data[0]))
             dataframe[column] = (data / standard_ratio).astype(int)
     return dataframe
 

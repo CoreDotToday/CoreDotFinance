@@ -34,7 +34,6 @@ def adjust_price(dataframe: pd.DataFrame):
         return dataframe
 
     standard_ratio = dataframe[shares][0] / dataframe[shares]
-
     available_column_list = [
         "close",
         "change",
@@ -88,6 +87,7 @@ def options(dataframe, **kwargs):
         return dataframe
 
     if kwargs.get("adjust") is True:
+        dataframe.replace("0", 0, inplace=True)
         dataframe = adjust_price(dataframe)
 
     if isinstance(dataframe.columns, pd.core.indexes.multi.MultiIndex):

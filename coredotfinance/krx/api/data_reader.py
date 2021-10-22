@@ -70,14 +70,15 @@ def data_reader(code, symbol=None, start=None, end=None, date=None, **kwargs):
     post_params = krx_instance.get_requested_data()
     if symbol:
         symbol_name = krx_instance.data_nm
-        print(symbol_name)
+        if kwargs.get("display_symbol_name") == True:
+            print(symbol_name)
 
     mdcstat = _parse_mdcstat(post_params)
     jsp_soup = jsp_util.get_jsp_soup(mdcstat)
     valid_post_params = fetch.convert_vaild_post_params(jsp_soup, post_params)
     krx_data = fetch.get_krx_data(valid_post_params)
-    korean_columns = column.get_korean_columns(jsp_soup, mdcstat)
-    dataframe = get_dataframe(krx_data, korean_columns)
+    korean_columns, index_name = column.get_korean_columns(jsp_soup, mdcstat)
+    dataframe = get_dataframe(krx_data, korean_columns, index_name)
 
     return dataframe
 

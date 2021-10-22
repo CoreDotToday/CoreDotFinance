@@ -26,7 +26,7 @@ no_display_columns = [
 ]
 
 
-def get_dataframe(krx_data, column_map):
+def get_dataframe(krx_data, column_map, index_name):
     _check_data_validation(krx_data)
     column_map.update(second_column_map)
     data = _apply_column_map(krx_data, column_map)
@@ -38,6 +38,9 @@ def get_dataframe(krx_data, column_map):
         columns = _multi_columnize(column_data)
         data.columns = columns
     data = _dataframe_astype(data)
+
+    if index_name:
+        data.index.name = index_name
 
     return data
 

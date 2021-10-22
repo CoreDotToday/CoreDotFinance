@@ -47,7 +47,11 @@ def get_korean_columns(jsp_soup, mdcstat):
     if div_tag:
         div_map = _parse_div_map(div_tag)
         map_.update(div_map)
-    return map_
+    if "TRD_DD" in map_:
+        index_name = "date"
+    else:
+        index_name = None
+    return map_, index_name
 
 
 def _parse_jsGrid_dict(jsp_soup):

@@ -71,7 +71,6 @@ def is_kor_column(column_list: pd.DataFrame.index):
 
 def get_column_map(file):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    print(file)
     path = os.path.join(BASE_DIR, f"{file}.json")
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
